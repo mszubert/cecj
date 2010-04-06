@@ -1,0 +1,61 @@
+verbosity	= 0
+
+breedthreads	= 1
+evalthreads		= 1
+seed.0			= 4357
+
+pop			= ec.Population
+state		= ec.simple.SimpleEvolutionState
+init		= ec.simple.SimpleInitializer
+finish		= ec.simple.SimpleFinisher
+breed		= ec.simple.SimpleBreeder
+stat		= ec.simple.SimpleStatistics
+exch		= ec.simple.SimpleExchanger
+eval		= coevolution.eval.ArchivingCoevolutionaryEvaluator
+
+generations				= 50
+checkpoint				= false
+prefix					= ec
+checkpoint-modulo		= 1
+
+pop.subpops						= 1
+pop.subpop.0					= coevolution.archive.ArchivingSubpopulation
+pop.subpop.0.size 				= 5
+pop.subpop.0.duplicate-retries 	= 0
+
+pop.subpop.0.species 				= ec.vector.VectorSpecies
+pop.subpop.0.species.ind			= ec.vector.BitVectorIndividual
+pop.subpop.0.species.fitness 		= ec.simple.SimpleFitness
+pop.subpop.0.species.genome-size	= 8
+pop.subpop.0.species.crossover-type	= one
+pop.subpop.0.species.mutation-prob	= 0.1
+
+pop.subpop.0.species.pipe							= ec.vector.breed.VectorMutationPipeline
+pop.subpop.0.species.pipe.source.0					= ec.vector.breed.VectorCrossoverPipeline
+pop.subpop.0.species.pipe.source.0.source.1			= ec.select.TournamentSelection
+pop.subpop.0.species.pipe.source.0.source.1.size 	= 2
+
+pop.subpop.0.species.pipe.source.0.source.0					= ec.select.MultiSelection
+pop.subpop.0.species.pipe.source.0.source.0.num-selects		= 2
+pop.subpop.0.species.pipe.source.0.source.0.select.0		= coevolution.archive.ArchiveRandomSelection
+pop.subpop.0.species.pipe.source.0.source.0.select.0.prob	= 0.5
+pop.subpop.0.species.pipe.source.0.source.0.select.0.size	= 5
+pop.subpop.0.species.pipe.source.0.source.0.select.1		= ec.select.TournamentSelection
+pop.subpop.0.species.pipe.source.0.source.0.select.1.size 	= 2
+pop.subpop.0.species.pipe.source.0.source.0.select.1.prob 	= 0.5
+
+eval.archive										= coevolution.archive.BestOfGenerationArchive
+eval.problem										= coevolution.app.numbers_game.SingleDimensionalNumbersGame
+eval.statistics										= coevolution.statistics.SimpleCoevolutionaryStatistics
+eval.interaction-scheme								= coevolution.interaction.IntraPopulationInteractionScheme
+eval.subpop.0.sampling-method						= coevolution.sampling.AllSamplingMethod
+eval.subpop.0.fitness-method						= coevolution.fitness.SimpleSumFitness
+eval.subpop.0.archive-sampling-method				= coevolution.sampling.AllSamplingMethod
+
+stat.file		= $out.stat
+stat.num-children 			= 1
+stat.child.0 				= coevolution.statistics.AverageObjectiveFitnessChartStatistics
+stat.child.0.fitness-calc 	= coevolution.app.numbers_game.SingleDimensionalNumbersGame 
+stat.child.0.title 			= Average performance
+stat.child.0.x-axis-label 	= generation
+stat.child.0.y-axis-label 	= fitness

@@ -1,0 +1,67 @@
+verbosity	= 0
+
+breedthreads	= 1
+evalthreads		= 1
+seed.0			= 4357
+
+pop			= ec.Population
+state		= ec.simple.SimpleEvolutionState
+init		= ec.simple.SimpleInitializer
+finish		= ec.simple.SimpleFinisher
+breed		= ec.simple.SimpleBreeder
+stat 		= ec.simple.SimpleShortStatistics
+exch		= ec.simple.SimpleExchanger
+eval		= cecj.eval.SimpleCoevolutionaryEvaluator
+
+generations				= 5
+checkpoint				= false
+prefix					= ec
+checkpoint-modulo		= 1
+
+pop.subpops			= 2
+pop.subpop.0		= ec.Subpopulation
+pop.subpop.1		= ec.Subpopulation
+
+pop.subpop.0.size 				= 8
+pop.subpop.1.size 				= 8
+pop.subpop.0.duplicate-retries 	= 0
+pop.subpop.1.duplicate-retries 	= 0
+
+pop.subpop.0.species 				= ec.vector.VectorSpecies
+pop.subpop.1.species 				= ec.vector.VectorSpecies
+pop.subpop.0.species.fitness 		= ec.simple.SimpleFitness
+pop.subpop.1.species.fitness 		= ec.simple.SimpleFitness
+pop.subpop.0.species.ind			= ec.vector.BitVectorIndividual
+pop.subpop.1.species.ind			= ec.vector.BitVectorIndividual
+
+pop.subpop.0.species.genome-size	= 100
+pop.subpop.1.species.genome-size	= 100
+pop.subpop.0.species.crossover-type	= one
+pop.subpop.1.species.crossover-type	= one
+pop.subpop.0.species.mutation-prob	= 0.05
+pop.subpop.1.species.mutation-prob	= 0.05
+
+pop.subpop.0.species.pipe			= ec.vector.breed.VectorMutationPipeline
+pop.subpop.1.species.pipe			= ec.vector.breed.VectorMutationPipeline
+pop.subpop.0.species.pipe.source.0	= ec.select.FitProportionateSelection
+pop.subpop.1.species.pipe.source.0	= ec.select.FitProportionateSelection
+
+eval.problem					= cecj.app.numbers_game.SingleDimensionalNumbersGame
+eval.interaction-scheme			= cecj.interaction.InterPopulationInteractionScheme
+eval.subpop.0.sampling-method	= cecj.sampling.AllSamplingMethod
+eval.subpop.0.fitness-method	= cecj.fitness.SimpleSumFitness
+eval.subpop.1.sampling-method	= cecj.sampling.AllSamplingMethod
+eval.subpop.1.fitness-method	= cecj.fitness.SimpleSumFitness
+
+stat.file					= $out.stat
+stat.num-children 			= 2
+stat.child.0 				= cecj.statistics.AverageObjectiveFitnessChartStatistics
+stat.child.0.title 			= Average performance
+stat.child.0.x-axis-label 	= generation
+stat.child.0.y-axis-label 	= fitness
+stat.child.0.fitness-calc 	= cecj.app.numbers_game.SingleDimensionalNumbersGame 
+stat.child.1 				= cecj.statistics.AverageSubjectiveFitnessChartStatistics
+stat.child.1.title 			= Average subjective performance
+stat.child.1.x-axis-label 	= generation
+stat.child.1.y-axis-label 	= fitness
+stat.child.1.fitness-calc 	= cecj.app.numbers_game.SingleDimensionalNumbersGame 

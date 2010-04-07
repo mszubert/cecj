@@ -142,6 +142,7 @@ public class SimpleCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 		Parameter fitnessMethodParam = base.push(P_SUBPOP).push("" + subpop).push(P_FITNESS_METHOD);
 		fitnessAggregateMethod[subpop] = (FitnessAggregateMethod) (state.parameters
 				.getInstanceForParameter(fitnessMethodParam, null, FitnessAggregateMethod.class));
+		fitnessAggregateMethod[subpop].setup(state, fitnessMethodParam);
 	}
 
 	@Override

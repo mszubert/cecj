@@ -16,6 +16,9 @@ import ec.util.Parameter;
  */
 public class IntraPopulationInteractionScheme implements InteractionScheme {
 
+	private static final String P_PLAY_BOTH = "play-both";
+	
+	private boolean playBoth;
 	private SymmetricCompetitionProblem problem;
 
 	public void setup(EvolutionState state, Parameter base) {
@@ -24,6 +27,9 @@ public class IntraPopulationInteractionScheme implements InteractionScheme {
 		} else {
 			problem = (SymmetricCompetitionProblem) state.evaluator.p_problem;
 		}
+		
+		Parameter playBothParam = base.push(P_PLAY_BOTH);
+		playBoth = state.parameters.getBoolean(playBothParam, null, true);
 	}
 
 	public List<List<InteractionResult>> performInteractions(EvolutionState state, int subpop,
@@ -37,7 +43,9 @@ public class IntraPopulationInteractionScheme implements InteractionScheme {
 			List<InteractionResult> results = new ArrayList<InteractionResult>();
 			for (Individual opponent : curOpponents) {
 				results.add(problem.compete(state, competitor, opponent).first);
-				results.add(problem.compete(state, opponent, competitor).second);
+				if (playBoth) {
+					results.add(problem.compete(state, opponent, competitor).second);
+				}
 			}
 			subpopulationResults.add(results);
 		}

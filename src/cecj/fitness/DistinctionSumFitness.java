@@ -6,6 +6,7 @@ import cecj.interaction.InteractionResult;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.simple.SimpleFitness;
+import ec.util.Parameter;
 
 public class DistinctionSumFitness implements FitnessAggregateMethod {
 
@@ -43,5 +44,8 @@ public class DistinctionSumFitness implements FitnessAggregateMethod {
 			((SimpleFitness) inds[ind].fitness).setFitness(state, numChallenged[ind]
 					* (numOpponents[ind] - numChallenged[ind]), false);
 		}
+	}
+
+	public void setup(EvolutionState state, Parameter base) {
 	}
 }

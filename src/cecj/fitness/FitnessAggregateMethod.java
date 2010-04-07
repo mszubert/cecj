@@ -10,6 +10,7 @@ import java.util.List;
 import cecj.interaction.InteractionResult;
 
 import ec.EvolutionState;
+import ec.Setup;
 
 /**
  * A method of aggregating individuals' interactions results.
@@ -17,7 +18,7 @@ import ec.EvolutionState;
  * @author Marcin Szubert
  * 
  */
-public interface FitnessAggregateMethod {
+public interface FitnessAggregateMethod extends Setup {
 
 	public void prepareToAggregate(EvolutionState state, int subpop);
 

@@ -22,4 +22,8 @@ public class BinaryResult implements InteractionResult {
 		return ((result) ? 1 : 0);
 	}
 
+	@Override
+	public String toString() {
+		return ((result) ? "1" : "O");
+	}
 }

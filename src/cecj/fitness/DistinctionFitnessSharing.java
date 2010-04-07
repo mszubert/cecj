@@ -7,6 +7,7 @@ import cecj.interaction.InteractionResult;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.simple.SimpleFitness;
+import ec.util.Parameter;
 
 public class DistinctionFitnessSharing implements FitnessAggregateMethod {
 
@@ -63,5 +64,8 @@ public class DistinctionFitnessSharing implements FitnessAggregateMethod {
 		for (int ind = 0; ind < inds.length; ind++) {
 			((SimpleFitness) inds[ind].fitness).setFitness(state, fitnesses[ind], false);
 		}
+	}
+
+	public void setup(EvolutionState state, Parameter base) {
 	}
 }

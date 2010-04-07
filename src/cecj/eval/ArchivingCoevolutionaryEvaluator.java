@@ -107,7 +107,15 @@ public class ArchivingCoevolutionaryEvaluator extends SimpleCoevolutionaryEvalua
 			}
 		}
 
+		int a1 = ((ArchivingSubpopulation)state.population.subpops[0]).getArchivalIndividuals().size();
+		int a2 = ((ArchivingSubpopulation)state.population.subpops[1]).getArchivalIndividuals().size();
+		System.out.println("Evaluations performed = " + evaluationsPerformed);
+		System.out.println("Archives sized before submit : C = " + a1 + " T : " + a2);
 		archive.submit(state);
+		
+		a1 = ((ArchivingSubpopulation)state.population.subpops[0]).getArchivalIndividuals().size();
+		a2 = ((ArchivingSubpopulation)state.population.subpops[1]).getArchivalIndividuals().size();
+		System.out.println("Archives sized after submit : C = " + a1 + " T : " + a2);
 	}
 	
 	private List<Individual> findOpponentsFromArchive(EvolutionState state, int subpop) {

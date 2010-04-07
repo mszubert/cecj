@@ -69,13 +69,14 @@ public class LAPCA extends ParetoCoevolutionArchive {
 					madeDistinctions.add(dist);
 				}
 			}
+			
 			if (madeDistinctions.size() > 0) {
-				distinctions.retainAll(madeDistinctions);
+				distinctions.removeAll(madeDistinctions);
 			} else {
 				testsToRemove.add(test);
 			}
 		}
-		
+
 		tArchive.removeAll(testsToRemove);
 	}
 
@@ -131,13 +132,19 @@ public class LAPCA extends ParetoCoevolutionArchive {
 			List<Individual> tests) {
 		int archiveSize = candidates.size();
 		boolean domination[][] = new boolean[archiveSize][archiveSize];
+		
 		for (int c1 = 0; c1 < archiveSize; c1++) {
 			for (int c2 = 0; c2 < archiveSize; c2++) {
+				if (c1 == c2) {
+					continue;
+				}
+				
 				if (dominatesOrEqual(state, candidates.get(c1), candidates.get(c2), tests)) {
 					domination[c1][c2] = true;
 				}
 			}
 		}
+		
 		return domination;
 	}
 
@@ -145,22 +152,34 @@ public class LAPCA extends ParetoCoevolutionArchive {
 			List<Individual> cArchive, List<Individual> tests, List<Individual> tArchive) {
 
 		for (Individual newCandidate : candidates) {
+			boolean unique = true;
+
 			for (int archiveIndex = 0; archiveIndex < cArchive.size(); archiveIndex++) {
 				Individual archivalCandidate = cArchive.get(archiveIndex);
-				if (!areIndiscernibleCandidates(state, newCandidate, archivalCandidate, tArchive)
-						|| !areIndiscernibleCandidates(state, newCandidate, archivalCandidate,
-								tests)) {
-					cArchive.add(newCandidate);
+				if (areIndiscernibleCandidates(state, newCandidate, archivalCandidate, tArchive)
+						&& areIndiscernibleCandidates(state, newCandidate, archivalCandidate, tests)) {
+					unique = false;
+					break;
 				}
+			}
+			
+			if (unique) {
+				cArchive.add(newCandidate);
 			}
 		}
 
 		for (Individual newTest : tests) {
+			boolean unique = true;
 			for (int archiveIndex = 0; archiveIndex < tArchive.size(); archiveIndex++) {
 				Individual archivalTest = tArchive.get(archiveIndex);
-				if (!areIndiscernibleTests(state, newTest, archivalTest, cArchive)) {
-					tArchive.add(newTest);
+				if (areIndiscernibleTests(state, newTest, archivalTest, cArchive)) {
+					unique = false;
+					break;
 				}
+			}
+
+			if (unique) {
+				tArchive.add(newTest);
 			}
 		}
 	}

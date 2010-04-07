@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry including="**/*.java" kind="src" path="ECJ"/>
+	<classpathentry kind="src" path="tests"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="/Users/marcin/Documents/Research/Software/Libraries/jcommon-1.0.14.jar"/>
+	<classpathentry kind="lib" path="/Users/marcin/Documents/Research/Software/Libraries/iText-2.1.3.jar"/>
+	<classpathentry kind="lib" path="/Users/marcin/Documents/Research/Software/Libraries/jfreechart-1.0.11.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

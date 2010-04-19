@@ -53,10 +53,10 @@ public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCal
 		float sum = 0;
 		for (int r = 0; r < repeats; r++) {
 			game.reset();
-			sum += ((scenario1.play(game) >= 0) ? 1 : 0);
+			sum += ((scenario1.play(game) > 0) ? 1 : 0);
 			if (playBoth) {
 				game.reset();
-				sum += ((scenario2.play(game) <= 0) ? 1 : 0);
+				sum += ((scenario2.play(game) < 0) ? 1 : 0);
 			}
 		}
 

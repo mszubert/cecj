@@ -5,7 +5,6 @@
 
 package cecj.eval;
 
-import cecj.problems.CoevolutionaryProblem;
 import cecj.problems.TestBasedProblem;
 import ec.Evaluator;
 import ec.EvolutionState;
@@ -30,13 +29,16 @@ public abstract class CoevolutionaryEvaluator extends Evaluator {
 	 */
 	protected int numSubpopulations;
 
+	protected TestBasedProblem problem;
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		if (!(p_problem instanceof CoevolutionaryProblem)) {
-			state.output
-					.fatal("Coevolutionary evaluator is dedicated to coevolutionary problems\n");
+		if (!(p_problem instanceof TestBasedProblem)) {
+			state.output.fatal("Coevolutionary evaluator is dedicated to test-based problems\n");
+		} else {
+			problem = (TestBasedProblem) p_problem;
 		}
 
 		Parameter popSizeParameter = new Parameter(P_POP).push(P_SIZE);

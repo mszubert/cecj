@@ -7,16 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cecj.interaction.InteractionResult;
-import cecj.problems.SymmetricTestBasedProblem;
+import cecj.problems.TestBasedProblem;
 import cecj.statistics.ObjectiveFitnessCalculator;
 import cecj.utils.Pair;
-
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
 import ec.vector.BitVectorIndividual;
 
-public abstract class MultiDimensionalNumbersGame extends SymmetricTestBasedProblem implements
+public abstract class MultiDimensionalNumbersGame extends TestBasedProblem implements
 		ObjectiveFitnessCalculator {
 
 	private static final String P_DIMENSIONS = "dimensions";

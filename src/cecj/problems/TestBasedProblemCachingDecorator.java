@@ -29,10 +29,10 @@ public class TestBasedProblemCachingDecorator extends TestBasedProblem {
 	@Override
 	public void setup(EvolutionState state, Parameter base) {
 		super.setup(state, base);
-		
+
 		Parameter innerProblemParam = base.push(P_INNER_PROBLEM);
-		problem = (TestBasedProblem) state.parameters
-			.getInstanceForParameter(innerProblemParam, null, TestBasedProblem.class);
+		problem = (TestBasedProblem) state.parameters.getInstanceForParameter(innerProblemParam,
+				null, TestBasedProblem.class);
 		problem.setup(state, base);
 
 		Parameter cacheSizeParam = base.push(P_CACHE_SIZE);
@@ -45,7 +45,7 @@ public class TestBasedProblemCachingDecorator extends TestBasedProblem {
 	public TestBasedProblem getProblem() {
 		return problem;
 	}
-	
+
 	@Override
 	public Pair<? extends InteractionResult> test(EvolutionState state, Individual candidate,
 			Individual test) {

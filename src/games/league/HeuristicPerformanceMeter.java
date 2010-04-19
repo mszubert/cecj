@@ -3,12 +3,15 @@ package games.league;
 import ec.util.MersenneTwisterFast;
 import games.Player;
 import games.WPCPlayer;
+import games.scenarios.ALPGameScenario;
 import games.scenarios.GameScenario;
 import games.scenarios.RandomizedTwoPlayersGameScenario;
 
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Scanner;
 
+import cecj.app.go.GoGame;
 import cecj.app.othello.OthelloGame;
 
 public class HeuristicPerformanceMeter {
@@ -23,9 +26,9 @@ public class HeuristicPerformanceMeter {
 	private WPCPlayer player;
 
 	public void readPlayer(InputStream input) {
-		Scanner s = new Scanner(input);
-		double[] playerWpc = new double[64];
-		for (int i = 0; i < 64; i++) {
+		Scanner s = new Scanner(input).useLocale(Locale.ENGLISH);
+		double[] playerWpc = new double[25];
+		for (int i = 0; i < 25; i++) {
 			playerWpc[i] = s.nextDouble();
 		}
 		player = new WPCPlayer(playerWpc);
@@ -33,14 +36,18 @@ public class HeuristicPerformanceMeter {
 		System.out.println("Player = " + player);
 	}
 
-	private void testPlayer(OthelloGame game) {
-		WPCPlayer heuristic = new WPCPlayer(wpc);
-		GameScenario scenario1 = new RandomizedTwoPlayersGameScenario(
-				new MersenneTwisterFast(1987), new Player[] { player, heuristic }, new double[] {
-						0, 0 });
-		GameScenario scenario2 = new RandomizedTwoPlayersGameScenario(
-				new MersenneTwisterFast(1987), new Player[] { heuristic, player }, new double[] {
-						0, 0 });
+	private void testPlayer(GoGame game) {
+//		WPCPlayer heuristic = new WPCPlayer(wpc);
+		
+		GameScenario scenario1 = new ALPGameScenario(new MersenneTwisterFast(1987), player, 0, new double[] {0, 0 }); 
+		GameScenario scenario2 = new ALPGameScenario(new MersenneTwisterFast(1987), player, 1, new double[] {0, 0 });
+		
+//			new RandomizedTwoPlayersGameScenario(
+//				new MersenneTwisterFast(1987), new Player[] { player, heuristic }, new double[] {
+//						0, 0 });
+//		GameScenario scenario2 = new RandomizedTwoPlayersGameScenario(
+//				new MersenneTwisterFast(1987), new Player[] { heuristic, player }, new double[] {
+//						0, 0 });
 
 		game.reset();
 		System.out.println("Playing as black, the result is " + scenario1.play(game));
@@ -57,6 +64,6 @@ public class HeuristicPerformanceMeter {
 	public static void main(String[] args) {
 		HeuristicPerformanceMeter hpm = new HeuristicPerformanceMeter();
 		hpm.readPlayer(System.in);
-		hpm.testPlayer(new OthelloGame());
+		hpm.testPlayer(new GoGame());
 	}
 }

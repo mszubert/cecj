@@ -5,15 +5,14 @@ import java.math.RoundingMode;
 
 import cecj.interaction.InteractionResult;
 import cecj.interaction.RealValuedResult;
-import cecj.problems.SymmetricTestBasedProblem;
+import cecj.problems.TestBasedProblem;
 import cecj.statistics.ObjectiveFitnessCalculator;
 import cecj.utils.Pair;
-
 import ec.EvolutionState;
 import ec.Individual;
 import ec.vector.BitVectorIndividual;
 
-public class SingleDimensionalNumbersGame extends SymmetricTestBasedProblem implements ObjectiveFitnessCalculator {
+public class SingleDimensionalNumbersGame extends TestBasedProblem implements ObjectiveFitnessCalculator {
 
 	@Override
 	public Pair<? extends InteractionResult> test(EvolutionState state, Individual candidate,

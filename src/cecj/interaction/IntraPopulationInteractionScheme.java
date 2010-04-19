@@ -3,7 +3,8 @@ package cecj.interaction;
 import java.util.ArrayList;
 import java.util.List;
 
-import cecj.problems.SymmetricCompetitionProblem;
+import cecj.problems.TestBasedProblem;
+
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
@@ -19,13 +20,13 @@ public class IntraPopulationInteractionScheme implements InteractionScheme {
 	private static final String P_PLAY_BOTH = "play-both";
 	
 	private boolean playBoth;
-	private SymmetricCompetitionProblem problem;
+	private TestBasedProblem problem;
 
 	public void setup(EvolutionState state, Parameter base) {
-		if (!(state.evaluator.p_problem instanceof SymmetricCompetitionProblem)) {
+		if (!(state.evaluator.p_problem instanceof TestBasedProblem)) {
 			state.output.fatal("Intrapopulation interactions need symmetric problem definition\n");
 		} else {
-			problem = (SymmetricCompetitionProblem) state.evaluator.p_problem;
+			problem = (TestBasedProblem) state.evaluator.p_problem;
 		}
 		
 		Parameter playBothParam = base.push(P_PLAY_BOTH);
@@ -42,9 +43,9 @@ public class IntraPopulationInteractionScheme implements InteractionScheme {
 		for (Individual competitor : competitors) {
 			List<InteractionResult> results = new ArrayList<InteractionResult>();
 			for (Individual opponent : curOpponents) {
-				results.add(problem.compete(state, competitor, opponent).first);
+				results.add(problem.test(state, competitor, opponent).first);
 				if (playBoth) {
-					results.add(problem.compete(state, opponent, competitor).second);
+					results.add(problem.test(state, opponent, competitor).second);
 				}
 			}
 			subpopulationResults.add(results);

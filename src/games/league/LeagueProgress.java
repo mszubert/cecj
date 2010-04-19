@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cecj.app.go.GoGame;
+import cecj.app.othello.OthelloGame;
 
 public class LeagueProgress {
 
@@ -30,10 +31,8 @@ public class LeagueProgress {
 	private int[] draws;
 	private int[] losts;
 
-	@SuppressWarnings("unused")
 	private Player bestPlayer;
 	private int bestPlayerScore;
-	@SuppressWarnings("unused")
 	private String bestPlayerTeam;
 
 	public LeagueProgress() {
@@ -49,7 +48,7 @@ public class LeagueProgress {
 			}
 		}
 
-		for (int eval = 0; eval < evaluations; eval++) {
+		for (int eval = evaluations - 1; eval < evaluations; eval++) {
 			List<List<Player>> teamsSnapshot = new ArrayList<List<Player>>();
 			for (int team = 0; team < teams.size(); team++) {
 				teamsSnapshot.add(teams.get(team).get(eval));
@@ -72,6 +71,7 @@ public class LeagueProgress {
 		losts = new int[teamsSnapshot.size()];
 
 		GameScenario scenario;
+		//OthelloGame game = new OthelloGame();
 		GoGame game = new GoGame();
 
 		bestPlayer = null;
@@ -130,9 +130,9 @@ public class LeagueProgress {
 				}
 			}
 
-//			for (int opponentTeam = 0; opponentTeam < teamsSnapshot.size(); opponentTeam++) {
-//				System.err.println("Team " + team + " vs team " + opponentTeam + " : " + pointsBlack[opponentTeam] + "as Black" + pointsWhite[opponentTeam] + "as White = \t" + (pointsWhite[opponentTeam] + pointsBlack[opponentTeam]));
-//			}
+			for (int opponentTeam = 0; opponentTeam < teamsSnapshot.size(); opponentTeam++) {
+				System.err.println("Team " + team + " vs team " + opponentTeam + " : " + pointsBlack[opponentTeam] + "as Black" + pointsWhite[opponentTeam] + "as White = \t" + (pointsWhite[opponentTeam] + pointsBlack[opponentTeam]));
+			}
 		}
 	}
 
@@ -183,6 +183,21 @@ public class LeagueProgress {
 		}
 	}
 
+	private void printBestPlayer() {
+		System.out.println("\n Best player comes from team " + bestPlayerTeam + " and its score = "
+				+ bestPlayerScore);
+
+		double[] wpc = ((WPCPlayer) bestPlayer).getWPC();
+		for (int i = 0; i < WPC_LENGTH; i++) {
+			if (i % 5 == 0) {
+				System.out.println("");
+			} else {
+				System.out.print(" ");
+			}
+			System.out.print(Math.round(wpc[i] * 100) / 100.);
+		}
+	}
+	
 	public static void main(String[] args) {
 		LeagueProgress league = new LeagueProgress();
 //		league.addTeam("EXP3v2 0", "ctdl-mc-go-2/exp3v2_0.players");
@@ -194,11 +209,17 @@ public class LeagueProgress {
 //		league.addTeam("EXP3v2 95", "ctdl-mc-go-2/exp3v2_95.players");
 //		league.addTeam("EXP3v2 100", "ctdl-mc-go-2/exp3v2_100.players");
 	
-		league.addTeam("EXP1", "ctdl-mc-go-2/exp4v6_980.players");
-		league.addTeam("EXP2", "ctdl-mc-go-2/exp5v6_980.players");
+		league.addTeam("EXP1", "ctdl-mc-go-2/exp4v10_980.players");
+		league.addTeam("EXP2", "ctdl-mc-go-2/exp5v10_980.players");
 		league.addTeam("EXP3", "ctdl-mc-go-2/exp3v4_95.players");
-		league.addTeam("EXP4", "ctdl-mc-go-2/exp4v6_988.players");
-		league.addTeam("EXP5", "ctdl-mc-go-2/exp5v6_988.players");
+		league.addTeam("EXP4", "ctdl-mc-go-2/exp4v10_988.players");
+		league.addTeam("EXP5", "ctdl-mc-go-2/exp5v10_988.players");
+
+//		league.addTeam("EXP1", "othello/exp1.players");
+//		league.addTeam("EXP2", "othello/exp2.players");
+//		league.addTeam("EXP3", "othello/exp3.players");
+//		league.addTeam("EXP4", "othello/exp4.players");
+//		league.addTeam("EXP5", "othello/exp5.players");
 		
 //		league.addTeam("EXP4v5 0", "ctdl-mc-go-2/exp4v5_0.players");
 //		league.addTeam("EXP4v5 80", "ctdl-mc-go-2/exp4v5_80.players");
@@ -207,14 +228,15 @@ public class LeagueProgress {
 //		league.addTeam("EXP5v5 80", "ctdl-mc-go-2/exp5v5_80.players");
 //		league.addTeam("EXP5v5 98", "ctdl-mc-go-2/exp5v5_98.players");
 		
-//		league.addTeam("EXP5v6 980", "ctdl-mc-go-2/exp5v6_980.players");
-//		league.addTeam("EXP5v6 981", "ctdl-mc-go-2/exp5v6_981.players");
-//		league.addTeam("EXP5v6 982", "ctdl-mc-go-2/exp5v6_982.players");
-//		league.addTeam("EXP5v6 984", "ctdl-mc-go-2/exp5v6_984.players");
-//		league.addTeam("EXP5v6 988", "ctdl-mc-go-2/exp5v6_988.players");
-//		league.addTeam("EXP5v6 9816", "ctdl-mc-go-2/exp5v6_9816.players");
-//		
+//		league.addTeam("EXP5v6 980", "ctdl-mc-go-2/exp5v10_980.players");
+//		league.addTeam("EXP5v6 981", "ctdl-mc-go-2/exp5v10_981.players");
+//		league.addTeam("EXP5v6 982", "ctdl-mc-go-2/exp5v10_982.players");
+//		league.addTeam("EXP5v6 984", "ctdl-mc-go-2/exp5v10_984.players");
+//		league.addTeam("EXP5v6 988", "ctdl-mc-go-2/exp5v10_988.players");
+//		league.addTeam("EXP5v6 9816", "ctdl-mc-go-2/exp5v10_9816.players");
+		
 		league.play();
 		league.printTable();
+		league.printBestPlayer();
 	}
 }

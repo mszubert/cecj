@@ -31,14 +31,20 @@ public class WPCSequenceVisualizer {
 		System.err.println(Arrays.toString(wpc));
 
 		PdfPTable table = new PdfPTable(WPC_SIZE);
+
+		double max = 0;
+		for (int i = 0; i < WPC_LENGTH; i++) {
+			max = Math.max(Math.abs(wpc[i]), max);
+		}
+		
 		for (int i = 0; i < WPC_LENGTH; i++) {
 			PdfPCell cell = new PdfPCell(new Paragraph(" "));
 			cell.setBorder(Rectangle.NO_BORDER);
 			cell.setPadding(0.4f);
 			if (wpc[i] >= 0) {
-				cell.setBackgroundColor(new Color(0, Math.min(1, (float)wpc[i]), 0));					
+				cell.setBackgroundColor(new Color(0, Math.min(1, (float)wpc[i] / (float)max), 0));					
 			} else {
-				cell.setBackgroundColor(new Color(Math.min(1, Math.abs((float)wpc[i])), 0, 0));
+				cell.setBackgroundColor(new Color(Math.min(1, Math.abs((float)wpc[i] / (float)max)), 0, 0));
 			}
 			table.addCell(cell);
 		}
@@ -98,8 +104,11 @@ public class WPCSequenceVisualizer {
 			PdfWriter.getInstance(document, new FileOutputStream(fileOut));
 			document.open();
 			
-			PdfPTable table = new PdfPTable(4);
+			PdfPTable table = new PdfPTable(5);
 			LineNumberReader reader = new LineNumberReader(new FileReader(fileIn));
+
+			reader.readLine();
+			ind.readIndividual(null, reader);
 			
 			for (int gen = 0; gen < limit; gen++) {
 				reader.readLine();
@@ -126,6 +135,6 @@ public class WPCSequenceVisualizer {
 	
 	public static void main(String[] args) {
 		WPCSequenceVisualizer vis = new WPCSequenceVisualizer();
-		vis.visualize2("ctdl-mc-go-2/ind_3v2_90.stat", "out2.pdf", 51, 1);
+		vis.visualize2("ctdl-mc-go-2/ind_787.stat", "out.pdf", 50, 1);
 	}
 }

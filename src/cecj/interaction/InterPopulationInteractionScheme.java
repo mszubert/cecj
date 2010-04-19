@@ -3,7 +3,7 @@ package cecj.interaction;
 import java.util.ArrayList;
 import java.util.List;
 
-import cecj.problems.SymmetricCompetitionProblem;
+import cecj.problems.TestBasedProblem;
 
 import ec.EvolutionState;
 import ec.Individual;
@@ -19,13 +19,13 @@ public class InterPopulationInteractionScheme implements InteractionScheme {
 	 */
 	private int numSubpopulations;
 
-	private SymmetricCompetitionProblem problem;
+	private TestBasedProblem problem;
 
 	public void setup(EvolutionState state, Parameter base) {
-		if (!(state.evaluator.p_problem instanceof SymmetricCompetitionProblem)) {
+		if (!(state.evaluator.p_problem instanceof TestBasedProblem)) {
 			state.output.fatal("Intrapopulation interactions need symmetric problem definition\n");
 		} else {
-			problem = (SymmetricCompetitionProblem) state.evaluator.p_problem;
+			problem = (TestBasedProblem) state.evaluator.p_problem;
 		}
 
 		Parameter popSizeParameter = new Parameter(P_POP).push(P_SIZE);
@@ -50,7 +50,7 @@ public class InterPopulationInteractionScheme implements InteractionScheme {
 
 				List<Individual> curOpponents = opponents.get(subpop2);
 				for (Individual opponent : curOpponents) {
-					results.add(problem.compete(state, competitor, opponent).first);
+					results.add(problem.test(state, competitor, opponent).first);
 				}
 			}
 

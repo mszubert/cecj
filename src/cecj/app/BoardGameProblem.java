@@ -15,10 +15,10 @@ import cecj.interaction.BinaryResult;
 import cecj.interaction.InteractionResult;
 import cecj.interaction.WinDrawLossResult;
 import cecj.interaction.WinDrawLossResult.Result;
-import cecj.problems.SymmetricTestBasedProblem;
+import cecj.problems.TestBasedProblem;
 import cecj.utils.Pair;
 
-public class BoardGameProblem extends SymmetricTestBasedProblem {
+public class BoardGameProblem extends TestBasedProblem {
 
 	private static final String P_GAME = "game";
 	private static final String P_RANDOMNESS = "randomness";

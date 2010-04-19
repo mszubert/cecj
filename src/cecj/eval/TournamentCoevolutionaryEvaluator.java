@@ -1,12 +1,12 @@
 /*
   Copyright 2009 by Marcin Szubert
   Licensed under the Academic Free License version 3.0
-*/
+ */
 
 package cecj.eval;
 
 import cecj.interaction.InteractionResult;
-import cecj.problems.SymmetricCompetitionProblem;
+import cecj.problems.TestBasedProblem;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.simple.SimpleFitness;
@@ -40,7 +40,6 @@ public class TournamentCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 	 */
 	private int tournamentRepeats;
 
-	private SymmetricCompetitionProblem problem;
 
 	/**
 	 * Represents competing individuals.
@@ -77,12 +76,8 @@ public class TournamentCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
 
-		if (!(p_problem instanceof SymmetricCompetitionProblem)) {
-			state.output.fatal("Tournament evaluator can be used only with symmetric problems");
-		} else {
-			problem = (SymmetricCompetitionProblem) p_problem;
-		}
-
+		problem = (TestBasedProblem) p_problem;
+		
 		Parameter repeatsParameter = base.push(P_REPEATS);
 		tournamentRepeats = state.parameters.getIntWithDefault(repeatsParameter, null, 1);
 		if (tournamentRepeats <= 0) {
@@ -206,8 +201,8 @@ public class TournamentCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 			// TODO: consider if it is needed to call compete method twice
 			// maybe it should use internal individual's fitness or return both
 			// results at once?
-			InteractionResult score1 = problem.compete(state, c1, c2).first;
-			InteractionResult score2 = problem.compete(state, c2, c1).first;
+			InteractionResult score1 = problem.test(state, c1, c2).first;
+			InteractionResult score2 = problem.test(state, c2, c1).first;
 
 			if (score1.betterThan(score2)) {
 				points[competition[i]]++;

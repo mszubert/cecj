@@ -2,6 +2,7 @@ package games.league;
 
 import java.awt.Color;
 import java.io.FileOutputStream;
+import java.util.Locale;
 import java.util.Scanner;
 
 import com.lowagie.text.Document;
@@ -22,23 +23,23 @@ public class WPCVisualizerPDF {
 			PdfWriter.getInstance(document, new FileOutputStream("WPC.pdf"));
 			document.open();
 
-			PdfPTable table = new PdfPTable(5);
-			Scanner sc = new Scanner(System.in);
+			PdfPTable table = new PdfPTable(8);
+			Scanner sc = new Scanner(System.in).useLocale(Locale.ENGLISH);
 			double sum = 0;
-			for (int i = 0; i < 25; i++) {
+			for (int i = 0; i < 64; i++) {
 				float w = (float)sc.nextDouble();
 				sum += w;
 				System.out.println(w);
 				PdfPCell cell = new PdfPCell(new Paragraph(" "));
-				cell.setPadding(36.0f);
+				cell.setPadding(20.0f);
 				cell.setBorder(Rectangle.BOX);
 				cell.setBorderColor(new GrayColor(0.5f));
 				//cell.setBackgroundColor(new GrayColor(0.5f - w));
 				if (w >= 0) {
 					cell.setBackgroundColor(new GrayColor(w));					
-					cell.setBackgroundColor(new Color(0, Math.min(1, w * 3.0f), 0));					
+					cell.setBackgroundColor(new Color(0, Math.min(1, w), 0));					
 				} else {
-					cell.setBackgroundColor(new Color(Math.min(1, Math.abs(w * 3.0f)), 0, 0));
+					cell.setBackgroundColor(new Color(Math.min(1, Math.abs(w)), 0, 0));
 				}
 
 				table.addCell(cell);

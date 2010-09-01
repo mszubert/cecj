@@ -6,10 +6,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import cecj.interaction.InteractionResult;
-import cecj.problems.TestBasedProblem;
+import cecj.problem.TestBasedProblem;
 import cecj.statistics.ObjectiveFitnessCalculator;
-import cecj.utils.Pair;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
@@ -28,30 +26,31 @@ public abstract class MultiDimensionalNumbersGame extends TestBasedProblem imple
 	@Override
 	public void setup(EvolutionState state, Parameter base) {
 		super.setup(state, base);
-		
+
 		Parameter numDimensionsParam = base.push(P_DIMENSIONS);
 		numDimensions = state.parameters.getInt(numDimensionsParam, null, 1);
 		if (numDimensions <= 0) {
-			state.output
-				.fatal("Multi Dimensional Numbers Game dimensions must be specified and >= 0\n", numDimensionsParam);
+			state.output.fatal(
+					"Multi Dimensional Numbers Game dimensions must be specified and >= 0\n",
+					numDimensionsParam);
 		}
 
 		Parameter dimensionSizeParam = base.push(P_DIM_SIZE);
 		dimensionSize = state.parameters.getInt(dimensionSizeParam, null, 1);
 		if (dimensionSize <= 0) {
-			state.output
-				.fatal("Multi Dimensional Numbers Game dimension size must be specified and >= 0\n", dimensionSizeParam);
+			state.output.fatal(
+					"Multi Dimensional Numbers Game dimension size must be specified and >= 0\n",
+					dimensionSizeParam);
 		}
 
 		expectedGenomeLength = numDimensions * dimensionSize;
 	}
 
 	@Override
-	public Pair<? extends InteractionResult> test(EvolutionState state, Individual candidate,
-			Individual test) {
+	public int test(EvolutionState state, Individual candidate, Individual test) {
 		if (!(candidate instanceof BitVectorIndividual) || !(test instanceof BitVectorIndividual)) {
 			state.output
-				.error("NumbersGame player's individual should be represented by bit vector\n");
+					.error("NumbersGame player's individual should be represented by bit vector\n");
 		}
 
 		BitVectorIndividual bitCandidate = (BitVectorIndividual) candidate;
@@ -63,7 +62,7 @@ public abstract class MultiDimensionalNumbersGame extends TestBasedProblem imple
 
 		if (bitCandidate.genomeLength() != expectedGenomeLength) {
 			state.output
-				.error("NumbersGame player's bit vector length must be equal to product of dimensions number and dimension size\n");
+					.error("NumbersGame player's bit vector length must be equal to product of dimensions number and dimension size\n");
 		}
 
 		List<BigInteger> candidateVector = getIntegerVector(bitCandidate.genome);
@@ -82,7 +81,7 @@ public abstract class MultiDimensionalNumbersGame extends TestBasedProblem imple
 		BitVectorIndividual bitIndividual = (BitVectorIndividual) ind;
 
 		BigDecimal dimensionMaxValue = new BigDecimal(2).pow(dimensionSize)
-			.subtract(BigDecimal.ONE);
+				.subtract(BigDecimal.ONE);
 		BigDecimal sumMaxValue = dimensionMaxValue.multiply(new BigDecimal(numDimensions));
 
 		List<BigInteger> dimensionVector = getIntegerVector(bitIndividual.genome);
@@ -112,6 +111,6 @@ public abstract class MultiDimensionalNumbersGame extends TestBasedProblem imple
 		return result;
 	}
 
-	protected abstract Pair<? extends InteractionResult> compareDimensionsVectors(
-			List<BigInteger> candidateVector, List<BigInteger> testVector);
+	protected abstract int compareDimensionsVectors(List<BigInteger> candidateVector,
+			List<BigInteger> testVector);
 }

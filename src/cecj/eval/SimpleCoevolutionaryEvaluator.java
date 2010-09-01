@@ -9,11 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cecj.fitness.FitnessAggregateMethod;
-import cecj.interaction.InteractionResult;
 import cecj.interaction.InteractionScheme;
 import cecj.sampling.SamplingMethod;
 import cecj.statistics.CoevolutionaryStatistics;
-
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
@@ -78,17 +76,14 @@ public class SimpleCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 	protected CoevolutionaryStatistics statistics;
 
 	/**
-	 * Indicates how important are population opponents with respect to potential archival
-	 * opponents.
+	 * Indicates how important are population opponents with respect to archival opponents.
 	 */
 	private int popIndsWeight;
 
-	
 	protected int evaluationsLimit;
 
 	protected int evaluationsPerformed;
-	
-	
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -152,10 +147,10 @@ public class SimpleCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 		}
 
 		evaluationsPerformed += interactionScheme.getEvaluationsNumber(state, opponents, true);
-		
+
 		for (int subpop = 0; subpop < numSubpopulations; subpop++) {
-			List<List<InteractionResult>> subpopulationResults = interactionScheme
-					.performInteractions(state, subpop, opponents);
+			int[][] subpopulationResults = interactionScheme.performInteractions(state, subpop,
+					opponents);
 
 			fitnessAggregateMethod[subpop].prepareToAggregate(state, subpop);
 			fitnessAggregateMethod[subpop].addToAggregate(state, subpop, subpopulationResults,
@@ -170,9 +165,9 @@ public class SimpleCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 
 	@Override
 	public boolean runComplete(EvolutionState state) {
-		return (evaluationsPerformed >= evaluationsLimit); 
+		return (evaluationsPerformed >= evaluationsLimit);
 	}
-	
+
 	/**
 	 * Samples subpopulation to choose a reference set of individuals. Other individuals can be
 	 * evaluated on the basis of interactions with this reference set. It may happen that

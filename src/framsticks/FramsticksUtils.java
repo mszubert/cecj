@@ -7,10 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 
-import cecj.interaction.InteractionResult;
-import cecj.interaction.RealValuedResult;
-import cecj.utils.Pair;
-
 import ec.EvolutionState;
 import ec.util.Parameter;
 
@@ -133,13 +129,12 @@ public class FramsticksUtils {
 		return Float.parseFloat(evaluation.split("\t")[1]);
 	}
 
-	public Pair<? extends InteractionResult> coevolutionaryEvaluate(String candidate, String test,
+	public int coevolutionaryEvaluate(String candidate, String test,
 			String fileName) {
-		float candidateResult = evaluateGenotype(candidate, fileName);
-		float testResult = evaluateGenotype(test, fileName);
+		int candidateResult = (int)evaluateGenotype(candidate, fileName);
+		int testResult = (int)evaluateGenotype(test, fileName);
 
-		return new Pair<RealValuedResult>(new RealValuedResult(candidateResult),
-				new RealValuedResult(testResult));
+		return candidateResult - testResult;
 	}
 
 	public String mutateGenotype(String genotype) {

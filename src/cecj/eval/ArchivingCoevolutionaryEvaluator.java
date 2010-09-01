@@ -10,9 +10,7 @@ import java.util.List;
 
 import cecj.archive.ArchivingSubpopulation;
 import cecj.archive.CoevolutionaryArchive;
-import cecj.interaction.InteractionResult;
 import cecj.sampling.SamplingMethod;
-
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
@@ -49,7 +47,7 @@ public class ArchivingCoevolutionaryEvaluator extends SimpleCoevolutionaryEvalua
 	private SamplingMethod[] archiveSamplingMethod;
 
 	private int archiveIndsWeight;
-	
+
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
@@ -62,7 +60,6 @@ public class ArchivingCoevolutionaryEvaluator extends SimpleCoevolutionaryEvalua
 		Parameter archiveIndsWeightParam = base.push(P_ARCHIVE_INDS_WEIGHT);
 		archiveIndsWeight = state.parameters.getIntWithDefault(archiveIndsWeightParam, null, 1);
 
-				
 		archiveOpponents = new ArrayList<List<Individual>>(numSubpopulations);
 		archiveSamplingMethod = new SamplingMethod[numSubpopulations];
 
@@ -91,12 +88,13 @@ public class ArchivingCoevolutionaryEvaluator extends SimpleCoevolutionaryEvalua
 		for (int subpop = 0; subpop < numSubpopulations; subpop++) {
 			archiveOpponents.set(subpop, findOpponentsFromArchive(state, subpop));
 		}
-			
-		evaluationsPerformed += interactionScheme.getEvaluationsNumber(state, archiveOpponents, false);
-			
+
+		evaluationsPerformed += interactionScheme.getEvaluationsNumber(state, archiveOpponents,
+				false);
+
 		for (int subpop = 0; subpop < numSubpopulations; subpop++) {
-			List<List<InteractionResult>> subpopulationResults = interactionScheme
-					.performInteractions(state, subpop, archiveOpponents);
+			int[][] subpopulationResults = interactionScheme.performInteractions(state, subpop,
+					archiveOpponents);
 
 			fitnessAggregateMethod[subpop].addToAggregate(state, subpop, subpopulationResults,
 					archiveIndsWeight);
@@ -109,7 +107,7 @@ public class ArchivingCoevolutionaryEvaluator extends SimpleCoevolutionaryEvalua
 
 		archive.submit(state);
 	}
-	
+
 	private List<Individual> findOpponentsFromArchive(EvolutionState state, int subpop) {
 		List<Individual> archivalInds = ((ArchivingSubpopulation) state.population.subpops[subpop])
 				.getArchivalIndividuals();

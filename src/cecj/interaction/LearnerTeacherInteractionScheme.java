@@ -3,7 +3,7 @@ package cecj.interaction;
 import java.util.ArrayList;
 import java.util.List;
 
-import cecj.problems.TestBasedProblem;
+import cecj.problem.TestBasedProblem;
 
 import ec.EvolutionState;
 import ec.Individual;
@@ -66,27 +66,33 @@ public class LearnerTeacherInteractionScheme implements InteractionScheme {
 		}
 	}
 
-	public List<List<InteractionResult>> performInteractions(EvolutionState state, int subpop,
+	public int[][] performInteractions(EvolutionState state, int subpop,
 			List<List<Individual>> opponents) {
-
-		List<List<InteractionResult>> subpopulationResults = new ArrayList<List<InteractionResult>>();
 		Individual[] inds = state.population.subpops[subpop].individuals;
 
-		for (Individual ind : inds) {
-			List<InteractionResult> results = new ArrayList<InteractionResult>();
+		int numOpponents = 0;
+		for (int subpop2 = 0; subpop2 < numSubpopulations; subpop2++) {
+			if (subpopulationRoles[subpop2] != subpopulationRoles[subpop]) {
+				numOpponents += opponents.get(subpop2).size();
+			}
+		}
+
+		int[][] subpopulationResults = new int[inds.length][numOpponents];
+		for (int ind = 0; ind < inds.length; ind++) {
 			for (int subpop2 = 0; subpop2 < numSubpopulations; subpop2++) {
 				if (subpopulationRoles[subpop2] != subpopulationRoles[subpop]) {
 					List<Individual> curOpponents = opponents.get(subpop2);
-					for (Individual opponent : curOpponents) {
+					for (int opp = 0; opp < curOpponents.size(); opp++) {
 						if (subpopulationRoles[subpop] == Role.LEARNER) {
-							results.add(problem.test(state, ind, opponent).first);
+							subpopulationResults[ind][opp] = problem.test(state, inds[ind],
+									curOpponents.get(opp));
 						} else {
-							results.add(problem.test(state, opponent, ind).second);
+							subpopulationResults[ind][opp] = -problem.test(state, curOpponents
+									.get(opp), inds[ind]);
 						}
 					}
 				}
 			}
-			subpopulationResults.add(results);
 		}
 
 		return subpopulationResults;

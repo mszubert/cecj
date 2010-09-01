@@ -6,9 +6,6 @@
 package cecj.fitness;
 
 import java.util.Arrays;
-import java.util.List;
-
-import cecj.interaction.InteractionResult;
 
 import ec.EvolutionState;
 import ec.Individual;
@@ -24,19 +21,19 @@ public class SimpleSumFitness implements FitnessAggregateMethod {
 		Arrays.fill(fitnesses, 0.0f);
 	}
 
-	public void addToAggregate(EvolutionState state, int subpop,
-			List<List<InteractionResult>> subpopulationResults, int weight) {
+	public void addToAggregate(EvolutionState state, int subpop, int[][] subpopulationResults,
+			int weight) {
 
 		Individual[] inds = state.population.subpops[subpop].individuals;
-		if (subpopulationResults.size() != inds.length) {
+		if (subpopulationResults.length != inds.length) {
 			throw new IllegalArgumentException(
 					"Results list's size must be equal to subpopulation size.");
 		}
 
 		for (int ind = 0; ind < inds.length; ind++) {
 			float fitness = 0;
-			for (InteractionResult result : subpopulationResults.get(ind)) {
-				fitness += result.getNumericValue();
+			for (int result : subpopulationResults[ind]) {
+				fitness += result;
 			}
 			fitnesses[ind] += fitness * weight;
 		}

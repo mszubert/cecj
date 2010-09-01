@@ -1,10 +1,8 @@
 package cecj.interaction;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import cecj.problems.TestBasedProblem;
-
+import cecj.problem.TestBasedProblem;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
@@ -18,7 +16,7 @@ import ec.util.Parameter;
 public class IntraPopulationInteractionScheme implements InteractionScheme {
 
 	private static final String P_PLAY_BOTH = "play-both";
-	
+
 	private boolean playBoth;
 	private TestBasedProblem problem;
 
@@ -28,30 +26,34 @@ public class IntraPopulationInteractionScheme implements InteractionScheme {
 		} else {
 			problem = (TestBasedProblem) state.evaluator.p_problem;
 		}
-		
+
 		Parameter playBothParam = base.push(P_PLAY_BOTH);
 		playBoth = state.parameters.getBoolean(playBothParam, null, true);
 	}
 
-	public List<List<InteractionResult>> performInteractions(EvolutionState state, int subpop,
+	public int[][] performInteractions(EvolutionState state, int subpop,
 			List<List<Individual>> opponents) {
 
-		List<List<InteractionResult>> subpopulationResults = new ArrayList<List<InteractionResult>>();
 		Individual[] competitors = state.population.subpops[subpop].individuals;
 		List<Individual> curOpponents = opponents.get(subpop);
+		int[][] results = new int[competitors.length][playBoth ? curOpponents.size() * 2
+				: curOpponents.size()];
 
-		for (Individual competitor : competitors) {
-			List<InteractionResult> results = new ArrayList<InteractionResult>();
+		for (int competitorIndex = 0; competitorIndex < competitors.length; competitorIndex++) {
+			Individual competitor = competitors[competitorIndex];
+
+			int opponentIndex = 0;
 			for (Individual opponent : curOpponents) {
-				results.add(problem.test(state, competitor, opponent).first);
+				results[competitorIndex][opponentIndex++] = problem.test(state, competitor,
+						opponent);
 				if (playBoth) {
-					results.add(problem.test(state, opponent, competitor).second);
+					results[competitorIndex][opponentIndex++] = -problem.test(state, opponent,
+							competitor);
 				}
 			}
-			subpopulationResults.add(results);
 		}
 
-		return subpopulationResults;
+		return results;
 	}
 
 	public int getEvaluationsNumber(EvolutionState state, List<List<Individual>> opponents,

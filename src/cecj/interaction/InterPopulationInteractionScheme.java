@@ -1,10 +1,8 @@
 package cecj.interaction;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import cecj.problems.TestBasedProblem;
-
+import cecj.problem.TestBasedProblem;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
@@ -35,26 +33,32 @@ public class InterPopulationInteractionScheme implements InteractionScheme {
 		}
 	}
 
-	public List<List<InteractionResult>> performInteractions(EvolutionState state, int subpop,
+	public int[][] performInteractions(EvolutionState state, int subpop,
 			List<List<Individual>> opponents) {
-		List<List<InteractionResult>> subpopulationResults = new ArrayList<List<InteractionResult>>();
 		Individual[] competitors = state.population.subpops[subpop].individuals;
 
-		for (Individual competitor : competitors) {
-			List<InteractionResult> results = new ArrayList<InteractionResult>();
+		int numOpponents = 0;
+		for (int subpop2 = 0; subpop2 < numSubpopulations; subpop2++) {
+			if (subpop2 != subpop) {
+				numOpponents += opponents.get(subpop2).size();
+			}
+		}
 
+		int[][] subpopulationResults = new int[competitors.length][numOpponents];
+		for (int competitorIndex = 0; competitorIndex < competitors.length; competitorIndex++) {
+			Individual competitor = competitors[competitorIndex];
+
+			int opponentIndex = 0;
 			for (int subpop2 = 0; subpop2 < numSubpopulations; subpop2++) {
-				if (subpop2 == subpop) {
-					continue;
-				}
-
-				List<Individual> curOpponents = opponents.get(subpop2);
-				for (Individual opponent : curOpponents) {
-					results.add(problem.test(state, competitor, opponent).first);
+				if (subpop2 != subpop) {
+					List<Individual> curOpponents = opponents.get(subpop2);
+					for (Individual opponent : curOpponents) {
+						subpopulationResults[competitorIndex][opponentIndex] = problem.test(state,
+								competitor, opponent);
+						opponentIndex++;
+					}
 				}
 			}
-
-			subpopulationResults.add(results);
 		}
 
 		return subpopulationResults;

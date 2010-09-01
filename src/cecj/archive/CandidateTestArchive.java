@@ -10,7 +10,7 @@ import java.util.List;
 import cecj.eval.ArchivingCoevolutionaryEvaluator;
 import cecj.interaction.LearnerTeacherInteractionScheme;
 import cecj.interaction.LearnerTeacherInteractionScheme.Role;
-import cecj.problems.TestBasedProblem;
+import cecj.problem.TestBasedProblem;
 
 import ec.EvolutionState;
 import ec.Individual;

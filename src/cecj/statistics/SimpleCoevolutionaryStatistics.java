@@ -1,27 +1,22 @@
 package cecj.statistics;
 
-import java.util.List;
-
-import cecj.interaction.InteractionResult;
-
 import ec.EvolutionState;
 import ec.vector.DoubleVectorIndividual;
 
 public class SimpleCoevolutionaryStatistics extends CoevolutionaryStatistics {
 
 	@Override
-	public void printInteractionResults(EvolutionState state,
-			List<List<InteractionResult>> results, int subpop) {
+	public void printInteractionResults(EvolutionState state, int[][] results, int subpop) {
 
 		System.out.println("Subpopulation " + subpop + " interactions result:");
 
-		for (int i = 0; i < results.size(); i++) {
+		for (int i = 0; i < results.length; i++) {
 			System.out.print("Individual " + i + " : ");
-			for (int j = 0; j < results.get(i).size(); j++) {
-				System.out.print(results.get(i).get(j) + " ");
+			for (int j = 0; j < results[i].length; j++) {
+				System.out.print(results[i][j] + " ");
 			}
 			System.out.println(state.population.subpops[subpop].individuals[i].fitness
-				.fitnessToStringForHumans());
+					.fitnessToStringForHumans());
 		}
 
 		System.out.println("");

@@ -17,7 +17,7 @@ public abstract class GameScenario {
 		this.random = random;
 	}
 
-	public abstract double play(BoardGame game);
+	public abstract int play(BoardGame game);
 
 	protected GameMove chooseBestMove(BoardGame game, Player player, List<? extends GameMove> moves) {
 		double bestEval = Float.NEGATIVE_INFINITY;

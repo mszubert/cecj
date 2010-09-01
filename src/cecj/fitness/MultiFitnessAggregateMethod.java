@@ -1,8 +1,5 @@
 package cecj.fitness;
 
-import java.util.List;
-
-import cecj.interaction.InteractionResult;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.simple.SimpleFitness;
@@ -26,16 +23,16 @@ public class MultiFitnessAggregateMethod implements FitnessAggregateMethod {
 			state.output.fatal("The number of multi-fitness aggregate methods must be >= 1).",
 					numMethodsParam, null);
 		}
-		
+
 		methods = new FitnessAggregateMethod[numMethods];
 		methodsWeights = new float[numMethods];
-		
+
 		for (int i = 0; i < numMethods; i++) {
 			Parameter methodParam = base.push(P_METHOD).push("" + i);
 			methods[i] = (FitnessAggregateMethod) state.parameters.getInstanceForParameter(
 					methodParam, null, FitnessAggregateMethod.class);
 			methods[i].setup(state, methodParam);
-			
+
 			Parameter methodWeightParam = methodParam.push(P_WEIGHT);
 			methodsWeights[i] = state.parameters.getFloatWithDefault(methodWeightParam, null, 1.0f);
 		}
@@ -46,9 +43,9 @@ public class MultiFitnessAggregateMethod implements FitnessAggregateMethod {
 			methods[i].prepareToAggregate(state, subpop);
 		}
 	}
-	
-	public void addToAggregate(EvolutionState state, int subpop,
-			List<List<InteractionResult>> subpopulationResults, int weight) {
+
+	public void addToAggregate(EvolutionState state, int subpop, int[][] subpopulationResults,
+			int weight) {
 		for (int i = 0; i < numMethods; i++) {
 			methods[i].addToAggregate(state, subpop, subpopulationResults, weight);
 		}
@@ -57,15 +54,15 @@ public class MultiFitnessAggregateMethod implements FitnessAggregateMethod {
 	public void assignFitness(EvolutionState state, int subpop) {
 		Individual[] inds = state.population.subpops[subpop].individuals;
 		float[] fitnesses = new float[inds.length];
-		
+
 		for (int i = 0; i < numMethods; i++) {
 			methods[i].assignFitness(state, subpop);
-			
+
 			for (int ind = 0; ind < inds.length; ind++) {
 				fitnesses[ind] += methodsWeights[i] * ((SimpleFitness) inds[ind].fitness).fitness();
 			}
 		}
-		
+
 		for (int ind = 0; ind < inds.length; ind++) {
 			((SimpleFitness) inds[ind].fitness).setFitness(state, fitnesses[ind], false);
 		}

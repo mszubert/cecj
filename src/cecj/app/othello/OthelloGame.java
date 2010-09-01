@@ -102,7 +102,7 @@ public class OthelloGame implements BoardGame {
 		return currentPlayer;
 	}
 	
-	public double getOutcome() {
+	public int getOutcome() {
 		return (board.countPieces(0) - board.countPieces(1));
 	}
 

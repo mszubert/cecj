@@ -107,12 +107,12 @@ public class GoGame implements BoardGame {
 		return currentPlayer;
 	}
 
-	public double getOutcome() {
+	public int getOutcome() {
 		if (moveCounter > MOVE_LIMIT) {
 			return 0;
 		}
 
-		double result = board.countPieces(GoBoard.BLACK) - board.countPieces(GoBoard.WHITE);
+		int result = board.countPieces(GoBoard.BLACK) - board.countPieces(GoBoard.WHITE);
 		result += board.countTerritory(GoBoard.BLACK) - board.countTerritory(GoBoard.WHITE);
 
 		return result;

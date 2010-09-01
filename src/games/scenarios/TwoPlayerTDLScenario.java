@@ -32,7 +32,7 @@ public class TwoPlayerTDLScenario extends GameScenario {
 	}
 
 	@Override
-	public double play(BoardGame game) {
+	public int play(BoardGame game) {
 		while (!game.endOfGame()) {
 			List<? extends GameMove> moves = game.findMoves();
 			if (!moves.isEmpty()) {

@@ -11,12 +11,7 @@ import games.WPCPlayer;
 import games.scenarios.GameScenario;
 import games.scenarios.RandomizedTwoPlayersGameScenario;
 import games.scenarios.TwoPlayerTDLScenario;
-import cecj.interaction.BinaryResult;
-import cecj.interaction.InteractionResult;
-import cecj.interaction.WinDrawLossResult;
-import cecj.interaction.WinDrawLossResult.Result;
-import cecj.problems.TestBasedProblem;
-import cecj.utils.Pair;
+import cecj.problem.TestBasedProblem;
 
 public class BoardGameProblem extends TestBasedProblem {
 
@@ -63,7 +58,7 @@ public class BoardGameProblem extends TestBasedProblem {
 	}
 
 	@Override
-	public Pair<? extends InteractionResult> test(EvolutionState state, Individual candidate,
+	public int test(EvolutionState state, Individual candidate,
 			Individual test) {
 		if (!(candidate instanceof DoubleVectorIndividual)
 				|| !(test instanceof DoubleVectorIndividual)) {
@@ -89,26 +84,10 @@ public class BoardGameProblem extends TestBasedProblem {
 					0, 0 });
 		}
 
-		double result = scenario.play(game);
 		if (binaryOutcome) {
-			if (result >= 0) {
-				return new Pair<BinaryResult>(new BinaryResult(true),
-						new BinaryResult(false));
-			} else {
-				return new Pair<BinaryResult>(new BinaryResult(false),
-						new BinaryResult(true));
-			}
+			return (scenario.play(game) > 0) ? 1 : 0;
 		} else {
-			if (result > 0) {
-				return new Pair<WinDrawLossResult>(new WinDrawLossResult(Result.WIN),
-						new WinDrawLossResult(Result.LOSS));
-			} else if (result < 0) {
-				return new Pair<WinDrawLossResult>(new WinDrawLossResult(Result.LOSS),
-						new WinDrawLossResult(Result.WIN));
-			} else {
-				return new Pair<WinDrawLossResult>(new WinDrawLossResult(Result.DRAW),
-						new WinDrawLossResult(Result.DRAW));
-			}
+			return scenario.play(game);
 		}
 	}
 }

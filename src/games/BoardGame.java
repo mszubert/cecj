@@ -18,7 +18,7 @@ public interface BoardGame {
 
 	public int getCurrentPlayer();
 
-	public double getOutcome();
+	public int getOutcome();
 
 	public void makeMove(GameMove move);
 

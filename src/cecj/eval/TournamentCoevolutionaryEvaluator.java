@@ -5,8 +5,7 @@
 
 package cecj.eval;
 
-import cecj.interaction.InteractionResult;
-import cecj.problems.TestBasedProblem;
+import cecj.problem.TestBasedProblem;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.simple.SimpleFitness;
@@ -39,7 +38,6 @@ public class TournamentCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 	 * More repeats can reduce the noise of this evaluation scheme.
 	 */
 	private int tournamentRepeats;
-
 
 	/**
 	 * Represents competing individuals.
@@ -77,7 +75,7 @@ public class TournamentCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 		super.setup(state, base);
 
 		problem = (TestBasedProblem) p_problem;
-		
+
 		Parameter repeatsParameter = base.push(P_REPEATS);
 		tournamentRepeats = state.parameters.getIntWithDefault(repeatsParameter, null, 1);
 		if (tournamentRepeats <= 0) {
@@ -198,13 +196,10 @@ public class TournamentCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 			Individual c1 = competitors[competition[i]];
 			Individual c2 = competitors[competition[i + 1]];
 
-			// TODO: consider if it is needed to call compete method twice
-			// maybe it should use internal individual's fitness or return both
-			// results at once?
-			InteractionResult score1 = problem.test(state, c1, c2).first;
-			InteractionResult score2 = problem.test(state, c2, c1).first;
+			int score1 = problem.test(state, c1, c2);
+			int score2 = problem.test(state, c2, c1);
 
-			if (score1.betterThan(score2)) {
+			if (score1 > score2) {
 				points[competition[i]]++;
 				active[competition[i + 1]] = false;
 			} else {
@@ -213,9 +208,6 @@ public class TournamentCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 			}
 		}
 
-		// TODO: in case of odd number of competitors, should the one given a
-		// "bye" achieve a point
-		// in this round?
 		if (numLeftCompetitors % 2 != 0) {
 			points[competition[numLeftCompetitors - 1]]++;
 		}

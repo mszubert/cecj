@@ -33,7 +33,7 @@ public class SelfPlayTDLScenario extends GameScenario {
 	}
 
 	@Override
-	public double play(BoardGame game) {
+	public int play(BoardGame game) {
 		int boardSize = game.getBoard().getSize();
 		traces = new double[boardSize + 1][boardSize + 1];
 		

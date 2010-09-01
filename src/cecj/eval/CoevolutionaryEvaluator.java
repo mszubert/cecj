@@ -5,7 +5,7 @@
 
 package cecj.eval;
 
-import cecj.problems.TestBasedProblem;
+import cecj.problem.TestBasedProblem;
 import ec.Evaluator;
 import ec.EvolutionState;
 import ec.util.Parameter;
@@ -48,6 +48,9 @@ public abstract class CoevolutionaryEvaluator extends Evaluator {
 		}
 	}
 
+	@Override
+	public abstract void evaluatePopulation(EvolutionState state);
+	
 	@Override
 	public boolean runComplete(EvolutionState state) {
 		return false;

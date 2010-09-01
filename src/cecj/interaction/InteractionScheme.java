@@ -18,7 +18,7 @@ import ec.Setup;
  */
 public interface InteractionScheme extends Setup {
 
-	public List<List<InteractionResult>> performInteractions(EvolutionState state, int subpop,
+	public int[][] performInteractions(EvolutionState state, int subpop,
 			List<List<Individual>> opponents);
 
 	public int getEvaluationsNumber(EvolutionState state, List<List<Individual>> opponents,

@@ -1,4 +1,4 @@
-package cecj.problems;
+package cecj.problem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,20 +7,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cecj.interaction.InteractionResult;
 import cecj.utils.Pair;
-
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
 
 public class TestBasedProblemCachingDecorator extends TestBasedProblem {
+
 	public static final String P_CACHE_SIZE = "cache-size";
 	public static final String P_INNER_PROBLEM = "inner-problem";
 
 	public static final int UNBOUNDED_CACHE = Integer.MAX_VALUE;
 
-	private Map<Pair<Individual>, Pair<? extends InteractionResult>> cache;
+	private Map<Pair<Individual>, Integer> cache;
 	private Map<Pair<Individual>, Integer> LRUtimer;
 
 	private TestBasedProblem problem;
@@ -38,20 +37,18 @@ public class TestBasedProblemCachingDecorator extends TestBasedProblem {
 		Parameter cacheSizeParam = base.push(P_CACHE_SIZE);
 		cacheSizeLimit = state.parameters.getIntWithDefault(cacheSizeParam, null, UNBOUNDED_CACHE);
 
-		cache = new HashMap<Pair<Individual>, Pair<? extends InteractionResult>>();
+		cache = new HashMap<Pair<Individual>, Integer>();
 		LRUtimer = new HashMap<Pair<Individual>, Integer>();
 	}
 
-	public TestBasedProblem getProblem() {
+	public TestBasedProblem getInnerProblem() {
 		return problem;
 	}
 
 	@Override
-	public Pair<? extends InteractionResult> test(EvolutionState state, Individual candidate,
-			Individual test) {
-
+	public int test(EvolutionState state, Individual candidate, Individual test) {
 		Pair<Individual> key = new Pair<Individual>(candidate, test);
-		Pair<? extends InteractionResult> result = cache.get(key);
+		Integer result = cache.get(key);
 		if (result == null) {
 			result = problem.test(state, candidate, test);
 			cache.put(key, result);

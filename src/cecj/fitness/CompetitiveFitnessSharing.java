@@ -6,9 +6,6 @@
 package cecj.fitness;
 
 import java.util.Arrays;
-import java.util.List;
-
-import cecj.interaction.InteractionResult;
 
 import ec.EvolutionState;
 import ec.Individual;
@@ -24,20 +21,19 @@ public class CompetitiveFitnessSharing implements FitnessAggregateMethod {
 		Arrays.fill(fitnesses, 0.0f);
 	}
 
-	public void addToAggregate(EvolutionState state, int subpop,
-			List<List<InteractionResult>> results, int weight) {
+	public void addToAggregate(EvolutionState state, int subpop, int[][] results, int weight) {
 
 		Individual[] inds = state.population.subpops[subpop].individuals;
-		if (results.size() != inds.length) {
+		if (results.length != inds.length) {
 			throw new IllegalArgumentException(
 					"Results list's size must be equal to subpopulation size.");
 		}
 
-		int numOpponents = results.get(0).size();
+		int numOpponents = results[0].length;
 		float[] opponentSum = new float[numOpponents];
 		for (int opponent = 0; opponent < numOpponents; opponent++) {
 			for (int ind = 0; ind < inds.length; ind++) {
-				opponentSum[opponent] += results.get(ind).get(opponent).getNumericValue();
+				opponentSum[opponent] += results[ind][opponent];
 			}
 		}
 
@@ -48,8 +44,7 @@ public class CompetitiveFitnessSharing implements FitnessAggregateMethod {
 					continue;
 				}
 
-				indFitness += results.get(ind).get(opponent).getNumericValue()
-						/ opponentSum[opponent];
+				indFitness += results[ind][opponent] / opponentSum[opponent];
 			}
 
 			fitnesses[ind] += indFitness * weight;

@@ -32,7 +32,7 @@ public class GnuGoGameScenario extends GameScenario {
 	}
 
 	@Override
-	public double play(BoardGame game) {
+	public int play(BoardGame game) {
 		clearBoard();
 		while (!game.endOfGame()) {
 			// System.err.println("Current PLayer = " + game.getCurrentPlayer());

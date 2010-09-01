@@ -11,9 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cecj.interaction.InteractionResult;
 import cecj.utils.EquivalenceComparator;
-
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
@@ -142,9 +140,9 @@ public class MaxSolveArchive extends CandidateTestArchive {
 
 		public boolean equal(Individual o1, Individual o2) {
 			for (Individual test : tests) {
-				InteractionResult result1 = problem.test(state, o1, test).first;
-				InteractionResult result2 = problem.test(state, o2, test).first;
-				if (!result1.equals(result2)) {
+				int result1 = problem.test(state, o1, test);
+				int result2 = problem.test(state, o2, test);
+				if (result1 != result2) {
 					return false;
 				}
 			}
@@ -163,9 +161,9 @@ public class MaxSolveArchive extends CandidateTestArchive {
 
 		public boolean equal(Individual o1, Individual o2) {
 			for (Individual candidate : candidates) {
-				InteractionResult result1 = problem.test(state, candidate, o2).second;
-				InteractionResult result2 = problem.test(state, candidate, o2).second;
-				if (!result1.equals(result2)) {
+				int result1 = problem.test(state, candidate, o1);
+				int result2 = problem.test(state, candidate, o2);
+				if (result1 != result2) {
 					return false;
 				}
 			}

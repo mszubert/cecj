@@ -3,7 +3,6 @@ package cecj.fitness;
 import java.util.ArrayList;
 import java.util.List;
 
-import cecj.interaction.InteractionResult;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.simple.SimpleFitness;
@@ -12,26 +11,28 @@ import ec.util.Parameter;
 public class DistinctionFitnessSharing implements FitnessAggregateMethod {
 
 	int subpopSize;
-	List<List<InteractionResult>> results;
+	List<List<Integer>> results;
 
 	public void prepareToAggregate(EvolutionState state, int subpop) {
-		results = new ArrayList<List<InteractionResult>>();
+		results = new ArrayList<List<Integer>>();
 		subpopSize = state.population.subpops[subpop].individuals.length;
 
 		for (int i = 0; i < subpopSize; i++) {
-			results.add(new ArrayList<InteractionResult>());
+			results.add(new ArrayList<Integer>());
 		}
 	}
 
-	public void addToAggregate(EvolutionState state, int subpop,
-			List<List<InteractionResult>> subpopulationResults, int weight) {
+	public void addToAggregate(EvolutionState state, int subpop, int[][] subpopulationResults,
+			int weight) {
 		if (results.size() != subpopSize) {
 			throw new IllegalArgumentException(
 					"Results list's size must be equal to subpopulation size.");
 		}
 
 		for (int ind = 0; ind < subpopSize; ind++) {
-			results.get(ind).addAll(subpopulationResults.get(ind));
+			for (int result : subpopulationResults[ind]) {
+				results.get(ind).add(result);
+			}
 		}
 	}
 
@@ -47,13 +48,13 @@ public class DistinctionFitnessSharing implements FitnessAggregateMethod {
 
 				int numDistinctions = 0;
 				for (int ind = 0; ind < subpopSize; ind++) {
-					if (results.get(ind).get(op1).betterThan(results.get(ind).get(op2))) {
+					if (results.get(ind).get(op1) > results.get(ind).get(op2)) {
 						numDistinctions++;
 					}
 				}
 
 				for (int ind = 0; ind < subpopSize; ind++) {
-					if (results.get(ind).get(op1).betterThan(results.get(ind).get(op2))) {
+					if (results.get(ind).get(op1) > results.get(ind).get(op2)) {
 						fitnesses[ind] += (1.0f / numDistinctions);
 					}
 				}

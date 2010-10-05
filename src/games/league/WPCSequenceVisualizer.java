@@ -1,7 +1,5 @@
 package games.league;
 
-import java.awt.Color;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.LineNumberReader;

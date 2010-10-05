@@ -1,18 +1,15 @@
 package games.league;
 
 import ec.util.MersenneTwisterFast;
-import games.Player;
 import games.WPCPlayer;
 import games.scenarios.ALPGameScenario;
 import games.scenarios.GameScenario;
-import games.scenarios.RandomizedTwoPlayersGameScenario;
 
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Scanner;
 
 import cecj.app.go.GoGame;
-import cecj.app.othello.OthelloGame;
 
 public class HeuristicPerformanceMeter {
 

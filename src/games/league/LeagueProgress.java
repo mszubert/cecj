@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cecj.app.go.GoGame;
-import cecj.app.othello.OthelloGame;
 
 public class LeagueProgress {
 

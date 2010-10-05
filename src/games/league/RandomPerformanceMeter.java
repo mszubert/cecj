@@ -31,9 +31,9 @@ public class RandomPerformanceMeter {
 		MersenneTwisterFast rng = new MersenneTwisterFast(System.currentTimeMillis());
 
 		GameScenario scenario1 = new RandomizedTwoPlayersGameScenario(rng, new Player[] { player,
-				new WPCPlayer(OthelloBoard.size()) }, new double[] { 0, 1.0 });
+				new WPCPlayer(OthelloBoard.BOARD_SIZE) }, new double[] { 0, 1.0 });
 		GameScenario scenario2 = new RandomizedTwoPlayersGameScenario(rng, new Player[] {
-				new WPCPlayer(OthelloBoard.size()), player }, new double[] { 1.0, 0 });
+				new WPCPlayer(OthelloBoard.BOARD_SIZE), player }, new double[] { 1.0, 0 });
 		OthelloGame game = new OthelloGame();
 
 		int sum = 0;

@@ -1,85 +1,19 @@
 package cecj.app.go;
 
+import games.SimpleBoard;
+
 import java.util.Arrays;
 
-import games.Board;
-import games.Player;
+public class GoBoard extends SimpleBoard {
 
-public class GoBoard implements Board {
-
-	protected static final int BOARD_MARGIN = 2;
-	protected static final int BOARD_SIZE = 5;
-
-	public static final int EMPTY = -1;
-	public static final int BLACK = 0;
-	public static final int WHITE = 1;
-	public static final int WALL = 2;
-
+	public static final int BOARD_SIZE = 5;
+	
 	public static final int NUM_DIRECTIONS = 4;
 	public static final int ROW_DIR[] = { -1, 0, 0, 1 };
 	public static final int COL_DIR[] = { 0, 1, -1, 0 };
 
-	private int board[][];
-
 	public GoBoard() {
-		board = new int[BOARD_SIZE + BOARD_MARGIN][BOARD_SIZE + BOARD_MARGIN];
-		reset();
-	}
-
-	public int countPieces(int player) {
-		int count = 0;
-		for (int row = 1; row <= BOARD_SIZE; row++) {
-			for (int col = 1; col <= BOARD_SIZE; col++) {
-				if (getPiece(row, col) == player) {
-					count++;
-				}
-			}
-		}
-		return count;
-	}
-
-	public double evaluate(Player player) {
-		double result = 0;
-		for (int row = 1; row <= BOARD_SIZE; row++) {
-			for (int col = 1; col <= BOARD_SIZE; col++) {
-				result += getValueAt(row, col) * player.getValue(row, col);
-			}
-		}
-		return result;
-	}
-
-	public int getPiece(int row, int col) {
-		return board[row][col];
-	}
-
-	public void setPiece(int row, int col, int player) {
-		board[row][col] = player;
-	}
-
-	public int getSize() {
-		return BOARD_SIZE;
-	}
-
-	public static int size() {
-		return BOARD_SIZE;
-	}
-
-	public int getValueAt(int row, int col) {
-		return getColorValue(board[row][col]);
-	}
-
-	public int getColorValue(int color) {
-		if (color == BLACK) {
-			return 1;
-		} else if (color == WHITE) {
-			return -1;
-		} else {
-			return 0;
-		}
-	}
-
-	public boolean isEmpty(int row, int col) {
-		return (getPiece(row, col) == EMPTY);
+		super(BOARD_SIZE);
 	}
 
 	public boolean isWall(int row, int col) {
@@ -87,14 +21,6 @@ public class GoBoard implements Board {
 	}
 
 	@Override
-	public GoBoard clone() {
-		GoBoard clone = new GoBoard();
-		for (int row = 0; row < board.length; row++) {
-			System.arraycopy(board[row], 0, clone.board[row], 0, board[row].length);
-		}
-		return clone;
-	}
-
 	public void reset() {
 		Arrays.fill(board[0], WALL);
 		for (int row = 1; row <= BOARD_SIZE; row++) {
@@ -105,6 +31,15 @@ public class GoBoard implements Board {
 		Arrays.fill(board[BOARD_SIZE + 1], WALL);
 	}
 
+	@Override
+	public GoBoard clone() {
+		GoBoard clone = new GoBoard();
+		for (int row = 0; row < board.length; row++) {
+			System.arraycopy(board[row], 0, clone.board[row], 0, board[row].length);
+		}
+		return clone;
+	}
+	
 	public GoMove createMove(int row, int col, int currentPlayer) {
 		GoBoard clonedBoard = clone();
 		clonedBoard.board[row][col] = currentPlayer;
@@ -183,29 +118,6 @@ public class GoBoard implements Board {
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("    ");
-		for (int i = 1; i <= BOARD_SIZE; i++) {
-			builder.append((char) ('A' + i - 1) + " ");
-		}
-		builder.append("\n");
-
-		for (int i = 0; i < BOARD_SIZE + BOARD_MARGIN; i++) {
-			if (i > 0 && i <= BOARD_SIZE) {
-				builder.append(i + " ");
-			} else {
-				builder.append("  ");
-			}
-			for (int j = 0; j < BOARD_SIZE + BOARD_MARGIN; j++) {
-				builder.append(((board[i][j] == -1) ? "-" : board[i][j]) + " ");
-			}
-			builder.append("\n");
-		}
-		return builder.toString();
 	}
 
 	public int countTerritory(int color) {

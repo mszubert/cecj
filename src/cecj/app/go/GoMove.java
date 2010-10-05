@@ -1,5 +1,6 @@
 package cecj.app.go;
 
+import games.Board;
 import games.GameMove;
 
 public class GoMove implements GameMove {
@@ -22,7 +23,7 @@ public class GoMove implements GameMove {
 		return row;
 	}
 	
-	public GoBoard getResultingBoard() {
+	public Board getAfterState() {
 		return board;
 	}
 	

@@ -16,7 +16,7 @@ public class SelfPlayTDLScenario extends GameScenario {
 
 	private double lambda;
 	private double[][] traces;
-	
+
 	public SelfPlayTDLScenario(MersenneTwisterFast random, Player player, double prob,
 			double learningRate) {
 		this(random, player, prob, learningRate, 0);
@@ -25,7 +25,7 @@ public class SelfPlayTDLScenario extends GameScenario {
 	public SelfPlayTDLScenario(MersenneTwisterFast random, Player player, double prob,
 			double learningRate, double lambda) {
 		super(random);
-		
+
 		this.prob = prob;
 		this.player = player;
 		this.lambda = lambda;
@@ -36,7 +36,7 @@ public class SelfPlayTDLScenario extends GameScenario {
 	public int play(BoardGame game) {
 		int boardSize = game.getBoard().getSize();
 		traces = new double[boardSize + 1][boardSize + 1];
-		
+
 		while (!game.endOfGame()) {
 			List<? extends GameMove> moves = game.findMoves();
 			if (!moves.isEmpty()) {
@@ -57,8 +57,7 @@ public class SelfPlayTDLScenario extends GameScenario {
 	}
 
 	private void updateEvaluationFunction(Board previousBoard, BoardGame game) {
-		double evalBefore = tanh(previousBoard.evaluate(player));
-		double derivative = (1 - (evalBefore * evalBefore));
+		double evalBefore = Math.tanh(player.evaluate(previousBoard));
 		double error;
 
 		if (game.endOfGame()) {
@@ -72,22 +71,10 @@ public class SelfPlayTDLScenario extends GameScenario {
 			}
 			error = result - evalBefore;
 		} else {
-			double evalAfter = tanh(game.getBoard().evaluate(player));
+			double evalAfter = Math.tanh(player.evaluate(game.getBoard()));
 			error = evalAfter - evalBefore;
 		}
 
-		int boardSize = previousBoard.getSize();
-		double delta = learningRate * error;
-		for (int row = 1; row <= boardSize; row++) {
-			for (int col = 1; col <= boardSize; col++) {
-				double w = player.getValue(row, col);
-				traces[row][col] = traces[row][col] * lambda + (derivative * previousBoard.getValueAt(row, col));
-				player.setValue(row, col, w + (delta * traces[row][col]));
-			}
-		}
-	}
-
-	private static double tanh(double x) {
-		return 2 / (1 + Math.exp(-2 * x)) - 1;
+		player.TDLUpdate(previousBoard, learningRate * error, traces, lambda);
 	}
 }

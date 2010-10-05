@@ -10,8 +10,20 @@ import java.util.List;
  */
 public interface BoardGame {
 
+	/**
+	 * Verifies if game is in terminal state.
+	 *
+	 * @return <code>true</code> if game is ended
+	 */
 	public boolean endOfGame();
-
+	
+	/**
+	 * Allows for game-specific fast move evaluation
+	 * 
+	 * @param player
+	 * @param move
+	 * @return
+	 */
 	public double evalMove(Player player, GameMove move);
 
 	public List<? extends GameMove> findMoves();

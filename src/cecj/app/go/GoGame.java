@@ -7,6 +7,7 @@ import games.Board;
 import games.BoardGame;
 import games.GameMove;
 import games.Player;
+import games.SimpleBoard;
 
 public class GoGame implements BoardGame {
 
@@ -36,12 +37,12 @@ public class GoGame implements BoardGame {
 	public double evalMove(Player player, GameMove move) {
 		double result;
 		if (move == passMove) {
-			result = board.evaluate(player);
+			result = player.evaluate(board);
 		} else {
-			result = ((GoMove) move).getResultingBoard().evaluate(player);
+			result = player.evaluate(move.getAfterState());
 		}
 
-		if (getCurrentPlayer() == GoBoard.WHITE) {
+		if (getCurrentPlayer() == SimpleBoard.WHITE) {
 			return -result;
 		} else {
 			return result;
@@ -51,22 +52,22 @@ public class GoGame implements BoardGame {
 	public int getLibertyDifference(GameMove move) {
 		GoBoard afterState = board;
 		if (move != passMove) {
-			afterState = ((GoMove) move).getResultingBoard();
+			afterState = (GoBoard)(move.getAfterState());
 		}
 
-		if (getCurrentPlayer() == GoBoard.WHITE) {
-			return afterState.countLiberties(GoBoard.WHITE)
-					- afterState.countLiberties(GoBoard.BLACK);
+		if (getCurrentPlayer() == SimpleBoard.WHITE) {
+			return afterState.countLiberties(SimpleBoard.WHITE)
+					- afterState.countLiberties(SimpleBoard.BLACK);
 		} else {
-			return afterState.countLiberties(GoBoard.BLACK)
-			- afterState.countLiberties(GoBoard.WHITE);
+			return afterState.countLiberties(SimpleBoard.BLACK)
+			- afterState.countLiberties(SimpleBoard.WHITE);
 		}
 	}
 
 	public List<? extends GameMove> findMoves() {
 		List<GoMove> moves = new ArrayList<GoMove>();
-		for (int row = 1; row <= GoBoard.size(); row++) {
-			for (int col = 1; col <= GoBoard.size(); col++) {
+		for (int row = 1; row <= board.getSize(); row++) {
+			for (int col = 1; col <= board.getSize(); col++) {
 				GoMove move = tryPlace(row, col);
 				if (move != null) {
 					moves.add(move);
@@ -84,7 +85,7 @@ public class GoGame implements BoardGame {
 		}
 
 		GoMove move = board.createMove(row, col, currentPlayer);
-		GoBoard afterState = move.getResultingBoard();
+		GoBoard afterState = (GoBoard)(move.getAfterState());
 
 		if (afterState.countPieces(currentPlayer) <= board.countPieces(currentPlayer)) {
 			return null;
@@ -112,8 +113,8 @@ public class GoGame implements BoardGame {
 			return 0;
 		}
 
-		int result = board.countPieces(GoBoard.BLACK) - board.countPieces(GoBoard.WHITE);
-		result += board.countTerritory(GoBoard.BLACK) - board.countTerritory(GoBoard.WHITE);
+		int result = board.countPieces(SimpleBoard.BLACK) - board.countPieces(SimpleBoard.WHITE);
+		result += board.countTerritory(SimpleBoard.BLACK) - board.countTerritory(SimpleBoard.WHITE);
 
 		return result;
 	}
@@ -128,7 +129,7 @@ public class GoGame implements BoardGame {
 		int opponent = getOpponent(currentPlayer);
 
 		if (move != passMove) {
-			GoBoard afterState = ((GoMove) move).getResultingBoard();
+			GoBoard afterState = (GoBoard)(move.getAfterState());
 			captures[currentPlayer] += (board.countPieces(opponent) - afterState
 					.countPieces(opponent));
 			board = afterState;

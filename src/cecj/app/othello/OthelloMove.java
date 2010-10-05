@@ -1,5 +1,6 @@
 package cecj.app.othello;
 
+import games.Board;
 import games.GameMove;
 
 public class OthelloMove implements GameMove {
@@ -38,5 +39,10 @@ public class OthelloMove implements GameMove {
 		} else {
 			return getCol() - o.getCol();
 		}
+	}
+
+	public Board getAfterState() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -4,6 +4,8 @@ import games.Board;
 import games.BoardGame;
 import games.GameMove;
 import games.Player;
+import games.SimpleBoard;
+import games.WPCPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +13,8 @@ import java.util.List;
 public class OthelloGame implements BoardGame {
 
 	private static final int NUM_PLAYERS = 2;
-
+	private static final int MAX_PLAYER = SimpleBoard.BLACK;
+	
 	private int currentPlayer;
 	private OthelloBoard board;
 
@@ -20,8 +23,8 @@ public class OthelloGame implements BoardGame {
 	}
 
 	public boolean endOfGame() {
-		for (int row = 1; row <= OthelloBoard.size(); row++) {
-			for (int col = 1; col <= OthelloBoard.size(); col++) {
+		for (int row = 1; row <= board.getSize(); row++) {
+			for (int col = 1; col <= board.getSize(); col++) {
 				if (canPlace(row, col, currentPlayer)
 						|| canPlace(row, col, getOpponent(currentPlayer))) {
 					return false;
@@ -32,6 +35,19 @@ public class OthelloGame implements BoardGame {
 	}
 
 	public double evalMove(Player player, GameMove move) {
+		if (player instanceof WPCPlayer) {
+			return evalMove((WPCPlayer)player, move);
+		}
+
+		double result = player.evaluate(move.getAfterState());
+		if (currentPlayer == MAX_PLAYER) {
+			return result;
+		} else {
+			return -result;
+		}
+	}
+	
+	public double evalMove(WPCPlayer player, GameMove move) {
 		List<Integer> directions = findDirections(move.getRow(), move.getCol(), currentPlayer);
 
 		float result = 0;
@@ -46,11 +62,11 @@ public class OthelloGame implements BoardGame {
 
 		return result + player.getValue(move.getRow(), move.getCol());
 	}
-
+	
 	public List<? extends GameMove> findMoves() {
 		List<OthelloMove> moves = new ArrayList<OthelloMove>();
-		for (int row = 1; row <= OthelloBoard.size(); row++) {
-			for (int col = 1; col <= OthelloBoard.size(); col++) {
+		for (int row = 1; row <= board.getSize(); row++) {
+			for (int col = 1; col <= board.getSize(); col++) {
 				if (canPlace(row, col, currentPlayer)) {
 					moves.add(new OthelloMove(row, col));
 				}
@@ -103,7 +119,7 @@ public class OthelloGame implements BoardGame {
 	}
 	
 	public int getOutcome() {
-		return (board.countPieces(0) - board.countPieces(1));
+		return (board.countPieces(SimpleBoard.BLACK) - board.countPieces(SimpleBoard.WHITE));
 	}
 
 	public void reset() {

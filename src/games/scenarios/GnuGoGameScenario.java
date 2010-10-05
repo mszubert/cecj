@@ -4,6 +4,7 @@ import ec.util.MersenneTwisterFast;
 import games.BoardGame;
 import games.GameMove;
 import games.Player;
+import games.SimpleBoard;
 import games.WPCPlayer;
 
 import java.io.BufferedReader;
@@ -64,8 +65,8 @@ public class GnuGoGameScenario extends GameScenario {
 
 	@SuppressWarnings("unused")
 	private static void printWinner(BoardGame game, int color) {
-		if ((game.getOutcome() > 0 && color == GoBoard.BLACK)
-				|| (game.getOutcome() < 0 && color == GoBoard.WHITE)) {
+		if ((game.getOutcome() > 0 && color == SimpleBoard.BLACK)
+				|| (game.getOutcome() < 0 && color == SimpleBoard.WHITE)) {
 			System.err.println("TD Player won!");
 		} else if (game.getOutcome() == 0) {
 			System.err.println("It was a draw");
@@ -76,7 +77,7 @@ public class GnuGoGameScenario extends GameScenario {
 
 	private static GameMove getGnuGoMove(GoGame game, int currentPlayer) {
 		String[] answer = new String[1];
-		if (currentPlayer == GoBoard.BLACK) {
+		if (currentPlayer == SimpleBoard.BLACK) {
 			executeGTPCommand("reg_genmove black", 0, false, answer);
 		} else {
 			executeGTPCommand("reg_genmove white", 0, false, answer);
@@ -87,7 +88,7 @@ public class GnuGoGameScenario extends GameScenario {
 		}
 
 		int col = answer[0].charAt(2) - 'A' + 1;
-		int row = GoBoard.size() - (answer[0].charAt(3) - '0') + 1;
+		int row = game.getBoard().getSize() - (answer[0].charAt(3) - '0') + 1;
 
 		GameMove move = game.tryPlace(row, col);
 		if (move == null) {
@@ -104,11 +105,11 @@ public class GnuGoGameScenario extends GameScenario {
 			pos = "pass";
 		} else {
 			char col = (char) ('A' + move.getCol() - 1);
-			int row = (GoBoard.size() - move.getRow() + 1);
+			int row = (GoBoard.BOARD_SIZE - move.getRow() + 1);
 			pos = "" + col + row;
 		}
 
-		if (currentPlayer == GoBoard.BLACK) {
+		if (currentPlayer == SimpleBoard.BLACK) {
 			executeGTPCommand("play black " + pos, 0, false, null);
 		} else {
 			executeGTPCommand("play white " + pos, 0, false, null);
@@ -192,7 +193,7 @@ public class GnuGoGameScenario extends GameScenario {
 	public static void main(String[] args) {
 		startGnuGo();
 		GnuGoGameScenario scenario = new GnuGoGameScenario(new MersenneTwisterFast(2010),
-				new WPCPlayer(new double[25]), GoBoard.WHITE, new double[] { 0.1, 0.1 });
+				new WPCPlayer(new double[25]), SimpleBoard.WHITE, new double[] { 0.1, 0.1 });
 		scenario.play(new GoGame());
 		stopGnuGo();
 	}

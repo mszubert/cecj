@@ -3,6 +3,7 @@ package cecj.app.go;
 import cecj.app.GamePlayerFitnessCalculator;
 import ec.EvolutionState;
 import ec.Individual;
+import games.SimpleBoard;
 import games.WPCPlayer;
 import games.scenarios.GameScenario;
 import games.scenarios.GnuGoGameScenario;
@@ -19,13 +20,13 @@ public class GnuGoPlayer extends GamePlayerFitnessCalculator {
 	
 	@Override
 	protected GameScenario getInverseScenario(EvolutionState state, double[] player) {
-		return new GnuGoGameScenario(state.random[0], new WPCPlayer(player), GoBoard.WHITE,
+		return new GnuGoGameScenario(state.random[0], new WPCPlayer(player), SimpleBoard.WHITE,
 				new double[] {evaluatedRandomness, evaluatorRandomness});
 	}
 
 	@Override
 	protected GameScenario getScenario(EvolutionState state, double[] player) {
-		return new GnuGoGameScenario(state.random[0], new WPCPlayer(player), GoBoard.BLACK,
+		return new GnuGoGameScenario(state.random[0], new WPCPlayer(player), SimpleBoard.BLACK,
 				new double[] {evaluatedRandomness, evaluatorRandomness});
 	}
 }

@@ -8,9 +8,9 @@ public interface Board extends Cloneable {
 
 	public int getPiece(int row, int col);
 
+	public void setPiece(int row, int col, int player);
+	
 	public boolean isEmpty(int row, int col);
-
-	public double evaluate(Player player);
 
 	public int getValueAt(int row, int col);
 

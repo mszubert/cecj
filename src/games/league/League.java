@@ -4,6 +4,7 @@ import ec.simple.SimpleFitness;
 import ec.util.MersenneTwisterFast;
 import ec.vector.DoubleVectorIndividual;
 import games.Player;
+import games.SimpleBoard;
 import games.WPCPlayer;
 import games.scenarios.GameScenario;
 import games.scenarios.GnuGoGameScenario;
@@ -15,7 +16,6 @@ import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import cecj.app.go.GoBoard;
 import cecj.app.go.GoGame;
 
 public class League {
@@ -155,9 +155,9 @@ public class League {
 		for (Player player : teams.get(0)) {
 			MersenneTwisterFast rng = new MersenneTwisterFast(System.currentTimeMillis());
 
-			GameScenario scenario1 = new GnuGoGameScenario(rng, player, GoBoard.BLACK,
+			GameScenario scenario1 = new GnuGoGameScenario(rng, player, SimpleBoard.BLACK,
 					new double[] { 0.0, 0.0 });
-			GameScenario scenario2 = new GnuGoGameScenario(rng, player, GoBoard.WHITE,
+			GameScenario scenario2 = new GnuGoGameScenario(rng, player, SimpleBoard.WHITE,
 					new double[] { 0.0, 0.0 });
 
 			GnuGoGameScenario.startGnuGo();

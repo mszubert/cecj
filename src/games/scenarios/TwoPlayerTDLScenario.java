@@ -61,7 +61,7 @@ public class TwoPlayerTDLScenario extends GameScenario {
 	}
 
 	private void updateEvaluationFunction(Board previousBoard, Player player, BoardGame game) {
-		double evalBefore = tanh(previousBoard.evaluate(player));
+		double evalBefore = Math.tanh(player.evaluate(previousBoard));
 		double derivative = (1 - (evalBefore * evalBefore));
 		double error;
 
@@ -76,21 +76,10 @@ public class TwoPlayerTDLScenario extends GameScenario {
 			}
 			error = result - evalBefore;
 		} else {
-			double evalAfter = tanh(game.getBoard().evaluate(player));
+			double evalAfter = Math.tanh(player.evaluate(game.getBoard()));
 			error = evalAfter - evalBefore;
 		}
 
-		int boardSize = previousBoard.getSize();
-		double delta = learningRate * error * derivative;
-		for (int row = 1; row <= boardSize; row++) {
-			for (int col = 1; col <= boardSize; col++) {
-				double w = player.getValue(row, col);
-				player.setValue(row, col, w + (delta * previousBoard.getValueAt(row, col)));
-			}
-		}
-	}
-
-	private static double tanh(double x) {
-		return 2 / (1 + Math.exp(-2 * x)) - 1;
+		player.TDLUpdate(previousBoard, learningRate * error * derivative);
 	}
 }

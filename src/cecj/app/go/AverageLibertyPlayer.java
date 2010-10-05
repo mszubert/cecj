@@ -1,6 +1,7 @@
 package cecj.app.go;
 
 import ec.EvolutionState;
+import games.SimpleBoard;
 import games.WPCPlayer;
 import games.scenarios.ALPGameScenario;
 import games.scenarios.GameScenario;
@@ -10,13 +11,13 @@ public class AverageLibertyPlayer extends GamePlayerFitnessCalculator {
 	
 	@Override
 	protected GameScenario getInverseScenario(EvolutionState state, double[] player) {
-		return new ALPGameScenario(state.random[0], new WPCPlayer(player), GoBoard.WHITE,
+		return new ALPGameScenario(state.random[0], new WPCPlayer(player), SimpleBoard.WHITE,
 				new double[] {evaluatedRandomness, evaluatorRandomness});
 	}
 
 	@Override
 	protected GameScenario getScenario(EvolutionState state, double[] player) {
-		return new ALPGameScenario(state.random[0], new WPCPlayer(player), GoBoard.BLACK,
+		return new ALPGameScenario(state.random[0], new WPCPlayer(player), SimpleBoard.BLACK,
 				new double[] {evaluatedRandomness, evaluatorRandomness});
 	}
 

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ec.util.MersenneTwisterFast;
-
 import games.BoardGame;
 import games.GameMove;
 import games.Player;

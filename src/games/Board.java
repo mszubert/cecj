@@ -14,5 +14,7 @@ public interface Board extends Cloneable {
 
 	public int getValueAt(int row, int col);
 
+	public Board createAfterState(int row, int col, int player);
+	
 	public Board clone();
 }

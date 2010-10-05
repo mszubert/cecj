@@ -1,5 +1,6 @@
 package cecj.app.go;
 
+import games.Board;
 import games.SimpleBoard;
 
 import java.util.Arrays;
@@ -7,7 +8,7 @@ import java.util.Arrays;
 public class GoBoard extends SimpleBoard {
 
 	public static final int BOARD_SIZE = 5;
-	
+
 	public static final int NUM_DIRECTIONS = 4;
 	public static final int ROW_DIR[] = { -1, 0, 0, 1 };
 	public static final int COL_DIR[] = { 0, 1, -1, 0 };
@@ -39,10 +40,10 @@ public class GoBoard extends SimpleBoard {
 		}
 		return clone;
 	}
-	
-	public GoMove createMove(int row, int col, int currentPlayer) {
+
+	public Board createAfterState(int row, int col, int player) {
 		GoBoard clonedBoard = clone();
-		clonedBoard.board[row][col] = currentPlayer;
+		clonedBoard.board[row][col] = player;
 
 		int cc[][] = new int[BOARD_SIZE + BOARD_MARGIN][BOARD_SIZE + BOARD_MARGIN];
 		int ccNum = 0;
@@ -51,8 +52,7 @@ public class GoBoard extends SimpleBoard {
 		for (int dir = 0; dir < NUM_DIRECTIONS; dir++) {
 			tr = row + ROW_DIR[dir];
 			tc = col + COL_DIR[dir];
-			if (!isEmpty(tr, tc) && !isWall(tr, tc) && board[tr][tc] != currentPlayer
-					&& cc[tr][tc] == 0) {
+			if (!isEmpty(tr, tc) && !isWall(tr, tc) && board[tr][tc] != player && cc[tr][tc] == 0) {
 				ccNum++;
 				if (!hasLiberties(clonedBoard, tr, tc, cc, ccNum)) {
 					removeStoneGroup(clonedBoard, cc, ccNum);
@@ -66,7 +66,7 @@ public class GoBoard extends SimpleBoard {
 			removeStoneGroup(clonedBoard, cc, ccNum);
 		}
 
-		return new GoMove(row, col, clonedBoard);
+		return clonedBoard;
 	}
 
 	private void removeStoneGroup(GoBoard clonedBoard, int[][] cc, int ccNum) {
@@ -206,7 +206,7 @@ public class GoBoard extends SimpleBoard {
 				}
 			}
 		}
-		
+
 		return result;
 	}
 }

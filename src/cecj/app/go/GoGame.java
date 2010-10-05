@@ -18,7 +18,7 @@ public class GoGame implements BoardGame {
 	private int moveCounter;
 	private int currentPlayer;
 	private int[] captures;
-	private static GoMove passMove = new GoMove(-1, -1, null);
+	private static GameMove passMove = new GameMove(-1, -1, null, -1);
 
 	GoBoard board;
 	GameMove[] historicalMoves;
@@ -64,11 +64,11 @@ public class GoGame implements BoardGame {
 		}
 	}
 
-	public List<? extends GameMove> findMoves() {
-		List<GoMove> moves = new ArrayList<GoMove>();
+	public List<GameMove> findMoves() {
+		List<GameMove> moves = new ArrayList<GameMove>();
 		for (int row = 1; row <= board.getSize(); row++) {
 			for (int col = 1; col <= board.getSize(); col++) {
-				GoMove move = tryPlace(row, col);
+				GameMove move = tryPlace(row, col);
 				if (move != null) {
 					moves.add(move);
 				}
@@ -79,12 +79,12 @@ public class GoGame implements BoardGame {
 		return moves;
 	}
 
-	public GoMove tryPlace(int row, int col) {
+	public GameMove tryPlace(int row, int col) {
 		if (!board.isEmpty(row, col)) {//|| board.isSinglePointEye(row, col, currentPlayer)) {
 			return null;
 		}
 
-		GoMove move = board.createMove(row, col, currentPlayer);
+		GameMove move = new GameMove(row, col, board, currentPlayer);
 		GoBoard afterState = (GoBoard)(move.getAfterState());
 
 		if (afterState.countPieces(currentPlayer) <= board.countPieces(currentPlayer)) {
@@ -151,7 +151,7 @@ public class GoGame implements BoardGame {
 		currentPlayer = 0;
 		moveCounter = 0;
 		captures = new int[NUM_PLAYERS];
-		historicalMoves = new GoMove[HISTORY_LENGTH];
+		historicalMoves = new GameMove[HISTORY_LENGTH];
 		historicalBoards = new GoBoard[HISTORY_LENGTH];
 	}
 

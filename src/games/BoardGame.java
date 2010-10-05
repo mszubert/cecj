@@ -26,7 +26,7 @@ public interface BoardGame {
 	 */
 	public double evalMove(Player player, GameMove move);
 
-	public List<? extends GameMove> findMoves();
+	public List<GameMove> findMoves();
 
 	public int getCurrentPlayer();
 

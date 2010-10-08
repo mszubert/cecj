@@ -6,9 +6,9 @@ import ec.util.Parameter;
 import ec.vector.DoubleVectorIndividual;
 import games.BoardGame;
 import games.GameFactory;
-import games.Player;
-import games.WPCPlayer;
-import games.scenarios.SelfPlayTDLScenario;
+import games.player.Player;
+import games.player.WPCPlayer;
+import games.scenario.SelfPlayTDLScenario;
 import cecj.eval.TDLImprover;
 
 public class WPCImprover implements TDLImprover {

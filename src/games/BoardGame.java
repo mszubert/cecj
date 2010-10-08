@@ -1,5 +1,7 @@
 package games;
 
+import games.player.Player;
+
 import java.util.List;
 
 /**

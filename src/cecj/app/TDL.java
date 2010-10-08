@@ -6,7 +6,6 @@ import ec.Population;
 import ec.Statistics;
 import ec.Subpopulation;
 import ec.simple.SimpleEvolutionState;
-import ec.simple.SimpleFitness;
 import ec.util.MersenneTwisterFast;
 import ec.util.Output;
 import ec.util.Parameter;
@@ -14,8 +13,9 @@ import ec.util.ParameterDatabase;
 import ec.vector.DoubleVectorIndividual;
 import games.BoardGame;
 import games.GameFactory;
-import games.WPCPlayer;
-import games.scenarios.SelfPlayTDLScenario;
+import games.player.EvolvedPlayer;
+import games.player.Player;
+import games.scenario.SelfPlayTDLScenario;
 
 public class TDL {
 	private static final String P_TDL = "tdl";
@@ -102,7 +102,7 @@ public class TDL {
 	}
 
 	public void run() {
-		WPCPlayer player = initializePlayer();
+		Player player = initializePlayer();
 		BoardGame boardGame = gameFactory.createGame();
 		SelfPlayTDLScenario scenario = new SelfPlayTDLScenario(random, player, randomness,
 				learningRate, lambda);
@@ -115,11 +115,10 @@ public class TDL {
 		}
 	}
 
-	private WPCPlayer initializePlayer() {
-		WPCPlayer player = gameFactory.createPlayer();
+	private Player initializePlayer() {
+		EvolvedPlayer player = (EvolvedPlayer)(gameFactory.createPlayer());
 		DoubleVectorIndividual ind = new DoubleVectorIndividual();
-		ind.genome = player.getWPC();
-		ind.fitness = new SimpleFitness();
+		player.writeToIndividual(ind);
 		state.population.subpops[0].individuals[0] = ind;
 		return player;
 	}

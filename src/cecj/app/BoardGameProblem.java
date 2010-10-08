@@ -3,19 +3,19 @@ package cecj.app;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
-import ec.vector.DoubleVectorIndividual;
 import games.BoardGame;
 import games.GameFactory;
-import games.Player;
-import games.WPCPlayer;
-import games.scenarios.GameScenario;
-import games.scenarios.RandomizedTwoPlayersGameScenario;
-import games.scenarios.TwoPlayerTDLScenario;
+import games.player.EvolvedPlayer;
+import games.scenario.GameScenario;
+import games.scenario.RandomizedTwoPlayersGameScenario;
+import games.scenario.TwoPlayerTDLScenario;
 import cecj.problem.TestBasedProblem;
 
 public class BoardGameProblem extends TestBasedProblem {
 
 	private static final String P_GAME = "game";
+	private static final String P_PLAYER = "player";
+
 	private static final String P_RANDOMNESS = "randomness";
 	private static final String P_LEARNING_RATE = "learning-rate";
 	private static final String P_BINARY_OUTCOUME = "binary-outcomes";
@@ -28,6 +28,7 @@ public class BoardGameProblem extends TestBasedProblem {
 	private boolean learningPlay;
 
 	private GameFactory gameFactory;
+	private EvolvedPlayer playerPrototype;
 
 	@Override
 	public void setup(EvolutionState state, Parameter base) {
@@ -36,6 +37,10 @@ public class BoardGameProblem extends TestBasedProblem {
 		Parameter gameParam = new Parameter(P_GAME);
 		gameFactory = (GameFactory) state.parameters.getInstanceForParameter(gameParam, null,
 				GameFactory.class);
+
+		Parameter playerParam = new Parameter(P_PLAYER);
+		playerPrototype = (EvolvedPlayer) state.parameters.getInstanceForParameter(playerParam,
+				null, EvolvedPlayer.class);
 
 		Parameter randomnessParam = base.push(P_RANDOMNESS);
 		if (state.parameters.exists(randomnessParam)) {
@@ -58,22 +63,15 @@ public class BoardGameProblem extends TestBasedProblem {
 	}
 
 	@Override
-	public int test(EvolutionState state, Individual candidate,
-			Individual test) {
-		if (!(candidate instanceof DoubleVectorIndividual)
-				|| !(test instanceof DoubleVectorIndividual)) {
-			state.output.error("Othello players should be represented by floats vectors\n");
-		}
-
-		double[] wpc1 = ((DoubleVectorIndividual) candidate).genome;
-		double[] wpc2 = ((DoubleVectorIndividual) test).genome;
-
-		WPCPlayer player1 = new WPCPlayer(wpc1);
-		WPCPlayer player2 = new WPCPlayer(wpc2);
-		BoardGame game = gameFactory.createGame();
-
+	public int test(EvolutionState state, Individual candidate, Individual test) {
 		GameScenario scenario;
-		Player[] players = new Player[] { player1, player2 };
+		BoardGame game = gameFactory.createGame();
+		
+		EvolvedPlayer[] players = new EvolvedPlayer[] { playerPrototype.createEmptyCopy(),
+				playerPrototype.createEmptyCopy() };
+		players[0].readFromIndividual(candidate);
+		players[1].readFromIndividual(test);
+		
 		if (learningPlay) {
 			scenario = new TwoPlayerTDLScenario(state.random[0], players, randomness, learningRate);
 		} else if (randomizedPlay) {

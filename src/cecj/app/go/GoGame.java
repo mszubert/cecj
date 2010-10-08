@@ -6,8 +6,8 @@ import java.util.List;
 import games.Board;
 import games.BoardGame;
 import games.GameMove;
-import games.Player;
 import games.SimpleBoard;
+import games.player.Player;
 
 public class GoGame implements BoardGame {
 

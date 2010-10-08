@@ -1,4 +1,6 @@
-package games;
+package games.player;
+
+import games.Board;
 
 public interface Player {
 	

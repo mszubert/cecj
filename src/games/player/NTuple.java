@@ -1,4 +1,7 @@
-package games;
+package games.player;
+
+import games.Board;
+import games.SymmetryExpander;
 
 
 public class NTuple {

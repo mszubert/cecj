@@ -1,4 +1,4 @@
-package games.scenarios;
+package games.scenario;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import cecj.app.go.GoGame;
 import ec.util.MersenneTwisterFast;
 import games.BoardGame;
 import games.GameMove;
-import games.Player;
+import games.player.Player;
 
 public class ALPGameScenario extends GameScenario {
 

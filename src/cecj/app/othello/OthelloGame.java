@@ -3,9 +3,9 @@ package cecj.app.othello;
 import games.Board;
 import games.BoardGame;
 import games.GameMove;
-import games.Player;
 import games.SimpleBoard;
-import games.WPCPlayer;
+import games.player.Player;
+import games.player.WPCPlayer;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,7 +7,7 @@ import ec.util.Parameter;
 import ec.vector.DoubleVectorIndividual;
 import games.BoardGame;
 import games.GameFactory;
-import games.scenarios.GameScenario;
+import games.scenario.GameScenario;
 
 public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCalculator {
 

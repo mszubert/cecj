@@ -2,7 +2,7 @@ package cecj.app.go;
 
 import games.BoardGame;
 import games.GameFactory;
-import games.WPCPlayer;
+import games.player.WPCPlayer;
 
 public class Go implements GameFactory {
 

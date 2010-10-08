@@ -1,10 +1,10 @@
 package cecj.app;
 
 import ec.EvolutionState;
-import games.Player;
-import games.WPCPlayer;
-import games.scenarios.GameScenario;
-import games.scenarios.RandomizedTwoPlayersGameScenario;
+import games.player.Player;
+import games.player.WPCPlayer;
+import games.scenario.GameScenario;
+import games.scenario.RandomizedTwoPlayersGameScenario;
 
 public abstract class WPCPlayerFitnessCalculator extends GamePlayerFitnessCalculator {
 

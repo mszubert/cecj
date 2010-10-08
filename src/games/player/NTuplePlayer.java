@@ -1,6 +1,9 @@
-package games;
+package games.player;
 
-public class NTuplePlayer implements Player {
+import ec.Individual;
+import games.Board;
+
+public class NTuplePlayer implements EvolvedPlayer {
 
 	private NTuple[] tuples;
 	
@@ -20,6 +23,21 @@ public class NTuplePlayer implements Player {
 			result += tuple.value(board);
 		}
 		return result;
+	}
+
+	public EvolvedPlayer createEmptyCopy() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void readFromIndividual(Individual ind) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void writeToIndividual(Individual ind) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

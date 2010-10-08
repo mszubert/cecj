@@ -1,8 +1,13 @@
-package games;
+package games.player;
 
+import ec.Individual;
+import ec.simple.SimpleFitness;
 import ec.util.MersenneTwisterFast;
+import ec.vector.DoubleVectorIndividual;
+import ec.vector.VectorIndividual;
+import games.Board;
 
-public class WPCPlayer implements Player {
+public class WPCPlayer implements EvolvedPlayer {
 
 	private int boardSize;
 
@@ -81,5 +86,20 @@ public class WPCPlayer implements Player {
 			}
 		}
 		return result;
+	}
+
+	public void readFromIndividual(Individual ind) {
+		if (ind instanceof DoubleVectorIndividual) {
+			wpc = ((DoubleVectorIndividual) ind).genome;
+		}
+	}
+
+	public void writeToIndividual(Individual ind) {
+		((VectorIndividual)ind).setGenome(wpc);
+		ind.fitness = new SimpleFitness();
+	}
+
+	public EvolvedPlayer createEmptyCopy() {
+		return new WPCPlayer(boardSize);
 	}
 }

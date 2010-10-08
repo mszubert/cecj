@@ -1,4 +1,4 @@
-package games.scenarios;
+package games.scenario;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import ec.util.MersenneTwisterFast;
 import games.Board;
 import games.BoardGame;
 import games.GameMove;
-import games.Player;
+import games.player.Player;
 
 public class TwoPlayerTDLScenario extends GameScenario {
 

@@ -1,6 +1,6 @@
 package cecj.app.go;	
 
-import games.WPCPlayer;
+import games.player.WPCPlayer;
 import cecj.app.WPCPlayerFitnessCalculator;
 
 public class GoHeuristicPlayer extends WPCPlayerFitnessCalculator {

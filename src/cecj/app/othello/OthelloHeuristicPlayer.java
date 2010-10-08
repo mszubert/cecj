@@ -1,6 +1,6 @@
 package cecj.app.othello;
 
-import games.WPCPlayer;
+import games.player.WPCPlayer;
 import cecj.app.WPCPlayerFitnessCalculator;
 
 public class OthelloHeuristicPlayer extends WPCPlayerFitnessCalculator {

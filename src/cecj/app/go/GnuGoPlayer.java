@@ -4,9 +4,9 @@ import cecj.app.GamePlayerFitnessCalculator;
 import ec.EvolutionState;
 import ec.Individual;
 import games.SimpleBoard;
-import games.WPCPlayer;
-import games.scenarios.GameScenario;
-import games.scenarios.GnuGoGameScenario;
+import games.player.WPCPlayer;
+import games.scenario.GameScenario;
+import games.scenario.GnuGoGameScenario;
 
 public class GnuGoPlayer extends GamePlayerFitnessCalculator {
 

@@ -2,7 +2,7 @@ package cecj.app.othello;
 
 import games.BoardGame;
 import games.GameFactory;
-import games.WPCPlayer;
+import games.player.WPCPlayer;
 
 public class Othello implements GameFactory {
 

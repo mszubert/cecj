@@ -1,11 +1,11 @@
-package games.scenarios;
+package games.scenario;
 
 import ec.util.MersenneTwisterFast;
 import games.BoardGame;
 import games.GameMove;
-import games.Player;
 import games.SimpleBoard;
-import games.WPCPlayer;
+import games.player.Player;
+import games.player.WPCPlayer;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -3,10 +3,10 @@ package games.league;
 import ec.simple.SimpleFitness;
 import ec.util.MersenneTwisterFast;
 import ec.vector.DoubleVectorIndividual;
-import games.Player;
-import games.WPCPlayer;
-import games.scenarios.GameScenario;
-import games.scenarios.RandomizedTwoPlayersGameScenario;
+import games.player.Player;
+import games.player.WPCPlayer;
+import games.scenario.GameScenario;
+import games.scenario.RandomizedTwoPlayersGameScenario;
 
 import java.io.FileReader;
 import java.io.IOException;

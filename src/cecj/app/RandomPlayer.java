@@ -2,7 +2,7 @@ package cecj.app;
 
 import ec.EvolutionState;
 import ec.util.Parameter;
-import games.WPCPlayer;
+import games.player.WPCPlayer;
 
 public class RandomPlayer extends WPCPlayerFitnessCalculator {
 

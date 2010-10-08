@@ -2,7 +2,7 @@ package games.league;
 
 import ec.util.MersenneTwisterFast;
 import games.GameMove;
-import games.Player;
+import games.player.Player;
 
 import java.util.List;
 

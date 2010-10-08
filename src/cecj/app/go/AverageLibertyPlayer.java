@@ -2,9 +2,9 @@ package cecj.app.go;
 
 import ec.EvolutionState;
 import games.SimpleBoard;
-import games.WPCPlayer;
-import games.scenarios.ALPGameScenario;
-import games.scenarios.GameScenario;
+import games.player.WPCPlayer;
+import games.scenario.ALPGameScenario;
+import games.scenario.GameScenario;
 import cecj.app.GamePlayerFitnessCalculator;
 
 public class AverageLibertyPlayer extends GamePlayerFitnessCalculator {

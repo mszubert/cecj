@@ -1,9 +1,9 @@
 package games.league;
 
 import ec.util.MersenneTwisterFast;
-import games.WPCPlayer;
-import games.scenarios.ALPGameScenario;
-import games.scenarios.GameScenario;
+import games.player.WPCPlayer;
+import games.scenario.ALPGameScenario;
+import games.scenario.GameScenario;
 
 import java.io.InputStream;
 import java.util.Locale;

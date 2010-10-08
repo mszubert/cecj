@@ -3,9 +3,9 @@ package cecj.app;
 import ec.EvolutionState;
 import ec.Individual;
 import games.BoardGame;
-import games.Player;
-import games.WPCPlayer;
-import games.scenarios.TwoPlayerTDLScenario;
+import games.player.Player;
+import games.player.WPCPlayer;
+import games.scenario.TwoPlayerTDLScenario;
 
 public class WPCMultiImprover extends WPCImprover {
 

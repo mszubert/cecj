@@ -1,6 +1,6 @@
 package cecj.app;
 
-import games.WPCPlayer;
+import games.player.WPCPlayer;
 
 import java.util.Random;
 

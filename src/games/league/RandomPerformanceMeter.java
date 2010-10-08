@@ -1,10 +1,10 @@
 package games.league;
 
 import ec.util.MersenneTwisterFast;
-import games.Player;
-import games.WPCPlayer;
-import games.scenarios.GameScenario;
-import games.scenarios.RandomizedTwoPlayersGameScenario;
+import games.player.Player;
+import games.player.WPCPlayer;
+import games.scenario.GameScenario;
+import games.scenario.RandomizedTwoPlayersGameScenario;
 
 import java.io.InputStream;
 import java.util.Scanner;

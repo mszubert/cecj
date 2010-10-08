@@ -32,6 +32,10 @@ public abstract class SimpleBoard implements Board {
 		return count;
 	}
 
+	public int getPiece(int flatLocation) {
+		return getPiece(flatLocation / size + 1, flatLocation % size + 1);
+	}
+	
 	public int getPiece(int row, int col) {
 		return board[row][col];
 	}

@@ -6,6 +6,8 @@ public interface Board extends Cloneable {
 	
 	public int countPieces(int i);
 
+	public int getPiece(int flatLocation);
+	
 	public int getPiece(int row, int col);
 
 	public void setPiece(int row, int col, int player);

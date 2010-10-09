@@ -69,8 +69,13 @@ public class BoardGameProblem extends TestBasedProblem {
 		
 		EvolvedPlayer[] players = new EvolvedPlayer[] { playerPrototype.createEmptyCopy(),
 				playerPrototype.createEmptyCopy() };
-		players[0].readFromIndividual(candidate);
-		players[1].readFromIndividual(test);
+		
+		try {
+			players[0].readFromIndividual(candidate);
+			players[1].readFromIndividual(test);
+		} catch (IllegalArgumentException ex) {
+			state.output.fatal("Players can not be constructed from this type of individual");
+		}
 		
 		if (learningPlay) {
 			scenario = new TwoPlayerTDLScenario(state.random[0], players, randomness, learningRate);

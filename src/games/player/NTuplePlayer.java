@@ -1,5 +1,6 @@
 package games.player;
 
+import cecj.ntuple.NTupleIndividual;
 import ec.Individual;
 import games.Board;
 
@@ -31,8 +32,11 @@ public class NTuplePlayer implements EvolvedPlayer {
 	}
 
 	public void readFromIndividual(Individual ind) {
-		// TODO Auto-generated method stub
-		
+		if (ind instanceof NTupleIndividual) {
+			
+		} else {
+			throw new IllegalArgumentException("Individual should be of type NTupleIndividual");
+		}
 	}
 
 	public void writeToIndividual(Individual ind) {

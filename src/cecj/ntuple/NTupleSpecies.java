@@ -42,6 +42,10 @@ public class NTupleSpecies extends Species {
 	private int numValues;
 
 	
+	public int getNumTuples() {
+		return numTuples;
+	}
+	
 	public Parameter defaultBase() {
 		return NTupleDefaults.base().push(P_NTUPLE_SPECIES);
 	}

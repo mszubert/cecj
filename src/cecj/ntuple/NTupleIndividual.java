@@ -11,9 +11,25 @@ public class NTupleIndividual extends Individual {
 	/**
 	 * 
 	 */
-	private int[] positions;
+	private int[][] positions;
 
-	private double[] weights;
+	private double[][] weights;
+
+	/**
+	 * This method is called only once - on a prototype individual stored in the species class.
+	 */
+	@Override
+	public void setup(EvolutionState state, Parameter base) {
+		super.setup(state, base);
+		
+		if (!(species instanceof NTupleSpecies)) {
+            state.output.fatal("NTupleIndividual requires a NTupleSpecies", base, defaultBase());
+		}
+		
+        NTupleSpecies s = (NTupleSpecies) species;
+        positions = new int[s.getNumTuples()][];
+        weights = new double[s.getNumTuples()][];
+	}
 
 	@Override
 	public boolean equals(Object ind) {
@@ -41,7 +57,7 @@ public class NTupleIndividual extends Individual {
 	}
 
 	public void reset(EvolutionState state, int thread) {
-
+		//generate random tuples shapes
 	}
 
 	public void defaultMutate(EvolutionState state, int thread) {

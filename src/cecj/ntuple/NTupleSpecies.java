@@ -10,7 +10,7 @@ import ec.util.Parameter;
  * Species representing NTyple System representation
  * 
  * @author Marcin Szubert
- *
+ * 
  */
 public class NTupleSpecies extends Species {
 
@@ -19,33 +19,44 @@ public class NTupleSpecies extends Species {
 	public final static String P_MUTATION_PROB = "mutation-prob";
 	public final static String P_CROSSOVER_PROB = "crossover-prob";
 
+	public final static String P_MUTATION_STDEV = "mutation-stdev";
+
 	public final static String P_TUPLE_ARITY = "tuple-arity";
 	public final static String P_NUM_TUPLES = "num-tuples";
 	public final static String P_NUM_VALUES = "num-values";
 
+	public final static String P_SPACE_SIZE = "space-size";
+
 	private float mutationProbability;
 	private float crossoverProbability;
+
+	private float mutationStdev;
 
 	/**
 	 * Number of elements in each tuple
 	 */
 	private int tupleArity;
-	
+
 	/**
 	 * Number of tuples in the system
 	 */
 	private int numTuples;
-	
+
 	/**
 	 * Number of possible values of each element of the tuple
 	 */
 	private int numValues;
 
-	
+	/**
+	 * Specifies the size of space which is sampled by NTuple Assuming that space dimensionality is
+	 * equal to 2
+	 */
+	private int spaceSize;
+
 	public int getNumTuples() {
 		return numTuples;
 	}
-	
+
 	public Parameter defaultBase() {
 		return NTupleDefaults.base().push(P_NTUPLE_SPECIES);
 	}
@@ -69,6 +80,13 @@ public class NTupleSpecies extends Species {
 							base.push(P_CROSSOVER_PROB), defaultBase().push(P_CROSSOVER_PROB));
 		}
 
+		mutationStdev = state.parameters.getFloat(base.push(P_MUTATION_STDEV), defaultBase().push(
+				P_MUTATION_STDEV), 0);
+		if (mutationStdev <= 0) {
+			state.output.fatal("NTupleSpecies must have a strictly positive standard deviation",
+					base.push(P_MUTATION_STDEV), defaultBase().push(P_MUTATION_STDEV));
+		}
+
 		tupleArity = state.parameters.getInt(base.push(P_TUPLE_ARITY), defaultBase().push(
 				P_TUPLE_ARITY), 1);
 		if (tupleArity == 0) {
@@ -86,7 +104,13 @@ public class NTupleSpecies extends Species {
 		if (numValues == 1) {
 			state.output.error("NTupleSpecies must have number of values which is > 1");
 		}
-		
+
+		spaceSize = state.parameters.getInt(base.push(P_SPACE_SIZE), defaultBase().push(
+				P_SPACE_SIZE), 1);
+		if (spaceSize == 0) {
+			state.output.error("NTupleSpecies must have space size which is > 0");
+		}
+
 		state.output.exitIfErrors();
 
 		super.setup(state, base);
@@ -105,5 +129,21 @@ public class NTupleSpecies extends Species {
 
 	public float getCrossoverProbability() {
 		return crossoverProbability;
+	}
+
+	public double getMutationStdev() {
+		return mutationStdev;
+	}
+	
+	public int getSpaceSize() {
+		return spaceSize;
+	}
+
+	public int getTupleArity() {
+		return tupleArity;
+	}
+	
+	public int getNumValues() {
+		return numValues;
 	}
 }

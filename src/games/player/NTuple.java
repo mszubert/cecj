@@ -12,12 +12,16 @@ public class NTuple {
 
 	private double[] lut;
 
-	private int[][] symmetricLocations;
+	private int[][] symmetricPositions;
 	
 	
 	public NTuple(int[] locations, SymmetryExpander expander) {
+		this(locations, new double[(int)Math.pow(VALUES, locations.length)], expander);
+    }
+	
+	public NTuple(int[] locations, double[] weights, SymmetryExpander expander) {
 		n = locations.length;
-		lut = new double[(int)Math.pow(VALUES, n)];
+		lut = weights;
 		
 		int iterator = 0;
 		int[][] symmetries = new int[locations.length][];
@@ -26,17 +30,17 @@ public class NTuple {
 		}
 		
 		int numSymmetries = symmetries[0].length;
-		symmetricLocations = new int[numSymmetries][n];
+		symmetricPositions = new int[numSymmetries][n];
 		for (int i = 0; i < numSymmetries; i++) {
 			for (int j = 0; j < n; j++) {
-				symmetricLocations[i][j] = symmetries[j][i];
+				symmetricPositions[i][j] = symmetries[j][i];
 			}
 		}
     }
 	
 	public double value(Board board) {
 		double result = 0;
-		for (int[] tuple : symmetricLocations) {
+		for (int[] tuple : symmetricPositions) {
 			result += lut[address(tuple, board)];
 		}
 		return result;
@@ -49,6 +53,14 @@ public class NTuple {
 			board.getPiece(location);
 		}
 		return result;
+	}
+
+	public int[] getPositions() {
+		return symmetricPositions[0];
+	}
+
+	public double[] getWeights() {
+		return lut;
 	}
 
 }

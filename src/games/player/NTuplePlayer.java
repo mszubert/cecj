@@ -1,8 +1,9 @@
 package games.player;
 
-import cecj.ntuple.NTupleIndividual;
 import ec.Individual;
 import games.Board;
+import cecj.app.othello.OthelloSymmetryExpander;
+import cecj.ntuple.NTupleIndividual;
 
 public class NTuplePlayer implements EvolvedPlayer {
 
@@ -33,15 +34,35 @@ public class NTuplePlayer implements EvolvedPlayer {
 
 	public void readFromIndividual(Individual ind) {
 		if (ind instanceof NTupleIndividual) {
+			NTupleIndividual ntuple = ((NTupleIndividual) ind);
+			int[][] positions = ntuple.getPositions();
+			double[][] weights = ntuple.getWeights();
 			
+			tuples = new NTuple[positions.length];
+			for (int i = 0; i < tuples.length; i++) {
+				tuples[i] = new NTuple(positions[i], weights[i], new OthelloSymmetryExpander());
+			}
 		} else {
 			throw new IllegalArgumentException("Individual should be of type NTupleIndividual");
 		}
 	}
 
 	public void writeToIndividual(Individual ind) {
-		// TODO Auto-generated method stub
-		
+		if (ind instanceof NTupleIndividual) {
+			int[][] positions = new int[tuples.length][];
+			double[][] weights = new double[tuples.length][];
+			
+			for (int i = 0; i < tuples.length; i++) {
+				positions[i] = tuples[i].getPositions();
+				weights[i] = tuples[i].getWeights();
+			}
+			
+			NTupleIndividual ntuple = ((NTupleIndividual) ind);
+			ntuple.setPositions(positions);
+			ntuple.setWeights(weights);
+		} else {
+			throw new IllegalArgumentException("Individual should be of type NTupleIndividual");
+		}
 	}
 
 }

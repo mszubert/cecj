@@ -24,6 +24,23 @@ public class NTupleIndividual extends Individual {
 
 	private double[][] weights;
 
+	
+	public double[][] getWeights() {
+		return weights;
+	}
+	
+	public void setWeights(double[][] weights) {
+		this.weights = weights;
+	}
+	
+	public int[][] getPositions() {
+		return positions;
+	}
+	
+	public void setPositions(int[][] positions) {
+		this.positions = positions;
+	}		
+	
 	/**
 	 * This method is called only once - on a prototype individual stored in the species class.
 	 */
@@ -88,7 +105,7 @@ public class NTupleIndividual extends Individual {
 			positions[i] = new int[positionSet.size()];
 			int j = 0;
 			for (int position : positionSet) {
-				positions[i][j] = position;
+				positions[i][j++] = position;
 			}
 
 			weights[i] = new double[(int) (Math.pow(s.getNumValues(), positions[i].length))];

@@ -1,8 +1,12 @@
 package games.player;
 
+import java.util.Arrays;
+
+import ec.EvolutionState;
 import ec.Individual;
 import ec.simple.SimpleFitness;
 import ec.util.MersenneTwisterFast;
+import ec.util.Parameter;
 import ec.vector.DoubleVectorIndividual;
 import ec.vector.VectorIndividual;
 import games.Board;
@@ -21,6 +25,11 @@ public class WPCPlayer implements EvolvedPlayer {
 	public WPCPlayer(double[] wpc) {
 		this.boardSize = (int) Math.sqrt(wpc.length);
 		this.wpc = wpc;
+	}
+	
+	public void setup(EvolutionState state, Parameter base) {
+		this.boardSize = 8;
+		this.wpc = new double[64];
 	}
 
 	public double getValue(int row, int col) {
@@ -92,16 +101,23 @@ public class WPCPlayer implements EvolvedPlayer {
 		if (ind instanceof DoubleVectorIndividual) {
 			wpc = ((DoubleVectorIndividual) ind).genome;
 		} else {
-			throw new IllegalArgumentException("Individual should be of type DoubleVectorIndividual");
+			throw new IllegalArgumentException(
+					"Individual should be of type DoubleVectorIndividual");
 		}
 	}
 
-	public void writeToIndividual(Individual ind) {
-		((VectorIndividual)ind).setGenome(wpc);
+	public Individual createIndividual() {
+		VectorIndividual ind = new DoubleVectorIndividual();
+		ind.setGenome(wpc);
 		ind.fitness = new SimpleFitness();
+		return ind;
 	}
 
 	public EvolvedPlayer createEmptyCopy() {
 		return new WPCPlayer(boardSize);
+	}
+
+	public void reset() {
+		Arrays.fill(wpc, 0.0);
 	}
 }

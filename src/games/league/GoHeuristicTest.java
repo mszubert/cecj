@@ -19,7 +19,7 @@ public class GoHeuristicTest {
 	{
 		random = new MersenneTwisterFast(2010);
 		prob = new double[] {0.1, 0.1};
-		Player player = new GoHeuristicPlayer().getOpponent(25);
+		Player player = new GoHeuristicPlayer().getOpponent();
 		players = new Player[] {player, player};
  	}
 	

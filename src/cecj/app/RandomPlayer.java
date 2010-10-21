@@ -2,9 +2,9 @@ package cecj.app;
 
 import ec.EvolutionState;
 import ec.util.Parameter;
-import games.player.WPCPlayer;
+import games.player.Player;
 
-public class RandomPlayer extends WPCPlayerFitnessCalculator {
+public class RandomPlayer extends RandomizedPlayerFitnessCalculator {
 
 	@Override
 	public void setup(EvolutionState state, Parameter base) {
@@ -13,7 +13,7 @@ public class RandomPlayer extends WPCPlayerFitnessCalculator {
 	}
 	
 	@Override
-	protected WPCPlayer getOpponent(int size) {
-		return new WPCPlayer(new double[size]);
+	protected Player getOpponent() {
+		return null;
 	}
 }

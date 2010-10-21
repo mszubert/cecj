@@ -1,7 +1,6 @@
 package cecj.ntuple;
 
 import java.util.Arrays;
-import java.util.TreeSet;
 
 import ec.EvolutionState;
 import ec.Individual;
@@ -12,10 +11,6 @@ public class NTupleIndividual extends Individual {
 
 	public static final String P_NTUPLE_INDIVIDUAL = "ntuple-ind";
 
-	/**
-	 * Directions on a 2D board represented by a "flat" array
-	 */
-	private static int[] dirs = { 1, 8, -1, -8, 9, 7, -9, -7 };
 
 	/**
 	 * 
@@ -51,10 +46,6 @@ public class NTupleIndividual extends Individual {
 		if (!(species instanceof NTupleSpecies)) {
 			state.output.fatal("NTupleIndividual requires a NTupleSpecies", base, defaultBase());
 		}
-
-		NTupleSpecies s = (NTupleSpecies) species;
-		positions = new int[s.getNumTuples()][];
-		weights = new double[s.getNumTuples()][];
 	}
 
 	@Override
@@ -71,8 +62,14 @@ public class NTupleIndividual extends Individual {
 	@Override
 	public Object clone() {
 		NTupleIndividual clone = (NTupleIndividual) (super.clone());
-		clone.positions = positions.clone();
-		clone.weights = weights.clone();
+		
+		if (positions != null) {
+			clone.positions = positions.clone();
+		}
+		
+		if (weights != null) {
+			clone.weights = weights.clone();
+		}
 
 		return clone;
 	}
@@ -86,31 +83,6 @@ public class NTupleIndividual extends Individual {
 		return NTupleDefaults.base().push(P_NTUPLE_INDIVIDUAL);
 	}
 
-	public void reset(EvolutionState state, int thread) {
-		NTupleSpecies s = (NTupleSpecies) species;
-		int maxPosition = s.getSpaceSize() * s.getSpaceSize();
-		int tupleArity = s.getTupleArity();
-
-		MersenneTwisterFast rng = state.random[thread];
-		for (int i = 0; i < positions.length; i++) {
-			TreeSet<Integer> positionSet = new TreeSet<Integer>();
-			int seed = rng.nextInt(maxPosition);
-			positionSet.add(seed);
-			for (int j = 0; j < tupleArity - 1; j++) {
-				seed += dirs[rng.nextInt(dirs.length)];
-				seed = (seed + maxPosition) % maxPosition;
-				positionSet.add(seed);
-			}
-
-			positions[i] = new int[positionSet.size()];
-			int j = 0;
-			for (int position : positionSet) {
-				positions[i][j++] = position;
-			}
-
-			weights[i] = new double[(int) (Math.pow(s.getNumValues(), positions[i].length))];
-		}
-	}
 
 	public void defaultMutate(EvolutionState state, int thread) {
 		NTupleSpecies s = (NTupleSpecies) species;

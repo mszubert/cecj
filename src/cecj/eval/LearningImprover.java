@@ -16,7 +16,7 @@ import ec.Setup;
  * @author Marcin Szubert
  * 
  */
-public interface TDLImprover extends Setup {
+public interface LearningImprover extends Setup {
 
 	/**
 	 * Prepares an individual for being improved by TDL algorithm.

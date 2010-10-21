@@ -10,16 +10,14 @@ import ec.util.MersenneTwisterFast;
 import ec.util.Output;
 import ec.util.Parameter;
 import ec.util.ParameterDatabase;
-import ec.vector.DoubleVectorIndividual;
 import games.BoardGame;
-import games.GameFactory;
 import games.player.EvolvedPlayer;
-import games.player.Player;
 import games.scenario.SelfPlayTDLScenario;
 
 public class TDL {
 	private static final String P_TDL = "tdl";
 	private static final String P_GAME = "game";
+	private static final String P_PLAYER = "player";
 
 	private static final String P_STAT = "stat";
 	private static final String P_SEED = "seed";
@@ -65,7 +63,8 @@ public class TDL {
 
 	private Statistics stat;
 	private EvolutionState state;
-	private GameFactory gameFactory;
+	private BoardGame boardGame;
+	private EvolvedPlayer player;
 	private MersenneTwisterFast random;
 
 	private int numGames;
@@ -92,9 +91,16 @@ public class TDL {
 		state.numGenerations = numGames;
 
 		Parameter gameParam = new Parameter(P_GAME);
-		gameFactory = (GameFactory) state.parameters.getInstanceForParameter(gameParam, null,
-				GameFactory.class);
+		boardGame = (BoardGame) state.parameters.getInstanceForParameter(gameParam, null,
+				BoardGame.class);
 
+		Parameter playerParam = new Parameter(P_PLAYER);
+		player = (EvolvedPlayer) state.parameters.getInstanceForParameter(playerParam, null,
+				EvolvedPlayer.class);
+		player.setup(state, base);
+		
+		state.population.subpops[0].individuals[0] = player.createIndividual();
+		
 		Parameter statParam = base.push(P_STAT);
 		stat = (Statistics) state.parameters.getInstanceForParameterEq(statParam, null,
 				Statistics.class);
@@ -102,8 +108,6 @@ public class TDL {
 	}
 
 	public void run() {
-		Player player = initializePlayer();
-		BoardGame boardGame = gameFactory.createGame();
 		SelfPlayTDLScenario scenario = new SelfPlayTDLScenario(random, player, randomness,
 				learningRate, lambda);
 
@@ -113,13 +117,5 @@ public class TDL {
 			scenario.play(boardGame);
 			state.generation++;
 		}
-	}
-
-	private Player initializePlayer() {
-		EvolvedPlayer player = (EvolvedPlayer)(gameFactory.createPlayer());
-		DoubleVectorIndividual ind = new DoubleVectorIndividual();
-		player.writeToIndividual(ind);
-		state.population.subpops[0].individuals[0] = ind;
-		return player;
 	}
 }

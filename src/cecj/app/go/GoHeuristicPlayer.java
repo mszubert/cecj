@@ -1,9 +1,10 @@
 package cecj.app.go;	
 
+import games.player.Player;
 import games.player.WPCPlayer;
-import cecj.app.WPCPlayerFitnessCalculator;
+import cecj.app.RandomizedPlayerFitnessCalculator;
 
-public class GoHeuristicPlayer extends WPCPlayerFitnessCalculator {
+public class GoHeuristicPlayer extends RandomizedPlayerFitnessCalculator {
 
 	double[] wpc = { -0.125668, 0.265170, 0.179982, 0.264306, -0.135056,
 					 0.255316, 0.285938, 0.285971, 0.286838, 0.264588,
@@ -18,7 +19,7 @@ public class GoHeuristicPlayer extends WPCPlayerFitnessCalculator {
 						 -0.1, 0.2, 0.15, 0.2, -0.1 };
 	
 	@Override
-	public WPCPlayer getOpponent(int size) {
+	public Player getOpponent() {
 		return new WPCPlayer(rounded);
 	}
 }

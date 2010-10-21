@@ -8,7 +8,7 @@ package cecj.archive;
 import java.util.List;
 
 import cecj.eval.ArchivingCoevolutionaryEvaluator;
-import cecj.eval.TDLImprovingEvaluator;
+import cecj.eval.LearningCoevolutionaryEvaluator;
 
 import ec.EvolutionState;
 import ec.Individual;
@@ -56,7 +56,7 @@ public abstract class CoevolutionaryArchive implements Setup {
 	 */
 	public void setup(EvolutionState state, Parameter base) {
 		if (!(state.evaluator instanceof ArchivingCoevolutionaryEvaluator)
-				&& !(state.evaluator instanceof TDLImprovingEvaluator)) {
+				&& !(state.evaluator instanceof LearningCoevolutionaryEvaluator)) {
 			state.output.fatal("This archive can be used only with ArchivingEvaluator.\n");
 		}
 

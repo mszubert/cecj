@@ -4,7 +4,6 @@ import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
 import games.BoardGame;
-import games.GameFactory;
 import games.player.EvolvedPlayer;
 import games.scenario.GameScenario;
 import games.scenario.RandomizedTwoPlayersGameScenario;
@@ -27,7 +26,7 @@ public class BoardGameProblem extends TestBasedProblem {
 	private double learningRate;
 	private boolean learningPlay;
 
-	private GameFactory gameFactory;
+	private BoardGame boardGame;
 	private EvolvedPlayer playerPrototype;
 
 	@Override
@@ -35,8 +34,8 @@ public class BoardGameProblem extends TestBasedProblem {
 		super.setup(state, base);
 
 		Parameter gameParam = new Parameter(P_GAME);
-		gameFactory = (GameFactory) state.parameters.getInstanceForParameter(gameParam, null,
-				GameFactory.class);
+		boardGame = (BoardGame) state.parameters.getInstanceForParameter(gameParam, null,
+				BoardGame.class);
 
 		Parameter playerParam = new Parameter(P_PLAYER);
 		playerPrototype = (EvolvedPlayer) state.parameters.getInstanceForParameter(playerParam,
@@ -65,8 +64,6 @@ public class BoardGameProblem extends TestBasedProblem {
 	@Override
 	public int test(EvolutionState state, Individual candidate, Individual test) {
 		GameScenario scenario;
-		BoardGame game = gameFactory.createGame();
-		
 		EvolvedPlayer[] players = new EvolvedPlayer[] { playerPrototype.createEmptyCopy(),
 				playerPrototype.createEmptyCopy() };
 		
@@ -87,10 +84,11 @@ public class BoardGameProblem extends TestBasedProblem {
 					0, 0 });
 		}
 
+		boardGame.reset();
 		if (binaryOutcome) {
-			return (scenario.play(game) > 0) ? 1 : 0;
+			return (scenario.play(boardGame) > 0) ? 1 : 0;
 		} else {
-			return scenario.play(game);
+			return scenario.play(boardGame);
 		}
 	}
 }

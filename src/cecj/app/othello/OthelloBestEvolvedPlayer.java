@@ -1,9 +1,10 @@
 package cecj.app.othello;
 
+import games.player.Player;
 import games.player.WPCPlayer;
-import cecj.app.WPCPlayerFitnessCalculator;
+import cecj.app.RandomizedPlayerFitnessCalculator;
 
-public class OthelloBestEvolvedPlayer extends WPCPlayerFitnessCalculator {
+public class OthelloBestEvolvedPlayer extends RandomizedPlayerFitnessCalculator {
 
 	double[] wpc = { 4.622507f, -1.477853f, 1.409644f, -0.066975f, -0.305214f, 1.633019f,
 			-1.050899f, 4.365550f, -1.329145f, -2.245663f, -1.060633f, -0.541089f, -0.332716f,
@@ -17,7 +18,7 @@ public class OthelloBestEvolvedPlayer extends WPCPlayerFitnessCalculator {
 			-0.148002f, 5.781035f };
 
 	@Override
-	protected WPCPlayer getOpponent(int size) {
+	protected Player getOpponent() {
 		return new WPCPlayer(wpc);
 	}
 }

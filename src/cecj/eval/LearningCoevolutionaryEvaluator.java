@@ -25,18 +25,18 @@ import ec.util.Parameter;
  * Note that this evaluator realizes the Coevolutionary Reinforcement Learning idea.
  * 
  * @author Marcin Szubert
- * @see TDLImprover
+ * @see LearningImprover
  * 
  */
-public class TDLImprovingEvaluator extends CoevolutionaryEvaluator {
+public class LearningCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 
 	private static final String P_INNER_EVALUATOR = "inner-evaluator";
-	private static final String P_TDL_IMPROVER = "tdl-improver";
-	private static final String P_TDL_FREQUENCY = "tdl-frequency";
-	private static final String P_TDL_PREPARE = "tdl-prepare";
+	private static final String P_LEARNING_IMPROVER = "learning-improver";
+	private static final String P_LEARNING_FREQUENCY = "learning-frequency";
+	private static final String P_LEARNING_PREPARE = "learning-prepare";
 	
 	private CoevolutionaryEvaluator innerEvaluator;
-	private TDLImprover temporalDifferenceImprover;
+	private LearningImprover temporalDifferenceImprover;
 	private boolean firstEvaluation = true;
 	private int tdlFrequency;
 	private boolean tdlPrepare;
@@ -50,15 +50,15 @@ public class TDLImprovingEvaluator extends CoevolutionaryEvaluator {
 				innerEvaluatorParam, null, CoevolutionaryEvaluator.class));
 		innerEvaluator.setup(state, innerEvaluatorParam);
 
-		Parameter tdlImproverParam = base.push(P_TDL_IMPROVER);
-		temporalDifferenceImprover = (TDLImprover) (state.parameters.getInstanceForParameter(
-				tdlImproverParam, null, TDLImprover.class));
+		Parameter tdlImproverParam = base.push(P_LEARNING_IMPROVER);
+		temporalDifferenceImprover = (LearningImprover) (state.parameters.getInstanceForParameter(
+				tdlImproverParam, null, LearningImprover.class));
 		temporalDifferenceImprover.setup(state, tdlImproverParam);
 
-		Parameter tdlImprovingFrequency = base.push(P_TDL_FREQUENCY);
+		Parameter tdlImprovingFrequency = base.push(P_LEARNING_FREQUENCY);
 		tdlFrequency = state.parameters.getIntWithDefault(tdlImprovingFrequency, null, 1);
 		
-		Parameter tdlPrepareParam = base.push(P_TDL_PREPARE);
+		Parameter tdlPrepareParam = base.push(P_LEARNING_PREPARE);
 		tdlPrepare = state.parameters.getBoolean(tdlPrepareParam, null, false);
 	}
 

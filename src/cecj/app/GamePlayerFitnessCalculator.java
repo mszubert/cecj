@@ -1,13 +1,13 @@
 package cecj.app;
 
-import cecj.statistics.ObjectiveFitnessCalculator;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
-import ec.vector.DoubleVectorIndividual;
 import games.BoardGame;
-import games.GameFactory;
+import games.player.EvolvedPlayer;
+import games.player.Player;
 import games.scenario.GameScenario;
+import cecj.statistics.ObjectiveFitnessCalculator;
 
 public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCalculator {
 
@@ -16,14 +16,17 @@ public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCal
 
 	private static final String P_PLAY_BOTH = "play-both";
 	private static final String P_REPEATS = "repeats";
+
 	private static final String P_GAME = "game";
+	private static final String P_PLAYER = "player";
 
 	protected double evaluatedRandomness;
 	protected double evaluatorRandomness;
 	protected boolean playBoth;
 	protected int repeats;
 
-	protected GameFactory gameFactory;
+	private BoardGame boardGame;
+	private EvolvedPlayer playerPrototype;
 
 	public void setup(EvolutionState state, Parameter base) {
 		Parameter randomnessParam = base.push(P_EVALUATED_RANDOMNESS);
@@ -39,24 +42,28 @@ public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCal
 		playBoth = state.parameters.getBoolean(playBothParam, null, false);
 
 		Parameter gameParam = new Parameter(P_GAME);
-		gameFactory = (GameFactory) state.parameters.getInstanceForParameter(gameParam, null,
-				GameFactory.class);
+		boardGame = (BoardGame) state.parameters.getInstanceForParameter(gameParam, null,
+				BoardGame.class);
+
+		Parameter playerParam = new Parameter(P_PLAYER);
+		playerPrototype = (EvolvedPlayer) state.parameters.getInstanceForParameter(playerParam,
+				null, EvolvedPlayer.class);
 	}
 
 	public float calculateObjectiveFitness(EvolutionState state, Individual ind) {
-		double[] player = ((DoubleVectorIndividual) ind).genome;
+		EvolvedPlayer player = playerPrototype.createEmptyCopy();
+		player.readFromIndividual(ind);
 
-		BoardGame game = gameFactory.createGame();
 		GameScenario scenario1 = getScenario(state, player);
 		GameScenario scenario2 = getInverseScenario(state, player);
 
 		float sum = 0;
 		for (int r = 0; r < repeats; r++) {
-			game.reset();
-			sum += ((scenario1.play(game) > 0) ? 1 : 0);
+			boardGame.reset();
+			sum += ((scenario1.play(boardGame) > 0) ? 1 : 0);
 			if (playBoth) {
-				game.reset();
-				sum += ((scenario2.play(game) < 0) ? 1 : 0);
+				boardGame.reset();
+				sum += ((scenario2.play(boardGame) < 0) ? 1 : 0);
 			}
 		}
 
@@ -67,7 +74,7 @@ public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCal
 		}
 	}
 
-	protected abstract GameScenario getScenario(EvolutionState state, double[] player);
+	protected abstract GameScenario getScenario(EvolutionState state, Player player);
 
-	protected abstract GameScenario getInverseScenario(EvolutionState state, double[] player);
+	protected abstract GameScenario getInverseScenario(EvolutionState state, Player player);
 }

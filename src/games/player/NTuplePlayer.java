@@ -40,13 +40,24 @@ public class NTuplePlayer implements EvolvedPlayer {
 	}
 
 	public void TDLUpdate(Board previous, double delta) {
-		// TODO Auto-generated method stub
-
+		for (NTuple tuple : tuples) {
+			tuple.updateWeights(previous, delta);
+		}
 	}
 
-	public void TDLUpdate(Board previous, double delta, double[][] traces, double lambda) {
-		// TODO Auto-generated method stub
+	public void initializeEligibilityTraces() {
+		for (NTuple tuple : tuples) {
+			tuple.initializeEligibilityTraces();
+		}
+	}
+	
+	public void TDLUpdate(Board previous, double delta, double lambda) {
+		double evalBefore = Math.tanh(evaluate(previous));
+		double derivative = (1 - (evalBefore * evalBefore));
 
+		for (NTuple tuple : tuples) {
+			tuple.updateWeights(previous, delta, lambda, derivative);
+		}
 	}
 
 	public void reset() {

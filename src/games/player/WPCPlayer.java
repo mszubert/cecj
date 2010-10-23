@@ -17,6 +17,9 @@ public class WPCPlayer implements EvolvedPlayer {
 
 	private double[] wpc;
 
+	private double[][] traces;
+
+	
 	public WPCPlayer(int boardSize) {
 		this.boardSize = boardSize;
 		this.wpc = new double[boardSize * boardSize];
@@ -26,7 +29,7 @@ public class WPCPlayer implements EvolvedPlayer {
 		this.boardSize = (int) Math.sqrt(wpc.length);
 		this.wpc = wpc;
 	}
-	
+
 	public void setup(EvolutionState state, Parameter base) {
 		this.boardSize = 8;
 		this.wpc = new double[64];
@@ -65,8 +68,12 @@ public class WPCPlayer implements EvolvedPlayer {
 			}
 		}
 	}
+	
+	public void initializeEligibilityTraces() {
+		traces = new double[boardSize + 1][boardSize + 1];
+	}
 
-	public void TDLUpdate(Board previous, double delta, double[][] traces, double lambda) {
+	public void TDLUpdate(Board previous, double delta, double lambda) {
 		double evalBefore = Math.tanh(evaluate(previous));
 		double derivative = (1 - (evalBefore * evalBefore));
 

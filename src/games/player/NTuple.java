@@ -3,7 +3,6 @@ package games.player;
 import games.Board;
 import games.SymmetryExpander;
 
-
 public class NTuple {
 
 	private static final int VALUES = 3;
@@ -12,23 +11,24 @@ public class NTuple {
 
 	private double[] lut;
 
+	private double[] traces;
+
 	private int[][] symmetricPositions;
-	
-	
+
 	public NTuple(int[] locations, SymmetryExpander expander) {
-		this(locations, new double[(int)Math.pow(VALUES, locations.length)], expander);
-    }
-	
+		this(locations, new double[(int) Math.pow(VALUES, locations.length)], expander);
+	}
+
 	public NTuple(int[] locations, double[] weights, SymmetryExpander expander) {
 		n = locations.length;
 		lut = weights;
-		
+
 		int iterator = 0;
 		int[][] symmetries = new int[locations.length][];
 		for (int location : locations) {
 			symmetries[iterator++] = expander.getSymmetries(location);
 		}
-		
+
 		int numSymmetries = symmetries[0].length;
 		symmetricPositions = new int[numSymmetries][n];
 		for (int i = 0; i < numSymmetries; i++) {
@@ -36,8 +36,8 @@ public class NTuple {
 				symmetricPositions[i][j] = symmetries[j][i];
 			}
 		}
-    }
-	
+	}
+
 	public double value(Board board) {
 		double result = 0;
 		for (int[] tuple : symmetricPositions) {
@@ -61,6 +61,30 @@ public class NTuple {
 
 	public double[] getWeights() {
 		return lut;
+	}
+
+	public void updateWeights(Board previous, double delta) {
+		for (int[] tuple : symmetricPositions) {
+			lut[address(tuple, previous)] += delta;
+		}
+	}
+
+	public void updateWeights(Board previous, double delta, double lambda, double derivative) {
+		for (int i = 0; i < traces.length; i++) {
+			traces[i] *= lambda;
+		}
+		
+		for (int[] tuple : symmetricPositions) {
+			traces[address(tuple, previous)] += derivative;
+		}
+		
+		for (int i = 0; i < lut.length; i++) {
+			lut[i] += delta * traces[i];
+		}
+	}
+
+	public void initializeEligibilityTraces() {
+		traces = new double[lut.length];
 	}
 
 }

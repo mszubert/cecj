@@ -11,11 +11,9 @@ import java.util.List;
 public class SelfPlayTDLScenario extends GameScenario {
 
 	private double prob;
+	private double lambda;
 	private Player player;
 	private double learningRate;
-
-	private double lambda;
-	private double[][] traces;
 
 	public SelfPlayTDLScenario(MersenneTwisterFast random, Player player, double prob,
 			double learningRate) {
@@ -34,8 +32,7 @@ public class SelfPlayTDLScenario extends GameScenario {
 
 	@Override
 	public int play(BoardGame game) {
-		int boardSize = game.getBoard().getSize();
-		traces = new double[boardSize + 1][boardSize + 1];
+		player.initializeEligibilityTraces();
 
 		while (!game.endOfGame()) {
 			List<? extends GameMove> moves = game.findMoves();
@@ -75,6 +72,6 @@ public class SelfPlayTDLScenario extends GameScenario {
 			error = evalAfter - evalBefore;
 		}
 
-		player.TDLUpdate(previousBoard, learningRate * error, traces, lambda);
+		player.TDLUpdate(previousBoard, learningRate * error, lambda);
 	}
 }

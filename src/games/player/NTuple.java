@@ -50,7 +50,7 @@ public class NTuple {
 		int result = 0;
 		for (int location : tuple) {
 			result *= VALUES;
-			board.getPiece(location);
+			result += (board.getValueAt(location) + 1);
 		}
 		return result;
 	}

@@ -2,6 +2,7 @@ package games.player;
 
 import ec.EvolutionState;
 import ec.Individual;
+import ec.util.MersenneTwisterFast;
 import ec.util.Parameter;
 import games.Board;
 
@@ -67,6 +68,18 @@ public class NTuplePlayer implements EvolvedPlayer {
 		}
 	}
 
+	public void randomizeWeights(MersenneTwisterFast random, double range) {
+		for (int i = 0; i < tuples.length; i++) {
+			double[] weights = tuples[i].getWeights();
+			for (int j = 0; j < weights.length; j++) {
+				weights[j] = random.nextDouble() * range;
+				if (random.nextBoolean()) {
+					weights[j] *= -1;
+				}
+			}
+		}
+	}
+	
 	public void readFromIndividual(Individual ind) {
 		if (ind instanceof NTupleIndividual) {
 			NTupleIndividual ntuple = ((NTupleIndividual) ind);

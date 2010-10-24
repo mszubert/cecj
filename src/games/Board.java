@@ -13,6 +13,8 @@ public interface Board extends Cloneable {
 	public void setPiece(int row, int col, int player);
 	
 	public boolean isEmpty(int row, int col);
+	
+	public int getValueAt(int flatLocation);
 
 	public int getValueAt(int row, int col);
 

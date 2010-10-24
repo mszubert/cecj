@@ -48,6 +48,11 @@ public abstract class SimpleBoard implements Board {
 		return size;
 	}
 
+	
+	public int getValueAt(int flatLocation) {
+		return getValueAt(flatLocation / size + 1, flatLocation % size + 1);
+	}
+	
 	public int getValueAt(int row, int col) {
 		return getColorValue(board[row][col]);
 	}

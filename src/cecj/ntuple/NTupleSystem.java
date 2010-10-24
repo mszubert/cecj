@@ -67,6 +67,8 @@ public class NTupleSystem implements Setup {
 		if (spaceSize == 0) {
 			state.output.error("NTupleSpecies must have space size which is > 0");
 		}
+		
+		state.output.exitIfErrors();
 	}
 	
 	public void randomizeIndividual(EvolutionState state, int thread, NTupleIndividual ind) {

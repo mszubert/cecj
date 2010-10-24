@@ -60,7 +60,7 @@ public class WPCPlayer implements EvolvedPlayer {
 		return res;
 	}
 
-	public void randomize(MersenneTwisterFast random, double range) {
+	public void randomizeWeights(MersenneTwisterFast random, double range) {
 		for (int i = 0; i < wpc.length; i++) {
 			wpc[i] = random.nextDouble() * range;
 			if (random.nextBoolean()) {

@@ -2,6 +2,7 @@ package games.player;
 
 import ec.Individual;
 import ec.Setup;
+import ec.util.MersenneTwisterFast;
 
 public interface EvolvedPlayer extends Player, Setup {
 	
@@ -12,4 +13,6 @@ public interface EvolvedPlayer extends Player, Setup {
 	public Individual createIndividual();
 
 	public void reset();
+	
+	public void randomizeWeights(MersenneTwisterFast random, double range);
 }

@@ -13,14 +13,15 @@ public class NTupleSystem implements Setup {
 	public final static String P_NUM_TUPLES = "num-tuples";
 	public final static String P_NUM_VALUES = "num-values";
 
+	public final static String P_INIT_RANGE = "init-range";
+
 	public final static String P_SPACE_SIZE = "space-size";
 
 	/**
 	 * Directions on a 2D board represented by a "flat" array
 	 */
 	private static int[] dirs = { 1, 8, -1, -8, 9, 7, -9, -7 };
-	
-	
+
 	/**
 	 * Number of elements in each tuple
 	 */
@@ -42,7 +43,8 @@ public class NTupleSystem implements Setup {
 	 */
 	private int spaceSize;
 
-	
+	private double initRange;
+
 	public void setup(EvolutionState state, Parameter base) {
 		tupleArity = state.parameters.getInt(base.push(P_TUPLE_ARITY), NTupleDefaults.base().push(
 				P_TUPLE_ARITY), 1);
@@ -67,15 +69,18 @@ public class NTupleSystem implements Setup {
 		if (spaceSize == 0) {
 			state.output.error("NTupleSpecies must have space size which is > 0");
 		}
-		
+
+		initRange = state.parameters.getDoubleWithDefault(base.push(P_INIT_RANGE), NTupleDefaults
+				.base().push(P_INIT_RANGE), 0.0);
+
 		state.output.exitIfErrors();
 	}
-	
+
 	public void randomizeIndividual(EvolutionState state, int thread, NTupleIndividual ind) {
 		double[][] weights = new double[numTuples][];
 		int[][] positions = new int[numTuples][];
 		int maxPosition = spaceSize * spaceSize;
-		
+
 		MersenneTwisterFast rng = state.random[thread];
 		for (int i = 0; i < numTuples; i++) {
 			TreeSet<Integer> positionSet = new TreeSet<Integer>();
@@ -94,10 +99,16 @@ public class NTupleSystem implements Setup {
 			}
 
 			weights[i] = new double[(int) (Math.pow(numValues, positions[i].length))];
+			for (int w = 0; w < weights[i].length; w++) {
+				weights[i][w] = rng.nextDouble() * initRange;
+				if (rng.nextBoolean()) {
+					weights[i][w] *= -1;
+				}
+			}
 		}
-		
+
 		ind.setPositions(positions);
 		ind.setWeights(weights);
 	}
-	
+
 }

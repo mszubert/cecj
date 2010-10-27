@@ -55,6 +55,7 @@ public class SelfPlayTDLScenario extends GameScenario {
 
 	private void updateEvaluationFunction(Board previousBoard, BoardGame game) {
 		double evalBefore = Math.tanh(player.evaluate(previousBoard));
+		double derivative = (1 - (evalBefore * evalBefore));
 		double error;
 
 		if (game.endOfGame()) {
@@ -72,6 +73,10 @@ public class SelfPlayTDLScenario extends GameScenario {
 			error = evalAfter - evalBefore;
 		}
 
-		player.TDLUpdate(previousBoard, learningRate * error, lambda);
+		if (lambda > 0) {
+			player.TDLUpdate(previousBoard, learningRate * error, lambda);
+		} else {
+			player.TDLUpdate(previousBoard, learningRate * error * derivative);
+		}
 	}
 }

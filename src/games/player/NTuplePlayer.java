@@ -2,6 +2,7 @@ package games.player;
 
 import ec.EvolutionState;
 import ec.Individual;
+import ec.simple.SimpleFitness;
 import ec.util.MersenneTwisterFast;
 import ec.util.Parameter;
 import games.Board;
@@ -108,6 +109,7 @@ public class NTuplePlayer implements EvolvedPlayer {
 
 		ind.setPositions(positions);
 		ind.setWeights(weights);
+		ind.fitness = new SimpleFitness();
 
 		return ind;
 	}

@@ -20,6 +20,7 @@ public class NTupleSpecies extends Species {
 	public final static String P_CROSSOVER_PROB = "crossover-prob";
 
 	public final static String P_MUTATION_STDEV = "mutation-stdev";
+
 	public static final String P_SYSTEM = "system";
 
 	private float mutationProbability;
@@ -27,7 +28,8 @@ public class NTupleSpecies extends Species {
 
 	private float mutationStdev;
 	private NTupleSystem tupleSystem;
-	
+
+
 	public Parameter defaultBase() {
 		return NTupleDefaults.base().push(P_NTUPLE_SPECIES);
 	}
@@ -57,10 +59,10 @@ public class NTupleSpecies extends Species {
 			state.output.fatal("NTupleSpecies must have a strictly positive standard deviation",
 					base.push(P_MUTATION_STDEV), defaultBase().push(P_MUTATION_STDEV));
 		}
-
+		
 		tupleSystem = new NTupleSystem();
 		tupleSystem.setup(state, NTupleDefaults.base().push(P_SYSTEM));
-		
+
 		state.output.exitIfErrors();
 		super.setup(state, base);
 	}

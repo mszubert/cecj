@@ -19,6 +19,9 @@ public class WPCPlayer implements EvolvedPlayer {
 
 	private double[][] traces;
 
+	public WPCPlayer() {
+		
+	}
 	
 	public WPCPlayer(int boardSize) {
 		this.boardSize = boardSize;

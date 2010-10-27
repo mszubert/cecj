@@ -97,7 +97,7 @@ public class TDL {
 		Parameter playerParam = new Parameter(P_PLAYER);
 		player = (EvolvedPlayer) state.parameters.getInstanceForParameter(playerParam, null,
 				EvolvedPlayer.class);
-		player.setup(state, base);
+		player.setup(state, playerParam);
 		player.reset();
 		
 		state.population.subpops[0].individuals[0] = player.createIndividual();

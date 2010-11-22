@@ -110,6 +110,7 @@ public class WPCPlayer implements EvolvedPlayer {
 	public void readFromIndividual(Individual ind) {
 		if (ind instanceof DoubleVectorIndividual) {
 			wpc = ((DoubleVectorIndividual) ind).genome;
+			boardSize = (int)Math.sqrt(wpc.length);
 		} else {
 			throw new IllegalArgumentException(
 					"Individual should be of type DoubleVectorIndividual");

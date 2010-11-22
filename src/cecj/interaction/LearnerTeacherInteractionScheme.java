@@ -21,12 +21,15 @@ public class LearnerTeacherInteractionScheme implements InteractionScheme {
 	private static final String P_SIZE = "subpops";
 	private static final String P_SUBPOP = "subpop";
 
+	private static final String P_RESULT_INTERPRETER = "result-interpreter";
+
 	/**
 	 * Number of subpopulations.
 	 */
 	private int numSubpopulations;
 
 	private TestBasedProblem problem;
+	private InteractionResultInterpreter resultInterpreter;
 
 	public enum Role {
 		LEARNER, TEACHER
@@ -40,6 +43,11 @@ public class LearnerTeacherInteractionScheme implements InteractionScheme {
 		} else {
 			problem = (TestBasedProblem) state.evaluator.p_problem;
 		}
+
+		Parameter resultInterpreterParam = base.push(P_RESULT_INTERPRETER);
+		resultInterpreter = (InteractionResultInterpreter) (state.parameters
+				.getInstanceForParameter(resultInterpreterParam, null,
+						InteractionResultInterpreter.class));
 
 		Parameter popSizeParameter = new Parameter(P_POP).push(P_SIZE);
 		numSubpopulations = state.parameters.getInt(popSizeParameter, null, 0);
@@ -77,25 +85,25 @@ public class LearnerTeacherInteractionScheme implements InteractionScheme {
 			}
 		}
 
-		int[][] subpopulationResults = new int[inds.length][numOpponents];
+		int[][] subpopResults = new int[inds.length][numOpponents];
 		for (int ind = 0; ind < inds.length; ind++) {
 			for (int subpop2 = 0; subpop2 < numSubpopulations; subpop2++) {
 				if (subpopulationRoles[subpop2] != subpopulationRoles[subpop]) {
 					List<Individual> curOpponents = opponents.get(subpop2);
 					for (int opp = 0; opp < curOpponents.size(); opp++) {
 						if (subpopulationRoles[subpop] == Role.LEARNER) {
-							subpopulationResults[ind][opp] = problem.test(state, inds[ind],
-									curOpponents.get(opp));
+							subpopResults[ind][opp] = resultInterpreter.getCandidateValue(problem
+									.test(state, inds[ind], curOpponents.get(opp)));
 						} else {
-							subpopulationResults[ind][opp] = -problem.test(state, curOpponents
-									.get(opp), inds[ind]);
+							subpopResults[ind][opp] = resultInterpreter.getTestValue(problem.test(
+									state, curOpponents.get(opp), inds[ind]));
 						}
 					}
 				}
 			}
 		}
 
-		return subpopulationResults;
+		return subpopResults;
 	}
 
 	public List<Integer> getSubpopulationIndices(Role role) {

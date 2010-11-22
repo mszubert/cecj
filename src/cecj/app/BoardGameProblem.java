@@ -17,11 +17,13 @@ public class BoardGameProblem extends TestBasedProblem {
 
 	private static final String P_RANDOMNESS = "randomness";
 	private static final String P_LEARNING_RATE = "learning-rate";
-	private static final String P_BINARY_OUTCOUME = "binary-outcomes";
+	private static final String P_BINARY_OUTCOUME = "binary-outcome";
+	private static final String P_TERNARY_OUTCOUME = "ternary-outcome";
 
 	private double randomness;
 	private boolean randomizedPlay;
 	private boolean binaryOutcome;
+	private boolean ternaryOutcome;
 
 	private double learningRate;
 	private boolean learningPlay;
@@ -59,6 +61,8 @@ public class BoardGameProblem extends TestBasedProblem {
 
 		Parameter binaryOutcomeParam = base.push(P_BINARY_OUTCOUME);
 		binaryOutcome = state.parameters.getBoolean(binaryOutcomeParam, null, false);
+		Parameter ternaryOutcomeParam = base.push(P_TERNARY_OUTCOUME);
+		ternaryOutcome = state.parameters.getBoolean(ternaryOutcomeParam, null, false);
 	}
 
 	@Override
@@ -87,6 +91,9 @@ public class BoardGameProblem extends TestBasedProblem {
 		boardGame.reset();
 		if (binaryOutcome) {
 			return (scenario.play(boardGame) > 0) ? 1 : 0;
+		} else if (ternaryOutcome) {
+			int result = scenario.play(boardGame);
+			return (result > 0) ? 3 : ((result == 0) ? 1 : 0);
 		} else {
 			return scenario.play(boardGame);
 		}

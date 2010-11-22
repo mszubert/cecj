@@ -67,7 +67,9 @@ public class NTupleCrossoverPipeline extends BreedingPipeline {
 			parents[1].evaluated = false;
 
 			inds[i] = parents[0];
-			inds[i + 1] = parents[1];
+			if (i + 1 < n+start) {
+				inds[i + 1] = parents[1];
+			}
 		}
 
 		return n;

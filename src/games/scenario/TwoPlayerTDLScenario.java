@@ -1,12 +1,12 @@
 package games.scenario;
 
-import java.util.List;
-
 import ec.util.MersenneTwisterFast;
 import games.Board;
 import games.BoardGame;
 import games.GameMove;
-import games.player.Player;
+import games.player.LearningPlayer;
+
+import java.util.List;
 
 public class TwoPlayerTDLScenario extends GameScenario {
 
@@ -14,9 +14,9 @@ public class TwoPlayerTDLScenario extends GameScenario {
 	private double prob;
 	private double learningRate;
 
-	private Player[] players;
+	private LearningPlayer[] players;
 
-	public TwoPlayerTDLScenario(MersenneTwisterFast random, Player[] players, double prob,
+	public TwoPlayerTDLScenario(MersenneTwisterFast random, LearningPlayer[] players, double prob,
 			double learningRate, int learner) {
 		super(random);
 
@@ -26,7 +26,7 @@ public class TwoPlayerTDLScenario extends GameScenario {
 		this.learner = learner;
 	}
 
-	public TwoPlayerTDLScenario(MersenneTwisterFast random, Player[] players, double prob,
+	public TwoPlayerTDLScenario(MersenneTwisterFast random, LearningPlayer[] players, double prob,
 			double learningRate) {
 		this(random, players, prob, learningRate, -1);
 	}
@@ -44,7 +44,7 @@ public class TwoPlayerTDLScenario extends GameScenario {
 
 					if (learner == -1 || game.getCurrentPlayer() == learner) {
 						Board previousBoard = game.getBoard().clone();
-						Player previousPlayer = players[game.getCurrentPlayer()];
+						LearningPlayer previousPlayer = players[game.getCurrentPlayer()];
 
 						game.makeMove(bestMove);
 						updateEvaluationFunction(previousBoard, previousPlayer, game);
@@ -60,7 +60,7 @@ public class TwoPlayerTDLScenario extends GameScenario {
 		return game.getOutcome();
 	}
 
-	private void updateEvaluationFunction(Board previousBoard, Player player, BoardGame game) {
+	private void updateEvaluationFunction(Board previousBoard, LearningPlayer player, BoardGame game) {
 		double evalBefore = Math.tanh(player.evaluate(previousBoard));
 		double derivative = (1 - (evalBefore * evalBefore));
 		double error;

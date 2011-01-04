@@ -36,10 +36,10 @@ public class LearningCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 	private static final String P_LEARNING_PREPARE = "learning-prepare";
 	
 	private CoevolutionaryEvaluator innerEvaluator;
-	private LearningImprover temporalDifferenceImprover;
+	private LearningImprover learningImprover;
 	private boolean firstEvaluation = true;
-	private int tdlFrequency;
-	private boolean tdlPrepare;
+	private int learningFrequency;
+	private boolean learningPrepare;
 
 	@Override
 	public void setup(EvolutionState state, Parameter base) {
@@ -51,34 +51,34 @@ public class LearningCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 		innerEvaluator.setup(state, innerEvaluatorParam);
 
 		Parameter tdlImproverParam = base.push(P_LEARNING_IMPROVER);
-		temporalDifferenceImprover = (LearningImprover) (state.parameters.getInstanceForParameter(
+		learningImprover = (LearningImprover) (state.parameters.getInstanceForParameter(
 				tdlImproverParam, null, LearningImprover.class));
-		temporalDifferenceImprover.setup(state, tdlImproverParam);
+		learningImprover.setup(state, tdlImproverParam);
 
 		Parameter tdlImprovingFrequency = base.push(P_LEARNING_FREQUENCY);
-		tdlFrequency = state.parameters.getIntWithDefault(tdlImprovingFrequency, null, 1);
+		learningFrequency = state.parameters.getIntWithDefault(tdlImprovingFrequency, null, 1);
 		
 		Parameter tdlPrepareParam = base.push(P_LEARNING_PREPARE);
-		tdlPrepare = state.parameters.getBoolean(tdlPrepareParam, null, false);
+		learningPrepare = state.parameters.getBoolean(tdlPrepareParam, null, false);
 	}
 
 	@Override
 	public void evaluatePopulation(EvolutionState state) {
-		if (firstEvaluation && tdlPrepare) {
+		if (firstEvaluation && learningPrepare) {
 			for (int subpop = 0; subpop < numSubpopulations; subpop++) {
 				Individual[] inds = state.population.subpops[subpop].individuals;
 				for (Individual ind : inds) {
-					temporalDifferenceImprover.prepareForImproving(state, ind);
+					learningImprover.prepareForImproving(state, ind);
 				}
 			}
 			firstEvaluation = false;
 		}
 
-		if ((state.generation % tdlFrequency) == 0) {
+		if ((state.generation % learningFrequency) == 0) {
 			for (int subpop = 0; subpop < numSubpopulations; subpop++) {
 				Individual[] inds = state.population.subpops[subpop].individuals;
 				for (Individual ind : inds) {
-					temporalDifferenceImprover.improve(state, ind);
+					learningImprover.improve(state, ind);
 				}
 			}
 		}

@@ -4,7 +4,7 @@ import ec.util.MersenneTwisterFast;
 import games.Board;
 import games.BoardGame;
 import games.GameMove;
-import games.player.Player;
+import games.player.LearningPlayer;
 
 import java.util.List;
 
@@ -12,15 +12,15 @@ public class SelfPlayTDLScenario extends GameScenario {
 
 	private double prob;
 	private double lambda;
-	private Player player;
+	private LearningPlayer player;
 	private double learningRate;
 
-	public SelfPlayTDLScenario(MersenneTwisterFast random, Player player, double prob,
+	public SelfPlayTDLScenario(MersenneTwisterFast random, LearningPlayer player, double prob,
 			double learningRate) {
 		this(random, player, prob, learningRate, 0);
 	}
 
-	public SelfPlayTDLScenario(MersenneTwisterFast random, Player player, double prob,
+	public SelfPlayTDLScenario(MersenneTwisterFast random, LearningPlayer player, double prob,
 			double learningRate, double lambda) {
 		super(random);
 

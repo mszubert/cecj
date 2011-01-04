@@ -4,7 +4,7 @@ import ec.Individual;
 import ec.Setup;
 import ec.util.MersenneTwisterFast;
 
-public interface EvolvedPlayer extends Player, Setup {
+public interface EvolvedPlayer extends LearningPlayer, Setup {
 	
 	public EvolvedPlayer createEmptyCopy();
 	

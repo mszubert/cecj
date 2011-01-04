@@ -58,12 +58,17 @@ public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCal
 		GameScenario scenario2 = getInverseScenario(state, player);
 
 		float sum = 0;
+		int gameResult;
 		for (int r = 0; r < repeats; r++) {
 			boardGame.reset();
-			sum += ((scenario1.play(boardGame) > 0) ? 1 : 0);
+			gameResult = scenario1.play(boardGame);
+			sum += ((gameResult > 0) ? 1 : 0);
+			sum += ((gameResult == 0) ? 0.5 : 0);
 			if (playBoth) {
 				boardGame.reset();
-				sum += ((scenario2.play(boardGame) < 0) ? 1 : 0);
+				gameResult = scenario2.play(boardGame);
+				sum += ((gameResult < 0) ? 1 : 0);
+				sum += ((gameResult == 0) ? 0.5 : 0);
 			}
 		}
 

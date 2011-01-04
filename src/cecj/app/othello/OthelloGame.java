@@ -22,6 +22,10 @@ public class OthelloGame implements BoardGame {
 		this.board = new OthelloBoard();
 	}
 
+	public OthelloGame(OthelloBoard board) {
+		this.board = board;
+	}
+
 	public boolean endOfGame() {
 		for (int row = 1; row <= board.getSize(); row++) {
 			for (int col = 1; col <= board.getSize(); col++) {
@@ -48,7 +52,8 @@ public class OthelloGame implements BoardGame {
 	}
 
 	public double evalMove(WPCPlayer player, GameMove move) {
-		List<Integer> directions = board.findDirections(move.getRow(), move.getCol(), currentPlayer);
+		List<Integer> directions = board
+				.findDirections(move.getRow(), move.getCol(), currentPlayer);
 
 		float result = 0;
 		for (int dir : directions) {
@@ -74,7 +79,7 @@ public class OthelloGame implements BoardGame {
 	}
 
 	public void makeMove(GameMove move) {
-		board = (OthelloBoard)(move.getAfterState());
+		board = (OthelloBoard) (move.getAfterState());
 		currentPlayer = getOpponent(currentPlayer);
 	}
 

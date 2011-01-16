@@ -1,0 +1,39 @@
+package cecj.app;
+
+import ec.EvolutionState;
+import ec.Individual;
+import ec.Problem;
+import ec.simple.SimpleFitness;
+import ec.simple.SimpleProblemForm;
+import ec.util.Parameter;
+
+public class SimpleBoardGameProblem extends Problem implements SimpleProblemForm {
+
+	private static final String P_FITNESS_CALCULATOR = "fitness-calc";
+
+	private GamePlayerFitnessCalculator fitnessCalc;
+
+	@Override
+	public void setup(EvolutionState state, Parameter base) {
+		super.setup(state, base);
+
+		Parameter fitnessCalcParameter = base.push(P_FITNESS_CALCULATOR);
+		fitnessCalc = (GamePlayerFitnessCalculator) state.parameters.getInstanceForParameter(
+				fitnessCalcParameter, null, GamePlayerFitnessCalculator.class);
+		fitnessCalc.setup(state, fitnessCalcParameter);
+	}
+
+	public void evaluate(EvolutionState state, Individual ind, int subpopulation, int threadnum) {
+		if (ind.evaluated) {
+			return;
+		}
+		
+		float fitness = fitnessCalc.calculateObjectiveFitness(state, ind);
+		((SimpleFitness)ind.fitness).setFitness(state, fitness, false);
+		ind.evaluated = true;
+	}
+
+	public void describe(Individual ind, EvolutionState state, int subpopulation, int threadnum,
+			int log, int verbosity) {
+	}
+}

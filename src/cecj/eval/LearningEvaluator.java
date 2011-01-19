@@ -5,6 +5,7 @@
 
 package cecj.eval;
 
+import ec.Evaluator;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.util.Parameter;
@@ -28,14 +29,14 @@ import ec.util.Parameter;
  * @see LearningImprover
  * 
  */
-public class LearningCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
+public class LearningEvaluator extends Evaluator {
 
 	private static final String P_INNER_EVALUATOR = "inner-evaluator";
 	private static final String P_LEARNING_IMPROVER = "learning-improver";
 	private static final String P_LEARNING_FREQUENCY = "learning-frequency";
 	private static final String P_LEARNING_PREPARE = "learning-prepare";
 	
-	private CoevolutionaryEvaluator innerEvaluator;
+	private Evaluator innerEvaluator;
 	private LearningImprover learningImprover;
 	private boolean firstEvaluation = true;
 	private int learningFrequency;
@@ -46,8 +47,8 @@ public class LearningCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 		super.setup(state, base);
 
 		Parameter innerEvaluatorParam = base.push(P_INNER_EVALUATOR);
-		innerEvaluator = (CoevolutionaryEvaluator) (state.parameters.getInstanceForParameter(
-				innerEvaluatorParam, null, CoevolutionaryEvaluator.class));
+		innerEvaluator = (Evaluator) (state.parameters.getInstanceForParameter(
+				innerEvaluatorParam, null, Evaluator.class));
 		innerEvaluator.setup(state, innerEvaluatorParam);
 
 		Parameter tdlImproverParam = base.push(P_LEARNING_IMPROVER);
@@ -65,7 +66,7 @@ public class LearningCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 	@Override
 	public void evaluatePopulation(EvolutionState state) {
 		if (firstEvaluation && learningPrepare) {
-			for (int subpop = 0; subpop < numSubpopulations; subpop++) {
+			for (int subpop = 0; subpop < state.population.subpops.length; subpop++) {
 				Individual[] inds = state.population.subpops[subpop].individuals;
 				for (Individual ind : inds) {
 					learningImprover.prepareForImproving(state, ind);
@@ -75,7 +76,7 @@ public class LearningCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 		}
 
 		if ((state.generation % learningFrequency) == 0) {
-			for (int subpop = 0; subpop < numSubpopulations; subpop++) {
+			for (int subpop = 0; subpop < state.population.subpops.length; subpop++) {
 				Individual[] inds = state.population.subpops[subpop].individuals;
 				for (Individual ind : inds) {
 					learningImprover.improve(state, ind);
@@ -84,5 +85,10 @@ public class LearningCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 		}
 
 		innerEvaluator.evaluatePopulation(state);
+	}
+
+	@Override
+	public boolean runComplete(EvolutionState state) {
+		return false;
 	}
 }

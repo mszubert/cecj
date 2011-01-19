@@ -40,9 +40,12 @@ public class TDLMultiPlayImprover extends TDLSelfPlayImprover {
 			for (int r = 0; r < repeats; r++) {
 				boardGame.reset();
 				scenario.play(boardGame);
+			}	
+			
+			for (int r = 0; r < repeats; r++) {
 				boardGame.reset();
 				scenario2.play(boardGame);
-			}	
+			}
 		}
 	}
 }

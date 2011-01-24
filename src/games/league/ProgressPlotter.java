@@ -18,8 +18,8 @@ import cecj.ntuple.NTupleIndividual;
 
 public class ProgressPlotter {
 
-	private static final int PLAYERS_PER_GENERATION = 11;
-	private static final int GENERATIONS = 40;
+	private static final int PLAYERS_PER_GENERATION = 25;
+	private static final int GENERATIONS = 41;
 
 	private List<List<Player>> progress;
 	private double[][] results;
@@ -55,8 +55,13 @@ public class ProgressPlotter {
 	}
 
 	private void printTable() {
-		// TODO Auto-generated method stub
-
+		for (int i = 0; i < GENERATIONS; i++) {
+			for (int j = 0; j < GENERATIONS; j++) {
+				System.out.println(i + "\t" + j + "\t" + results[i][j]);
+			}
+			System.out.println();
+		}
+		System.out.println();
 	}
 
 	private void analyzeProgress() {
@@ -65,8 +70,11 @@ public class ProgressPlotter {
 			for (int o = 0; o < g; o++) {
 				List<Player> olderGeneration = progress.get(o);
 				results[g][o] = playMatch(currentGeneration, olderGeneration);
+				System.out.println(g + "\t" + o + "\t" + results[g][o]);
 			}
+			System.out.println();
 		}
+		System.out.println();
 	}
 
 	private double playMatch(List<Player> currentGeneration, List<Player> olderGeneration) {
@@ -81,12 +89,12 @@ public class ProgressPlotter {
 				scenario = new RandomizedTwoPlayersGameScenario(new MersenneTwisterFast(1987),
 						new Player[] { cp, op }, new double[] { 0, 0 });
 				game.reset();
-				result += (scenario.play(game) > 0) ? 1 : 0;
+				result += (scenario.play(game) >= 0) ? 1 : 0;
 
 				scenario = new RandomizedTwoPlayersGameScenario(new MersenneTwisterFast(1987),
 						new Player[] { op, cp }, new double[] { 0, 0 });
 				game.reset();
-				result += (scenario.play(game) < 0) ? 1 : 0;
+				result += (scenario.play(game) <= 0) ? 1 : 0;
 
 				games += 2;
 			}
@@ -96,7 +104,7 @@ public class ProgressPlotter {
 	}
 
 	public static void main(String[] args) {
-		ProgressPlotter plotter = new ProgressPlotter("ctdl-mc-go-2/exp4v10_980.players");
+		ProgressPlotter plotter = new ProgressPlotter("ntuple/pTDLxover.players");
 		plotter.analyzeProgress();
 		plotter.printTable();
 	}

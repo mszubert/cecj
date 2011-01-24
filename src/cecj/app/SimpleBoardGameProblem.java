@@ -24,13 +24,8 @@ public class SimpleBoardGameProblem extends Problem implements SimpleProblemForm
 	}
 
 	public void evaluate(EvolutionState state, Individual ind, int subpopulation, int threadnum) {
-		if (ind.evaluated) {
-			return;
-		}
-		
 		float fitness = fitnessCalc.calculateObjectiveFitness(state, ind);
 		((SimpleFitness)ind.fitness).setFitness(state, fitness, false);
-		ind.evaluated = true;
 	}
 
 	public void describe(Individual ind, EvolutionState state, int subpopulation, int threadnum,

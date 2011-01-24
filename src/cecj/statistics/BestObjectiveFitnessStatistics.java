@@ -15,7 +15,8 @@ public class BestObjectiveFitnessStatistics extends Statistics {
 	private static final String P_FITNESS_CALCULATOR = "fitness-calc";
 	private static final String P_FITNESS_FILE = "fitness-file";
 	private static final String P_IND_FILE = "ind-file";
-
+	private static final String P_SAVE_LAST_GEN = "save-last-gen";
+	
 	public int fitnessStatisticsLog;
 	public int individualsLog;
 
@@ -25,6 +26,7 @@ public class BestObjectiveFitnessStatistics extends Statistics {
 	}
 
 	private int frequency;
+	private boolean saveLastGeneration;
 	private ObjectiveFitnessCalculator fitnessCalc;
 
 	@Override
@@ -38,7 +40,10 @@ public class BestObjectiveFitnessStatistics extends Statistics {
 
 		Parameter frequencyParam = base.push(P_FREQUENCY);
 		frequency = state.parameters.getIntWithDefault(frequencyParam, null, 1);
-
+		
+		Parameter saveLastGenParam = base.push(P_SAVE_LAST_GEN);
+		saveLastGeneration = state.parameters.getBoolean(saveLastGenParam, null, false);
+		
 		File fitnessStatisticsFile = state.parameters.getFile(base.push(P_FITNESS_FILE), null);
 		if (fitnessStatisticsFile != null) {
 			try {
@@ -86,14 +91,14 @@ public class BestObjectiveFitnessStatistics extends Statistics {
 			float objectiveFitnessOfSubjectivelyBest = fitnessCalc.calculateObjectiveFitness(state,
 					maxSubjectiveFitnessInd);
 
-			state.output.println(state.generation + "\t" + objectiveFitnessOfSubjectivelyBest,
+			state.output.println(state.generation + "\t" + objectiveFitnessOfSubjectivelyBest + "\t" + maxSubjectiveFitness,
 					Output.V_VERBOSE + 1, fitnessStatisticsLog);
 			state.output.println("Generation: " + state.generation, Output.V_VERBOSE + 1,
 					individualsLog);
 			maxSubjectiveFitnessInd.printIndividual(state, individualsLog, Output.V_VERBOSE + 1);
 		}
 
-		if (state.generation == state.numGenerations - 1) {
+		if (saveLastGeneration && (state.generation == state.numGenerations - 1)) { 
 			saveIndividuals(state);
 		}
 	}

@@ -113,4 +113,16 @@ public class NTuplePlayer implements EvolvedPlayer {
 
 		return ind;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("{\n" + tuples.length + "\n");
+		for (NTuple tuple : tuples) {
+			builder.append(tuple.toString());
+		}
+		builder.append("}");
+		
+		return builder.toString();
+	}
 }

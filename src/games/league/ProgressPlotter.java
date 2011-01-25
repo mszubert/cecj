@@ -103,10 +103,15 @@ public class ProgressPlotter {
 		return result / games;
 	}
 
+	public void printBestPlayer() {
+		System.out.println(progress.get(0).get(0));
+	}
+	
 	public static void main(String[] args) {
 		ProgressPlotter plotter = new ProgressPlotter("ntuple/pTDLxover.players");
-		plotter.analyzeProgress();
-		plotter.printTable();
+		//plotter.analyzeProgress();
+		//plotter.printTable();
+		plotter.printBestPlayer();
 	}
 
 }

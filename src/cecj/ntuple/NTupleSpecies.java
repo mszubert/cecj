@@ -23,6 +23,16 @@ public class NTupleSpecies extends Species {
 
 	public static final String P_SYSTEM = "system";
 
+	public static final int M_WEIGHT_MUTATION = 0;
+	public static final String V_WEIGHT_MUTATION = "weight";
+
+	public static final int M_POSITION_MUTATION = 1;
+	public static final String V_POSITION_MUTATION = "position";
+
+	public static final String P_MUTATION_TYPE = "mutation-type";
+	
+	private int mutationType;
+	
 	private float mutationProbability;
 	private float crossoverProbability;
 
@@ -60,6 +70,16 @@ public class NTupleSpecies extends Species {
 					base.push(P_MUTATION_STDEV), defaultBase().push(P_MUTATION_STDEV));
 		}
 		
+		String type = state.parameters.getStringWithDefault(base.push(P_MUTATION_TYPE), null, "weight");
+		if (type.equalsIgnoreCase(V_WEIGHT_MUTATION)) {
+			mutationType = M_WEIGHT_MUTATION;
+		} else if (type.equalsIgnoreCase(V_POSITION_MUTATION)) {
+			mutationType = M_POSITION_MUTATION;
+		} else {
+			state.output.error("NTupleMutationPipeline given a bad mutation type: " + type,
+					base.push(P_MUTATION_TYPE), null);
+		}
+		
 		tupleSystem = new NTupleSystem();
 		tupleSystem.setup(state, NTupleDefaults.base().push(P_SYSTEM));
 
@@ -74,6 +94,10 @@ public class NTupleSpecies extends Species {
 		return individual;
 	}
 
+	public int getMutationType() {
+		return mutationType;
+	}
+	
 	public float getMutationProbability() {
 		return mutationProbability;
 	}
@@ -84,5 +108,9 @@ public class NTupleSpecies extends Species {
 
 	public double getMutationStdev() {
 		return mutationStdev;
+	}
+	
+	public NTupleSystem getTupleSystem() {
+		return tupleSystem;
 	}
 }

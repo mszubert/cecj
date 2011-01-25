@@ -8,7 +8,7 @@ import games.player.EvolvedPlayer;
 import games.scenario.SelfPlayTDLScenario;
 import cecj.eval.LearningImprover;
 
-public class TDLSelfPlayImprover implements LearningImprover {
+public class SelfPlayTDLImprover implements LearningImprover {
 
 	private static final String P_GAME = "game";
 	private static final String P_PLAYER = "player";

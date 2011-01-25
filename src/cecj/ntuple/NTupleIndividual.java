@@ -94,16 +94,27 @@ public class NTupleIndividual extends Individual {
 			return;
 		}
 
-		MersenneTwisterFast rng = state.random[thread];
-		for (int i = 0; i < weights.length; i++) {
-			for (int j = 0; j < weights[i].length; j++) {
-				if (rng.nextBoolean(prob)) {
-					weights[i][j] = rng.nextGaussian() * s.getMutationStdev() + weights[i][j];
+		if (s.getMutationType() == NTupleSpecies.M_WEIGHT_MUTATION) {
+			MersenneTwisterFast rng = state.random[thread];
+			for (int i = 0; i < weights.length; i++) {
+				for (int j = 0; j < weights[i].length; j++) {
+					if (rng.nextBoolean(prob)) {
+						weights[i][j] = rng.nextGaussian() * s.getMutationStdev() + weights[i][j];
+					}
+				}
+			}
+		} else if (s.getMutationType() == NTupleSpecies.M_POSITION_MUTATION) {
+			MersenneTwisterFast rng = state.random[thread];
+			for (int i = 0; i < positions.length; i++) {
+				for (int j = 0; j < positions[i].length; j++) {
+					if (rng.nextBoolean(prob)) {
+						s.getTupleSystem().mutatePosition(positions[i], j);
+					}
 				}
 			}
 		}
 	}
-
+	
 	public void defaultCrossover(EvolutionState state, int thread, NTupleIndividual tupleIndividual) {
 		NTupleSpecies s = (NTupleSpecies) species;
 		float prob = s.getCrossoverProbability();
@@ -200,4 +211,6 @@ public class NTupleIndividual extends Individual {
 		System.out.println(ind.drawCombination(new MersenneTwisterFast(System.currentTimeMillis()),
 				10, 5));
 	}
+
+
 }

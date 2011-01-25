@@ -111,4 +111,42 @@ public class NTupleSystem implements Setup {
 		ind.setWeights(weights);
 	}
 
+	public void mutatePosition(int[] tuple, int position) {
+		int maxPosition = spaceSize * spaceSize;
+		TreeSet<Integer> positionSet = new TreeSet<Integer>();
+		for (int i = 0; i < tuple.length; i++) {
+			if (i != position) {
+				positionSet.add(tuple[i]);
+			}
+		}
+
+		int bestDir = -1;
+		int bestDirNeighbours = -1;
+		for (int d = 0; d < dirs.length; d++) {
+			int newPosition = tuple[position] + dirs[d];
+			newPosition = (newPosition + maxPosition) % maxPosition;
+
+			if (positionSet.contains(newPosition)) {
+				continue;
+			} else {
+				int neighbours = 0;
+				for (int d2 = 0; d2 < dirs.length; d2++) {
+					int newPositionNeighbour = newPosition + dirs[d2];
+					newPositionNeighbour = (newPositionNeighbour + maxPosition) % maxPosition;
+					if (positionSet.contains(newPositionNeighbour)) {
+						neighbours++;
+					}
+				}
+
+				if (neighbours > bestDirNeighbours) {
+					bestDirNeighbours = neighbours;
+					bestDir = d;
+				}
+			}
+		}
+
+		tuple[position] += dirs[bestDir];
+		tuple[position] = (tuple[position] + maxPosition) % maxPosition;
+	}
+
 }

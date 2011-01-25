@@ -7,7 +7,7 @@ import games.player.EvolvedPlayer;
 import games.player.LearningPlayer;
 import games.scenario.TwoPlayerTDLScenario;
 
-public class TDLMultiPlayImprover extends TDLSelfPlayImprover {
+public class PopulationTDLImprover extends SelfPlayTDLImprover {
 
 	private static final String P_OPPONENTS = "opponents";
 

@@ -86,5 +86,28 @@ public class NTuple {
 	public void initializeEligibilityTraces() {
 		traces = new double[lut.length];
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("{\n" + n + "\n" + symmetricPositions.length + "\n");
+		
+		for (int[] symmetry : symmetricPositions) {
+			builder.append("{ ");
+			for (int i = 0; i < n; i++) {
+				builder.append(symmetry[i] + " ");
+			}
+			builder.append("}\n");
+		}
+		
+		builder.append("{ ");
+		for (double weight : lut) {
+			builder.append(weight + " ");
+		}
+		builder.append("}\n");
+		
+		builder.append("}\n");
+		return builder.toString();
+	}
 
 }

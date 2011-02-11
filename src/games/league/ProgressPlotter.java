@@ -18,13 +18,15 @@ import cecj.ntuple.NTupleIndividual;
 
 public class ProgressPlotter {
 
-	private static final int PLAYERS_PER_GENERATION = 25;
-	private static final int GENERATIONS = 41;
+	private static final int PLAYERS_PER_GENERATION = 24;
+	private static final int GENERATIONS = 51;
 
 	private List<List<Player>> progress;
 	private double[][] results;
 
 	public ProgressPlotter(String filename) {
+
+		System.err.println("Reading progress from file " + filename);
 
 		results = new double[GENERATIONS][GENERATIONS];
 		progress = new ArrayList<List<Player>>();
@@ -35,6 +37,13 @@ public class ProgressPlotter {
 			while (((line = reader.readLine()) != null) && (progress.size() < GENERATIONS)) {
 				int generationSize = Integer.parseInt(line.split(" ")[1]);
 				List<Player> generation = new ArrayList<Player>(generationSize);
+
+				System.err.println("Generation " + line.split(" ")[0] + " has " + generationSize
+						+ "players");
+				if (generationSize < PLAYERS_PER_GENERATION) {
+					System.err.println("Generation " + line.split(" ")[0]
+							+ "has less players than required!");
+				}
 
 				for (int i = 0; i < generationSize; i++) {
 					NTupleIndividual ind = new NTupleIndividual();
@@ -54,6 +63,7 @@ public class ProgressPlotter {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private void printTable() {
 		for (int i = 0; i < GENERATIONS; i++) {
 			for (int j = 0; j < GENERATIONS; j++) {
@@ -106,12 +116,24 @@ public class ProgressPlotter {
 	public void printBestPlayer() {
 		System.out.println(progress.get(0).get(0));
 	}
-	
+
 	public static void main(String[] args) {
-		ProgressPlotter plotter = new ProgressPlotter("ntuple/pTDLxover.players");
+		//ProgressPlotter plotter = new ProgressPlotter("ntuple/apTDLmpx100.players");
 		//plotter.analyzeProgress();
-		//plotter.printTable();
-		plotter.printBestPlayer();
+		// plotter.printTable();
+		// plotter.printBestPlayer();
+
+		 NTupleIndividual ind = new NTupleIndividual();
+		 ind.fitness = new SimpleFitness();
+		 try {
+			 ind.readIndividual(null, new LineNumberReader(new FileReader("ntuple/ind.txt")));
+		 } catch (IOException e) {
+			 e.printStackTrace();
+		 }
+				
+		 NTuplePlayer player = new NTuplePlayer();
+		 player.readFromIndividual(ind);
+		 System.out.println(player);
 	}
 
 }

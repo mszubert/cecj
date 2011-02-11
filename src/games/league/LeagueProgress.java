@@ -4,7 +4,6 @@ import ec.simple.SimpleFitness;
 import ec.util.MersenneTwisterFast;
 import games.player.NTuplePlayer;
 import games.player.Player;
-import games.player.WPCPlayer;
 import games.scenario.GameScenario;
 import games.scenario.RandomizedTwoPlayersGameScenario;
 
@@ -19,10 +18,10 @@ import cecj.ntuple.NTupleIndividual;
 
 public class LeagueProgress {
 
-	private static final int WPC_LENGTH = 25;
-	private static final int PLAYERS_PER_TEAM = 25;
-	private static final int EVAL_FREQUENCY = 55000;
-	private static final int GENERATIONS = 41;
+	// private static final int WPC_LENGTH = 25;
+	private static final int PLAYERS_PER_TEAM = 24;
+	private static final int EVAL_FREQUENCY = 50000;
+	private static final int EVALUATIONS = 41;
 
 	private List<String> names;
 	private List<List<List<Player>>> teams;
@@ -32,9 +31,9 @@ public class LeagueProgress {
 	private int[] draws;
 	private int[] losts;
 
-	private Player bestPlayer;
-	private int bestPlayerScore;
-	private String bestPlayerTeam;
+	// private Player bestPlayer;
+	// private int bestPlayerScore;
+	// private String bestPlayerTeam;
 
 	public LeagueProgress() {
 		teams = new ArrayList<List<List<Player>>>();
@@ -42,17 +41,24 @@ public class LeagueProgress {
 	}
 
 	public void play() {
-		int evaluations = teams.get(0).size();
 		for (int i = 0; i < teams.size(); i++) {
-			if (teams.get(i).size() != evaluations) {
-				System.err.println("Team" + i + "was evaluated different number of times");
+			System.err.println("Team " + names.get(i) + " was evaluated " + teams.get(i).size() + " times");
+			if (teams.get(i).size() != EVALUATIONS) {
+				System.err
+						.println("Team " + names.get(i)
+								+ " was evaluated different number of times, namely "
+								+ teams.get(i).size());
 			}
 		}
 
-		for (int eval = 0; eval < evaluations; eval++) {
+		for (int eval = 0; eval < EVALUATIONS; eval++) {
 			List<List<Player>> teamsSnapshot = new ArrayList<List<Player>>();
 			for (int team = 0; team < teams.size(); team++) {
-				teamsSnapshot.add(teams.get(team).get(eval));
+				if (teams.get(team).size() > eval) {
+					teamsSnapshot.add(teams.get(team).get(eval));
+				} else {
+					teamsSnapshot.add(teams.get(team).get(teams.get(team).size() - 1));
+				}
 			}
 
 			playSingleLeague(teamsSnapshot);
@@ -74,69 +80,67 @@ public class LeagueProgress {
 		GameScenario scenario;
 		OthelloGame game = new OthelloGame();
 
-		bestPlayer = null;
-		bestPlayerTeam = null;
-		bestPlayerScore = 0;
+		// bestPlayer = null;
+		// bestPlayerTeam = null;
+		// bestPlayerScore = 0;
 
-		for (int team = 0; team < teamsSnapshot.size(); team++) {
-			int[] pointsWhite = new int[teamsSnapshot.size()];
-			int[] pointsBlack = new int[teamsSnapshot.size()];
+		for (int team = 1; team < teamsSnapshot.size(); team++) {
+			// int[] pointsWhite = new int[teamsSnapshot.size()];
+			// int[] pointsBlack = new int[teamsSnapshot.size()];
 
 			for (Player player : teamsSnapshot.get(team)) {
-				int playerScore = 0;
+				// int playerScore = 0;
 
-				for (int opponentTeam = 0; opponentTeam < teamsSnapshot.size(); opponentTeam++) {
-					if (team == opponentTeam)
-						continue;
+				for (int opponentTeam = 0; opponentTeam < team; opponentTeam++) {
+					// if (team == opponentTeam)
+					// continue;
 
 					for (Player opponent : teamsSnapshot.get(opponentTeam)) {
 						scenario = new RandomizedTwoPlayersGameScenario(new MersenneTwisterFast(
 								1987), new Player[] { player, opponent }, new double[] { 0, 0 });
 
 						game.reset();
-						double result = scenario.play(game);
-						score[team] += points(result);
-						playerScore += points(result);
-						pointsBlack[opponentTeam] += points(result);
-						if (result > 0)
-							wins[team]++;
-						if (result == 0)
-							draws[team]++;
-						if (result < 0)
-							losts[team]++;
+						assignPoints(team, opponentTeam, scenario.play(game));
 
 						scenario = new RandomizedTwoPlayersGameScenario(new MersenneTwisterFast(
 								1987), new Player[] { opponent, player }, new double[] { 0, 0 });
 
 						game.reset();
-						result = -scenario.play(game);
-						score[team] += points(result);
-						playerScore += points(result);
-						pointsWhite[opponentTeam] += points(result);
-						if (result > 0)
-							wins[team]++;
-						if (result == 0)
-							draws[team]++;
-						if (result < 0)
-							losts[team]++;
+						assignPoints(team, opponentTeam, -scenario.play(game));
 					}
-
 				}
 
-				if (playerScore > bestPlayerScore) {
-					bestPlayerScore = playerScore;
-					bestPlayer = player;
-					bestPlayerTeam = names.get(team);
-				}
+				// if (playerScore > bestPlayerScore) {
+				// bestPlayerScore = playerScore;
+				// bestPlayer = player;
+				// bestPlayerTeam = names.get(team);
+				// }
 			}
 
-//			for (int opponentTeam = 0; opponentTeam < teamsSnapshot.size(); opponentTeam++) {
-//				System.err
-//						.println("Team " + team + " vs team " + opponentTeam + " : "
-//								+ pointsBlack[opponentTeam] + "as Black"
-//								+ pointsWhite[opponentTeam] + "as White = \t"
-//								+ (pointsWhite[opponentTeam] + pointsBlack[opponentTeam]));
-//			}
+			// for (int opponentTeam = 0; opponentTeam < teamsSnapshot.size(); opponentTeam++) {
+			// System.err
+			// .println("Team " + team + " vs team " + opponentTeam + " : "
+			// + pointsBlack[opponentTeam] + "as Black"
+			// + pointsWhite[opponentTeam] + "as White = \t"
+			// + (pointsWhite[opponentTeam] + pointsBlack[opponentTeam]));
+			// }
+		}
+	}
+
+	private void assignPoints(int team, int opponentTeam, int result) {
+		score[team] += points(result);
+		score[opponentTeam] += points(-result);
+		// playerScore += points(result);
+		// pointsBlack[opponentTeam] += points(result);
+		if (result > 0) {
+			losts[opponentTeam]++;
+			wins[team]++;
+		} else if (result == 0) {
+			draws[team]++;
+			draws[opponentTeam]++;
+		} else {
+			losts[team]++;
+			wins[opponentTeam]++;
 		}
 	}
 
@@ -158,14 +162,27 @@ public class LeagueProgress {
 	}
 
 	private void addTeam(String name, String filename) {
+		addTeam(name, filename, -1, 1);
+	}
+
+	private void addTeam(String name, String filename, int rest, int mod) {
 		String line;
 		List<List<Player>> teamProgress = new ArrayList<List<Player>>();
 
+		System.err.println("Reading in team " + name + " from file " + filename);
+
 		try {
 			LineNumberReader reader = new LineNumberReader(new FileReader(filename));
-			while (((line = reader.readLine()) != null) && (teamProgress.size() < GENERATIONS)) {
+			while (((line = reader.readLine()) != null) && (teamProgress.size() < EVALUATIONS)) {
 				int teamSize = Integer.parseInt(line.split(" ")[1]);
+				int generation = Integer.parseInt(line.split(" ")[0]);
 				List<Player> team = new ArrayList<Player>(teamSize);
+
+				System.err.println("Generation " + generation + " has " + teamSize + "players");
+				if (teamSize < PLAYERS_PER_TEAM) {
+					System.err.println("Generation " + line.split(" ")[0]
+							+ "has less players than required!");
+				}
 
 				for (int i = 0; i < teamSize; i++) {
 					NTupleIndividual ind = new NTupleIndividual();
@@ -177,7 +194,11 @@ public class LeagueProgress {
 						team.add(player);
 					}
 				}
-				teamProgress.add(team);
+
+				if (generation % mod != rest) {
+					System.err.println("Generation " + generation + " ADDED");
+					teamProgress.add(team);
+				}
 			}
 
 			teams.add(teamProgress);
@@ -187,20 +208,20 @@ public class LeagueProgress {
 		}
 	}
 
-	private void printBestPlayer() {
-		System.out.println("\n Best player comes from team " + bestPlayerTeam + " and its score = "
-				+ bestPlayerScore);
-
-		double[] wpc = ((WPCPlayer) bestPlayer).getWPC();
-		for (int i = 0; i < WPC_LENGTH; i++) {
-			if (i % 5 == 0) {
-				System.out.println("");
-			} else {
-				System.out.print(" ");
-			}
-			System.out.print(Math.round(wpc[i] * 100) / 100.);
-		}
-	}
+	// private void printBestPlayer() {
+	// System.out.println("\n Best player comes from team " + bestPlayerTeam + " and its score = "
+	// + bestPlayerScore);
+	//
+	// double[] wpc = ((WPCPlayer) bestPlayer).getWPC();
+	// for (int i = 0; i < WPC_LENGTH; i++) {
+	// if (i % 5 == 0) {
+	// System.out.println("");
+	// } else {
+	// System.out.print(" ");
+	// }
+	// System.out.print(Math.round(wpc[i] * 100) / 100.);
+	// }
+	// }
 
 	public static void main(String[] args) {
 		LeagueProgress league = new LeagueProgress();
@@ -213,16 +234,34 @@ public class LeagueProgress {
 		// league.addTeam("EXP3v2 95", "ctdl-mc-go-2/exp3v2_95.players");
 		// league.addTeam("EXP3v2 100", "ctdl-mc-go-2/exp3v2_100.players");
 
-		league.addTeam("mTDL", "ntuple/mTDL.players");
-		league.addTeam("pTDL", "ntuple/pTDL.players");
-		league.addTeam("pTDLxover", "ntuple/pTDLxover.players");
-		league.addTeam("apTDL", "ntuple/apTDL.players");
-		league.addTeam("pcTDL", "ntuple/pcTDL.players");
-		league.addTeam("epTDLxover", "ntuple/epTDLxover.players");
+		// league.addTeam("mTDL", "ntuple/mTDL.players");
+		// league.addTeam("pTDL", "ntuple/pTDL.players");
+		// league.addTeam("pTDLx", "ntuple/pTDLxover.players");
+		// league.addTeam("pTDLmpx", "ntuple/pTDLmpx.players");
+		// league.addTeam("pTDLmx", "ntuple/pTDLmx.players");
+		//league.addTeam("pTDLmpx", "ntuple/pTDLmpx001.players");
+		// league.addTeam("apTDL", "ntuple/apTDL.players");
+
+		// league.addTeam("epTDLx", "ntuple/epTDLxover.players");
+		//league.addTeam("epTDLmpx", "ntuple/epTDLmpx.players");
+
+		// league.addTeam("pcTDL", "ntuple/pcTDL.players");
+		league.addTeam("pcTDLx", "ntuple/pcTDLx.players");
+		// league.addTeam("pcTDLmpx", "ntuple/pcTDLmpx.players");
+		// league.addTeam("apcTDLx", "ntuple/apcTDLx.players");
+		league.addTeam("a3pcTDLmpx", "ntuple/apcTDLmpx.players");
+
+		//league.addTeam("TDL", "ntuple/TDL.players");
+		//league.addTeam("mTDL100", "ntuple/mTDL100.players");
+		//league.addTeam("pTDL100", "ntuple/pTDL100.players");
+		//league.addTeam("pTDLx100", "ntuple/pTDLx100.players");
+		league.addTeam("pTDLmpx100", "ntuple/pTDLmpx100.players", 3, 5);
+		league.addTeam("apTDLmpx100", "ntuple/apTDLmpx100.players", 3, 5);
 		
-		
-		//league.addTeam("EXP4", "ctdl-mc-go-2/exp4v10_988.players");
-		//league.addTeam("EXP5", "ctdl-mc-go-2/exp5v10_988.players");
+		league.addTeam("epTDLmpx100", "ntuple/epTDLmpx100.players", 3, 5);
+
+		// league.addTeam("EXP4", "ctdl-mc-go-2/exp4v10_988.players");
+		// league.addTeam("EXP5", "ctdl-mc-go-2/exp5v10_988.players");
 
 		// league.addTeam("EXP1", "othello/exp1.players");
 		// league.addTeam("EXP2", "othello/exp2.players");
@@ -246,6 +285,6 @@ public class LeagueProgress {
 
 		league.play();
 		league.printTable();
-		//league.printBestPlayer();
+		// league.printBestPlayer();
 	}
 }

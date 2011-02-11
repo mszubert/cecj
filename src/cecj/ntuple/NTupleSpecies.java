@@ -70,7 +70,7 @@ public class NTupleSpecies extends Species {
 					base.push(P_MUTATION_STDEV), defaultBase().push(P_MUTATION_STDEV));
 		}
 		
-		String type = state.parameters.getStringWithDefault(base.push(P_MUTATION_TYPE), null, "weight");
+		String type = state.parameters.getStringWithDefault(base.push(P_MUTATION_TYPE), null, V_WEIGHT_MUTATION);
 		if (type.equalsIgnoreCase(V_WEIGHT_MUTATION)) {
 			mutationType = M_WEIGHT_MUTATION;
 		} else if (type.equalsIgnoreCase(V_POSITION_MUTATION)) {

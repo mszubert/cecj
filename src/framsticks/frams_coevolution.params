@@ -1,0 +1,51 @@
+verbosity = 0
+
+breedthreads  = 1
+evalthreads   = 1
+seed.0        = 4357
+
+pop     = ec.Population
+state   = ec.simple.SimpleEvolutionState
+init    = ec.simple.SimpleInitializer
+finish  = ec.simple.SimpleFinisher
+breed   = ec.simple.SimpleBreeder
+stat    = ec.simple.SimpleStatistics
+exch    = ec.simple.SimpleExchanger
+eval    = cecj.eval.TournamentCoevolutionaryEvaluator
+
+generations   = 200
+quit-on-run-complete  = true
+checkpoint        = false
+prefix            = ec
+checkpoint-modulo = 1
+
+pop.subpops                     = 1
+pop.subpop.0                    = ec.Subpopulation
+pop.subpop.0.size               = 8
+pop.subpop.0.duplicate-retries  = 0
+
+pop.subpop.0.species          = framsticks.FramsticksSpecies
+pop.subpop.0.species.ind      = framsticks.FramsticksIndividual
+pop.subpop.0.species.fitness  = ec.simple.SimpleFitness
+pop.subpop.0.species.crossover-prob = 1.0
+pop.subpop.0.species.mutation-prob  = 0.1
+
+pop.subpop.0.species.pipe                   = framsticks.FramsticksMutationPipeline
+pop.subpop.0.species.pipe.source.0          = framsticks.FramsticksCrossoverPipeline
+pop.subpop.0.species.pipe.source.0.source.0 = ec.select.TournamentSelection
+pop.subpop.0.species.pipe.source.0.source.1 = ec.select.TournamentSelection
+
+select.tournament.size = 2
+
+eval.problem = framsticks.FramsticksCoevolutionaryProblem
+
+breed.elite.0 = 2
+
+stat.file = $out.stat
+
+framsticks.directory-path = C:/Framsticks/
+framsticks.scripts-output = C:/Framsticks/scripts_output/genosEval.txt
+framsticks.settings-file = C:/Framsticks/maze1.sim
+framsticks.working-directory = C:/Framsticks/
+framsticks.expdef = standard-eval
+framsticks.executable-cmd = frams -Q -e -s -icliutils.ini

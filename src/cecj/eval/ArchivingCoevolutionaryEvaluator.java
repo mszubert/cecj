@@ -93,7 +93,7 @@ public class ArchivingCoevolutionaryEvaluator extends SimpleCoevolutionaryEvalua
 				false);
 
 		for (int subpop = 0; subpop < numSubpopulations; subpop++) {
-			int[][] subpopulationResults = interactionScheme.performInteractions(state, subpop,
+			float[][] subpopulationResults = interactionScheme.performInteractions(state, subpop,
 					archiveOpponents);
 
 			fitnessAggregateMethod[subpop].addToAggregate(state, subpop, subpopulationResults,

@@ -16,11 +16,9 @@ import ec.util.Parameter;
 public class IntraPopulationInteractionScheme implements InteractionScheme {
 
 	private static final String P_PLAY_BOTH = "play-both";
-	private static final String P_RESULT_INTERPRETER = "result-interpreter";
 
 	private boolean playBoth;
 	private TestBasedProblem problem;
-	private InteractionResultInterpreter resultInterpreter;
 
 	public void setup(EvolutionState state, Parameter base) {
 		if (!(state.evaluator.p_problem instanceof TestBasedProblem)) {
@@ -29,21 +27,16 @@ public class IntraPopulationInteractionScheme implements InteractionScheme {
 			problem = (TestBasedProblem) state.evaluator.p_problem;
 		}
 
-		Parameter resultInterpreterParam = base.push(P_RESULT_INTERPRETER);
-		resultInterpreter = (InteractionResultInterpreter) (state.parameters
-				.getInstanceForParameter(resultInterpreterParam, null,
-						InteractionResultInterpreter.class));
-
 		Parameter playBothParam = base.push(P_PLAY_BOTH);
 		playBoth = state.parameters.getBoolean(playBothParam, null, true);
 	}
 
-	public int[][] performInteractions(EvolutionState state, int subpop,
+	public float[][] performInteractions(EvolutionState state, int subpop,
 			List<List<Individual>> opponents) {
 
 		Individual[] competitors = state.population.subpops[subpop].individuals;
 		List<Individual> curOpponents = opponents.get(subpop);
-		int[][] results = new int[competitors.length][playBoth ? curOpponents.size() * 2
+		float[][] results = new float[competitors.length][playBoth ? curOpponents.size() * 2
 				: curOpponents.size()];
 
 		for (int competitorIndex = 0; competitorIndex < competitors.length; competitorIndex++) {
@@ -51,11 +44,11 @@ public class IntraPopulationInteractionScheme implements InteractionScheme {
 
 			int opponentIndex = 0;
 			for (Individual opponent : curOpponents) {
-				results[competitorIndex][opponentIndex++] = resultInterpreter
-						.getCandidateValue(problem.test(state, competitor, opponent));
+				results[competitorIndex][opponentIndex++] = problem.test(state, competitor,
+						opponent).getCandidateScore();
 				if (playBoth) {
-					results[competitorIndex][opponentIndex++] = resultInterpreter
-							.getTestValue(problem.test(state, opponent, competitor));
+					results[competitorIndex][opponentIndex++] = problem.test(state, opponent,
+							competitor).getTestScore();
 				}
 			}
 		}

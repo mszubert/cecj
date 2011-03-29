@@ -21,7 +21,7 @@ public class SimpleSumFitness implements FitnessAggregateMethod {
 		Arrays.fill(fitnesses, 0.0f);
 	}
 
-	public void addToAggregate(EvolutionState state, int subpop, int[][] subpopulationResults,
+	public void addToAggregate(EvolutionState state, int subpop, float[][] subpopulationResults,
 			int weight) {
 
 		Individual[] inds = state.population.subpops[subpop].individuals;
@@ -32,7 +32,7 @@ public class SimpleSumFitness implements FitnessAggregateMethod {
 
 		for (int ind = 0; ind < inds.length; ind++) {
 			float fitness = 0;
-			for (int result : subpopulationResults[ind]) {
+			for (float result : subpopulationResults[ind]) {
 				fitness += result;
 			}
 			fitnesses[ind] += fitness * weight;

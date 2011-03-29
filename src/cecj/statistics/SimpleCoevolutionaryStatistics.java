@@ -6,7 +6,7 @@ import ec.vector.DoubleVectorIndividual;
 public class SimpleCoevolutionaryStatistics extends CoevolutionaryStatistics {
 
 	@Override
-	public void printInteractionResults(EvolutionState state, int[][] results, int subpop) {
+	public void printInteractionResults(EvolutionState state, float[][] results, int subpop) {
 
 		System.out.println("Subpopulation " + subpop + " interactions result:");
 

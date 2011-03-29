@@ -196,8 +196,8 @@ public class TournamentCoevolutionaryEvaluator extends CoevolutionaryEvaluator {
 			Individual c1 = competitors[competition[i]];
 			Individual c2 = competitors[competition[i + 1]];
 
-			int score1 = problem.test(state, c1, c2);
-			int score2 = problem.test(state, c2, c1);
+			float score1 = problem.test(state, c1, c2).getCandidateScore();
+			float score2 = problem.test(state, c2, c1).getCandidateScore();
 
 			if (score1 > score2) {
 				points[competition[i]]++;

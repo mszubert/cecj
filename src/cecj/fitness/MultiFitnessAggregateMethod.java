@@ -44,7 +44,7 @@ public class MultiFitnessAggregateMethod implements FitnessAggregateMethod {
 		}
 	}
 
-	public void addToAggregate(EvolutionState state, int subpop, int[][] subpopulationResults,
+	public void addToAggregate(EvolutionState state, int subpop, float[][] subpopulationResults,
 			int weight) {
 		for (int i = 0; i < numMethods; i++) {
 			methods[i].addToAggregate(state, subpop, subpopulationResults, weight);

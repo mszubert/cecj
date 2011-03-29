@@ -46,7 +46,7 @@ public class NTupleSpecies extends Species {
 
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
-		mutationProbability = state.parameters.getFloat(base.push(P_MUTATION_PROB), defaultBase()
+		mutationProbability = state.parameters.getFloatWithMax(base.push(P_MUTATION_PROB), defaultBase()
 				.push(P_MUTATION_PROB), 0.0, 1.0);
 		if (mutationProbability == -1.0) {
 			state.output.error(
@@ -54,7 +54,7 @@ public class NTupleSpecies extends Species {
 					base.push(P_MUTATION_PROB), defaultBase().push(P_MUTATION_PROB));
 		}
 
-		crossoverProbability = state.parameters.getFloat(base.push(P_CROSSOVER_PROB), defaultBase()
+		crossoverProbability = state.parameters.getFloatWithMax(base.push(P_CROSSOVER_PROB), defaultBase()
 				.push(P_CROSSOVER_PROB), 0.0, 1.0);
 		if (crossoverProbability == -1.0) {
 			state.output

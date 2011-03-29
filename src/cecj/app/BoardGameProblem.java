@@ -8,6 +8,8 @@ import games.player.EvolvedPlayer;
 import games.scenario.GameScenario;
 import games.scenario.RandomizedTwoPlayersGameScenario;
 import games.scenario.TwoPlayerTDLScenario;
+import cecj.interaction.IntegerTestResult;
+import cecj.interaction.TestResult;
 import cecj.problem.TestBasedProblem;
 
 public class BoardGameProblem extends TestBasedProblem {
@@ -57,7 +59,7 @@ public class BoardGameProblem extends TestBasedProblem {
 	}
 
 	@Override
-	public int test(EvolutionState state, Individual candidate, Individual test) {
+	public TestResult test(EvolutionState state, Individual candidate, Individual test) {
 		GameScenario scenario;
 		EvolvedPlayer[] players = new EvolvedPlayer[] { playerPrototype.createEmptyCopy(),
 				playerPrototype.createEmptyCopy() };
@@ -80,6 +82,6 @@ public class BoardGameProblem extends TestBasedProblem {
 		}
 
 		boardGame.reset();
-		return scenario.play(boardGame);
+		return new IntegerTestResult(scenario.play(boardGame));
 	}
 }

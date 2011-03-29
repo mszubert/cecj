@@ -15,7 +15,7 @@ public class DistinctionSumFitness implements FitnessAggregateMethod {
 		numOpponents = new int[state.population.subpops[subpop].individuals.length];
 	}
 
-	public void addToAggregate(EvolutionState state, int subpop, int[][] subpopulationResults, int weight) {
+	public void addToAggregate(EvolutionState state, int subpop, float[][] subpopulationResults, int weight) {
 
 		Individual[] inds = state.population.subpops[subpop].individuals;
 		if (subpopulationResults.length != inds.length) {
@@ -24,7 +24,7 @@ public class DistinctionSumFitness implements FitnessAggregateMethod {
 		}
 
 		for (int ind = 0; ind < inds.length; ind++) {
-			for (int result : subpopulationResults[ind]) {
+			for (float result : subpopulationResults[ind]) {
 				if (result > 0) {
 					numChallenged[ind]++;
 				}

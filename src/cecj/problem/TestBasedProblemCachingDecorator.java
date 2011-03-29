@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cecj.interaction.TestResult;
 import cecj.utils.Pair;
 import ec.EvolutionState;
 import ec.Individual;
@@ -19,7 +20,7 @@ public class TestBasedProblemCachingDecorator extends TestBasedProblem {
 
 	public static final int UNBOUNDED_CACHE = Integer.MAX_VALUE;
 
-	private Map<Pair<Individual>, Integer> cache;
+	private Map<Pair<Individual>, TestResult> cache;
 	private Map<Pair<Individual>, Integer> LRUtimer;
 
 	private TestBasedProblem problem;
@@ -37,7 +38,7 @@ public class TestBasedProblemCachingDecorator extends TestBasedProblem {
 		Parameter cacheSizeParam = base.push(P_CACHE_SIZE);
 		cacheSizeLimit = state.parameters.getIntWithDefault(cacheSizeParam, null, UNBOUNDED_CACHE);
 
-		cache = new HashMap<Pair<Individual>, Integer>();
+		cache = new HashMap<Pair<Individual>, TestResult>();
 		LRUtimer = new HashMap<Pair<Individual>, Integer>();
 	}
 
@@ -46,9 +47,9 @@ public class TestBasedProblemCachingDecorator extends TestBasedProblem {
 	}
 
 	@Override
-	public int test(EvolutionState state, Individual candidate, Individual test) {
+	public TestResult test(EvolutionState state, Individual candidate, Individual test) {
 		Pair<Individual> key = new Pair<Individual>(candidate, test);
-		Integer result = cache.get(key);
+		TestResult result = cache.get(key);
 		if (result == null) {
 			result = problem.test(state, candidate, test);
 			cache.put(key, result);

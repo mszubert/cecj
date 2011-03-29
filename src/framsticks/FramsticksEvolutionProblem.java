@@ -29,10 +29,4 @@ public class FramsticksEvolutionProblem extends Problem implements SimpleProblem
 		((SimpleFitness) framstickIndividual.fitness).setFitness(state, fitness, false);
 		framstickIndividual.evaluated = true;
 	}
-
-	public void describe(Individual ind, EvolutionState state, int subpopulation, int threadnum,
-			int log, int verbosity) {
-		// TODO Auto-generated method stub
-		
-	}
 }

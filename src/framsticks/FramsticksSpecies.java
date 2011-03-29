@@ -22,7 +22,7 @@ public class FramsticksSpecies extends Species {
 	public void setup(final EvolutionState state, final Parameter base) {
 		Parameter def = defaultBase();
 
-		mutationProbability = state.parameters.getFloat(base.push(P_MUTATIONPROB), def
+		mutationProbability = state.parameters.getFloatWithMax(base.push(P_MUTATIONPROB), def
 				.push(P_MUTATIONPROB), 0.0, 1.0);
 		if (mutationProbability == -1.0)
 			state.output
@@ -30,7 +30,7 @@ public class FramsticksSpecies extends Species {
 							"FramsticksSpecies must have a mutation probability between 0.0 and 1.0 inclusive",
 							base.push(P_MUTATIONPROB), def.push(P_MUTATIONPROB));
 
-		crossoverProbability = state.parameters.getFloat(base.push(P_CROSSOVERPROB), def
+		crossoverProbability = state.parameters.getFloatWithMax(base.push(P_CROSSOVERPROB), def
 				.push(P_CROSSOVERPROB), 0.0, 1.0);
 		if (crossoverProbability == -1.0)
 			state.output

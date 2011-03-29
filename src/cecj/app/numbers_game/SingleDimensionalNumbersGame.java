@@ -3,6 +3,8 @@ package cecj.app.numbers_game;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import cecj.interaction.IntegerTestResult;
+import cecj.interaction.TestResult;
 import cecj.problem.TestBasedProblem;
 import cecj.statistics.ObjectiveFitnessCalculator;
 import ec.EvolutionState;
@@ -12,9 +14,9 @@ import ec.vector.BitVectorIndividual;
 public class SingleDimensionalNumbersGame extends TestBasedProblem implements ObjectiveFitnessCalculator {
 
 	@Override
-	public int test(EvolutionState state, Individual candidate,
+	public TestResult test(EvolutionState state, Individual candidate,
 			Individual test) {
-		return 100;
+		return new IntegerTestResult(100);
 		
 //		if (!(candidate instanceof BitVectorIndividual) || !(test instanceof BitVectorIndividual)) {
 //			state.output.error("Competitor individuals should be represented by bit vectors\n");

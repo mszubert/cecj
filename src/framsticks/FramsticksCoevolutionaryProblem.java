@@ -1,5 +1,6 @@
 package framsticks;
 
+import cecj.interaction.TestResult;
 import cecj.problem.TestBasedProblem;
 import ec.EvolutionState;
 import ec.Individual;
@@ -7,7 +8,7 @@ import ec.Individual;
 public class FramsticksCoevolutionaryProblem extends TestBasedProblem {
 
 	@Override
-	public int test(EvolutionState state, Individual candidate, Individual test) {
+	public TestResult test(EvolutionState state, Individual candidate, Individual test) {
 
 		if (!(candidate instanceof FramsticksIndividual) || !(test instanceof FramsticksIndividual)) {
 			state.output

@@ -140,8 +140,9 @@ public class MaxSolveArchive extends CandidateTestArchive {
 
 		public boolean equal(Individual o1, Individual o2) {
 			for (Individual test : tests) {
-				int result1 = problem.test(state, o1, test);
-				int result2 = problem.test(state, o2, test);
+				float result1 = problem.test(state, o1, test).getCandidateScore();
+				float result2 = problem.test(state, o2, test).getCandidateScore();
+				
 				if (result1 != result2) {
 					return false;
 				}
@@ -161,8 +162,8 @@ public class MaxSolveArchive extends CandidateTestArchive {
 
 		public boolean equal(Individual o1, Individual o2) {
 			for (Individual candidate : candidates) {
-				int result1 = problem.test(state, candidate, o1);
-				int result2 = problem.test(state, candidate, o2);
+				float result1 = problem.test(state, candidate, o1).getCandidateScore();
+				float result2 = problem.test(state, candidate, o2).getCandidateScore();
 				if (result1 != result2) {
 					return false;
 				}

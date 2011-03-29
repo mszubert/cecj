@@ -18,7 +18,7 @@ public interface FitnessAggregateMethod extends Setup {
 
 	public void prepareToAggregate(EvolutionState state, int subpop);
 
-	public void addToAggregate(EvolutionState state, int subpop, int[][] subpopulationResults,
+	public void addToAggregate(EvolutionState state, int subpop, float[][] subpopulationResults,
 			int weight);
 
 	/**

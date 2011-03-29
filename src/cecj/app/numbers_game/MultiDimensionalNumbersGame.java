@@ -6,6 +6,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import cecj.interaction.IntegerTestResult;
+import cecj.interaction.TestResult;
 import cecj.problem.TestBasedProblem;
 import cecj.statistics.ObjectiveFitnessCalculator;
 import ec.EvolutionState;
@@ -47,7 +49,7 @@ public abstract class MultiDimensionalNumbersGame extends TestBasedProblem imple
 	}
 
 	@Override
-	public int test(EvolutionState state, Individual candidate, Individual test) {
+	public TestResult test(EvolutionState state, Individual candidate, Individual test) {
 		if (!(candidate instanceof BitVectorIndividual) || !(test instanceof BitVectorIndividual)) {
 			state.output
 					.error("NumbersGame player's individual should be represented by bit vector\n");
@@ -68,7 +70,7 @@ public abstract class MultiDimensionalNumbersGame extends TestBasedProblem imple
 		List<BigInteger> candidateVector = getIntegerVector(bitCandidate.genome);
 		List<BigInteger> testVector = getIntegerVector(bitTest.genome);
 
-		return compareDimensionsVectors(candidateVector, testVector);
+		return new IntegerTestResult(compareDimensionsVectors(candidateVector, testVector));
 	}
 
 	/**

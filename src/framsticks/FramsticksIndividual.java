@@ -10,7 +10,8 @@ import ec.util.Parameter;
 
 public class FramsticksIndividual extends Individual {
 
-	public static final String P_FRAMSTICKS_INDIVIDUAL = "framsticks-ind";
+	private static final String P_FRAMSTICKS_INDIVIDUAL = "framsticks-ind";
+	private static final String P_INIT_TYPE = "init-type"; 
 
 	public String genotype;
 
@@ -38,7 +39,10 @@ public class FramsticksIndividual extends Individual {
 	@Override
 	public void setup(final EvolutionState state, final Parameter base) {
 		super.setup(state, base);
-		genotype = FramsticksUtils.getInstance(state).getNewGenotype();
+		
+		Parameter initTypeParam = base.push(P_INIT_TYPE);
+		int initializationType = state.parameters.getIntWithDefault(initTypeParam, null, 0);
+		genotype = FramsticksUtils.getInstance(state).getNewGenotype(initializationType);
 	}
 
 	@Override

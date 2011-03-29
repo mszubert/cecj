@@ -1,14 +1,16 @@
 package cecj.problem;
 
+import cecj.interaction.TestResult;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Problem;
 
 public abstract class TestBasedProblem extends Problem {
 
-	public abstract int test(EvolutionState state, Individual candidate, Individual test);
+	public abstract TestResult test(EvolutionState state, Individual candidate, Individual test);
 
 	public boolean solves(EvolutionState state, Individual candidate, Individual test) {
-		return (test(state, candidate, test) > 0);
+		TestResult testResult = test(state, candidate, test);
+		return (testResult.getCandidateScore() > testResult.getTestScore());
 	}
 }

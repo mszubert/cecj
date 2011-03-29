@@ -11,18 +11,18 @@ import ec.util.Parameter;
 public class DistinctionFitnessSharing implements FitnessAggregateMethod {
 
 	int subpopSize;
-	List<List<Integer>> results;
+	List<List<Float>> results;
 
 	public void prepareToAggregate(EvolutionState state, int subpop) {
-		results = new ArrayList<List<Integer>>();
+		results = new ArrayList<List<Float>>();
 		subpopSize = state.population.subpops[subpop].individuals.length;
 
 		for (int i = 0; i < subpopSize; i++) {
-			results.add(new ArrayList<Integer>());
+			results.add(new ArrayList<Float>());
 		}
 	}
 
-	public void addToAggregate(EvolutionState state, int subpop, int[][] subpopulationResults,
+	public void addToAggregate(EvolutionState state, int subpop, float[][] subpopulationResults,
 			int weight) {
 		if (results.size() != subpopSize) {
 			throw new IllegalArgumentException(
@@ -30,7 +30,7 @@ public class DistinctionFitnessSharing implements FitnessAggregateMethod {
 		}
 
 		for (int ind = 0; ind < subpopSize; ind++) {
-			for (int result : subpopulationResults[ind]) {
+			for (float result : subpopulationResults[ind]) {
 				results.get(ind).add(result);
 			}
 		}

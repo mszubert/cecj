@@ -33,7 +33,7 @@ public class InterPopulationInteractionScheme implements InteractionScheme {
 		}
 	}
 
-	public int[][] performInteractions(EvolutionState state, int subpop,
+	public float[][] performInteractions(EvolutionState state, int subpop,
 			List<List<Individual>> opponents) {
 		Individual[] competitors = state.population.subpops[subpop].individuals;
 
@@ -44,7 +44,7 @@ public class InterPopulationInteractionScheme implements InteractionScheme {
 			}
 		}
 
-		int[][] subpopulationResults = new int[competitors.length][numOpponents];
+		float[][] subpopulationResults = new float[competitors.length][numOpponents];
 		for (int competitorIndex = 0; competitorIndex < competitors.length; competitorIndex++) {
 			Individual competitor = competitors[competitorIndex];
 
@@ -54,7 +54,7 @@ public class InterPopulationInteractionScheme implements InteractionScheme {
 					List<Individual> curOpponents = opponents.get(subpop2);
 					for (Individual opponent : curOpponents) {
 						subpopulationResults[competitorIndex][opponentIndex] = problem.test(state,
-								competitor, opponent);
+								competitor, opponent).getCandidateScore();
 						opponentIndex++;
 					}
 				}

@@ -6,7 +6,6 @@ import java.io.IOException;
 import ec.EvolutionState;
 import ec.Individual;
 import ec.Statistics;
-import ec.util.Output;
 import ec.util.Parameter;
 
 public class AverageObjectiveFitnessStatistics extends Statistics {
@@ -43,8 +42,8 @@ public class AverageObjectiveFitnessStatistics extends Statistics {
 		}
 
 		Parameter fitnessCalcParameter = base.push(P_FITNESS_CALCULATOR);
-		fitnessCalc = (ObjectiveFitnessCalculator) state.parameters
-			.getInstanceForParameter(fitnessCalcParameter, null, ObjectiveFitnessCalculator.class);
+		fitnessCalc = (ObjectiveFitnessCalculator) state.parameters.getInstanceForParameter(
+				fitnessCalcParameter, null, ObjectiveFitnessCalculator.class);
 		fitnessCalc.setup(state, fitnessCalcParameter);
 
 		Parameter frequencyParam = base.push(P_FREQUENCY);
@@ -53,8 +52,8 @@ public class AverageObjectiveFitnessStatistics extends Statistics {
 		File fitnessStatisticsFile = state.parameters.getFile(base.push(P_FITNESS_FILE), null);
 		if (fitnessStatisticsFile != null) {
 			try {
-				fitnessStatisticslog = state.output.addLog(fitnessStatisticsFile, Output.V_VERBOSE,
-															false, true, false);
+				fitnessStatisticslog = state.output.addLog(fitnessStatisticsFile, false, true,
+						false);
 			} catch (IOException i) {
 				state.output.fatal("An IOException occurred while trying to create the log "
 						+ fitnessStatisticsFile + ":\n" + i);
@@ -111,11 +110,11 @@ public class AverageObjectiveFitnessStatistics extends Statistics {
 				float avgLastFitness = sumLastFitnesses / countLast;
 				state.output.println(state.generation + "\t" + avgFitness + "\t" + stdev + "\t"
 						+ maxFitness + "\t" + objectiveFitnessOfSubjectivelyBest + "\t"
-						+ avgLastFitness, Output.V_VERBOSE + 1, fitnessStatisticslog);
+						+ avgLastFitness, fitnessStatisticslog);
 			} else {
 				state.output.println(state.generation + "\t" + avgFitness + "\t" + stdev + "\t"
 						+ maxFitness + "\t" + objectiveFitnessOfSubjectivelyBest,
-										Output.V_VERBOSE + 1, fitnessStatisticslog);
+						fitnessStatisticslog);
 			}
 		}
 
@@ -127,10 +126,10 @@ public class AverageObjectiveFitnessStatistics extends Statistics {
 	private void saveIndividuals(EvolutionState state) {
 		for (int subpop = 0; subpop < state.population.subpops.length; ++subpop) {
 			state.output.println("\nSubpopulation " + subpop + " individuals : ",
-									Output.V_VERBOSE + 1, fitnessStatisticslog);
+					fitnessStatisticslog);
 			Individual[] inds = state.population.subpops[subpop].individuals;
 			for (Individual ind : inds) {
-				ind.printIndividual(state, fitnessStatisticslog, Output.V_VERBOSE + 1);
+				ind.printIndividual(state, fitnessStatisticslog);
 			}
 		}
 	}

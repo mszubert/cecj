@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import ec.EvolutionState;
 import ec.simple.SimpleStatistics;
-import ec.util.Output;
 import ec.util.Parameter;
 
 public abstract class CoevolutionaryStatistics extends SimpleStatistics {
@@ -22,8 +21,7 @@ public abstract class CoevolutionaryStatistics extends SimpleStatistics {
 
 		if (statisticsFile != null) {
 			try {
-				statisticslog = state.output.addLog(statisticsFile, Output.V_NO_GENERAL - 1, false,
-						false, false);
+				statisticslog = state.output.addLog(statisticsFile, false, false, false);
 			} catch (IOException i) {
 				state.output.fatal("An IOException occurred while trying to create the log "
 						+ statisticsFile + ":\n" + i);
@@ -31,6 +29,6 @@ public abstract class CoevolutionaryStatistics extends SimpleStatistics {
 		}
 	}
 
-	public abstract void printInteractionResults(EvolutionState state, int[][] result, int subpop);
+	public abstract void printInteractionResults(EvolutionState state, float[][] result, int subpop);
 
 }

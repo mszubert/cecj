@@ -21,7 +21,7 @@ public class CompetitiveFitnessSharing implements FitnessAggregateMethod {
 		Arrays.fill(fitnesses, 0.0f);
 	}
 
-	public void addToAggregate(EvolutionState state, int subpop, int[][] results, int weight) {
+	public void addToAggregate(EvolutionState state, int subpop, float[][] results, int weight) {
 
 		Individual[] inds = state.population.subpops[subpop].individuals;
 		if (results.length != inds.length) {

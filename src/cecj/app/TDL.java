@@ -38,9 +38,9 @@ public class TDL {
 			Output.initialError("Verbosity should be an integer >= 0.\n", verbosityParam);
 		}
 
-		Output output = new Output(true, verbosity);
-		output.addLog(ec.util.Log.D_STDOUT, Output.V_VERBOSE, false);
-		output.addLog(ec.util.Log.D_STDERR, Output.V_VERBOSE, true);
+		Output output = new Output(true);
+		output.addLog(ec.util.Log.D_STDOUT, false);
+		output.addLog(ec.util.Log.D_STDERR, true);
 
 		int time = (int) (System.currentTimeMillis());
 		Parameter seedParam = new Parameter(P_SEED);

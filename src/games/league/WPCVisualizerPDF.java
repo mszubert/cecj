@@ -24,39 +24,41 @@ public class WPCVisualizerPDF {
 
 			float max = Float.MIN_VALUE;
 			float min = Float.MAX_VALUE;
-			float w[] = new float[25];
-			
-			PdfPTable table = new PdfPTable(5);
+			float w[] = new float[64];
+
+			PdfPTable table = new PdfPTable(8);
 			Scanner sc = new Scanner(System.in).useLocale(Locale.ENGLISH);
 			double sum = 0;
-			
-			for (int i = 0; i < 25; i++) {
-				w[i] = (float)sc.nextDouble();
+
+			for (int i = 0; i < 64; i++) {
+				w[i] = (float) sc.nextDouble();
 				max = Math.max(w[i], max);
 				min = Math.min(w[i], min);
 			}
-			
-			for (int i = 0; i < 25; i++) {
+
+			for (int i = 0; i < 64; i++) {
 				sum += w[i];
 				System.out.println(w);
 				PdfPCell cell = new PdfPCell(new Paragraph(" "));
-				cell.setPadding(40.0f);
+				cell.setPadding(20.0f);
 				cell.setBorder(Rectangle.BOX);
 				cell.setBorderColor(new GrayColor(0.7f));
-				
-//				cell.setBackgroundColor(new GrayColor((max - w[i]) / (max - min)));
+
+				// cell.setBackgroundColor(new GrayColor((max - w[i]) / (max -
+				// min)));
 				cell.setBackgroundColor(new GrayColor(0.5f - w[i] / 2.0f));
-				
-//				if (w >= 0) {
-//					cell.setBackgroundColor(new GrayColor(w));					
-//					cell.setBackgroundColor(new Color(0, Math.min(1, w), 0));					
-//				} else {
-//					cell.setBackgroundColor(new Color(Math.min(1, Math.abs(w)), 0, 0));
-//				}
+
+				// if (w >= 0) {
+				// cell.setBackgroundColor(new GrayColor(w));
+				// cell.setBackgroundColor(new Color(0, Math.min(1, w), 0));
+				// } else {
+				// cell.setBackgroundColor(new Color(Math.min(1, Math.abs(w)),
+				// 0, 0));
+				// }
 
 				table.addCell(cell);
 			}
-			
+
 			System.err.println(sum / 25);
 			document.add(table);
 		} catch (Exception de) {

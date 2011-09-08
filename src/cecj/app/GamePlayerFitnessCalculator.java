@@ -9,7 +9,8 @@ import games.player.Player;
 import games.scenario.GameScenario;
 import cecj.statistics.ObjectiveFitnessCalculator;
 
-public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCalculator {
+public abstract class GamePlayerFitnessCalculator implements
+		ObjectiveFitnessCalculator {
 
 	protected static final String P_EVALUATOR_RANDOMNESS = "evaluator-randomness";
 	protected static final String P_EVALUATED_RANDOMNESS = "evaluated-randomness";
@@ -20,6 +21,10 @@ public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCal
 	private static final String P_GAME = "game";
 	private static final String P_PLAYER = "player";
 
+	private static final String P_WIN_POINTS = "win-points";
+	private static final String P_DRAW_POINTS = "draw-points";
+	private static final String P_LOSS_POINTS = "loss-points";
+
 	protected double evaluatedRandomness;
 	protected double evaluatorRandomness;
 	protected boolean playBoth;
@@ -28,12 +33,18 @@ public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCal
 	private BoardGame boardGame;
 	private EvolvedPlayer playerPrototype;
 
+	private float winPoints;
+	private float drawPoints;
+	private float lossPoints;
+
 	public void setup(EvolutionState state, Parameter base) {
 		Parameter randomnessParam = base.push(P_EVALUATED_RANDOMNESS);
-		evaluatedRandomness = state.parameters.getDoubleWithDefault(randomnessParam, null, 0);
+		evaluatedRandomness = state.parameters.getDoubleWithDefault(
+				randomnessParam, null, 0);
 
 		randomnessParam = base.push(P_EVALUATOR_RANDOMNESS);
-		evaluatorRandomness = state.parameters.getDoubleWithDefault(randomnessParam, null, 0);
+		evaluatorRandomness = state.parameters.getDoubleWithDefault(
+				randomnessParam, null, 0);
 
 		Parameter repetitionsParam = base.push(P_REPEATS);
 		repeats = state.parameters.getIntWithDefault(repetitionsParam, null, 1);
@@ -42,12 +53,24 @@ public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCal
 		playBoth = state.parameters.getBoolean(playBothParam, null, false);
 
 		Parameter gameParam = new Parameter(P_GAME);
-		boardGame = (BoardGame) state.parameters.getInstanceForParameter(gameParam, null,
-				BoardGame.class);
+		boardGame = (BoardGame) state.parameters.getInstanceForParameter(
+				gameParam, null, BoardGame.class);
 
 		Parameter playerParam = new Parameter(P_PLAYER);
-		playerPrototype = (EvolvedPlayer) state.parameters.getInstanceForParameter(playerParam,
-				null, EvolvedPlayer.class);
+		playerPrototype = (EvolvedPlayer) state.parameters
+				.getInstanceForParameter(playerParam, null, EvolvedPlayer.class);
+
+		Parameter winPointsParam = base.push(P_WIN_POINTS);
+		winPoints = state.parameters.getFloatWithDefault(winPointsParam, null,
+				1.0);
+
+		Parameter drawPointsParam = base.push(P_DRAW_POINTS);
+		drawPoints = state.parameters.getFloatWithDefault(drawPointsParam,
+				null, 0.0);
+
+		Parameter lossPointsParam = base.push(P_LOSS_POINTS);
+		lossPoints = state.parameters.getFloatWithDefault(lossPointsParam,
+				null, 0.0);
 	}
 
 	public float calculateObjectiveFitness(EvolutionState state, Individual ind) {
@@ -62,13 +85,11 @@ public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCal
 		for (int r = 0; r < repeats; r++) {
 			boardGame.reset();
 			gameResult = scenario1.play(boardGame);
-			sum += ((gameResult > 0) ? 1 : 0);
-			sum += ((gameResult == 0) ? 0.5 : 0);
+			sum += getPoints(gameResult);
 			if (playBoth) {
 				boardGame.reset();
 				gameResult = scenario2.play(boardGame);
-				sum += ((gameResult < 0) ? 1 : 0);
-				sum += ((gameResult == 0) ? 0.5 : 0);
+				sum += getPoints(-gameResult);
 			}
 		}
 
@@ -79,7 +100,19 @@ public abstract class GamePlayerFitnessCalculator implements ObjectiveFitnessCal
 		}
 	}
 
-	protected abstract GameScenario getScenario(EvolutionState state, Player player);
+	private float getPoints(int gameResult) {
+		if (gameResult > 0) {
+			return winPoints;
+		} else if (gameResult < 0) {
+			return lossPoints;
+		} else {
+			return drawPoints;
+		}
+	}
 
-	protected abstract GameScenario getInverseScenario(EvolutionState state, Player player);
+	protected abstract GameScenario getScenario(EvolutionState state,
+			Player player);
+
+	protected abstract GameScenario getInverseScenario(EvolutionState state,
+			Player player);
 }

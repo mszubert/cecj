@@ -1,5 +1,7 @@
 package games.player;
 
+import java.util.StringTokenizer;
+
 import games.Board;
 import games.SymmetryExpander;
 
@@ -14,6 +16,8 @@ public class NTuple {
 	private double[] traces;
 
 	private int[][] symmetricPositions;
+	
+	private NTuple() { }
 
 	public NTuple(int[] locations, SymmetryExpander expander) {
 		this(locations, new double[(int) Math.pow(VALUES, locations.length)], expander);
@@ -110,4 +114,38 @@ public class NTuple {
 		return builder.toString();
 	}
 
+	public static NTuple readNTuple(StringTokenizer tokenizer) {
+		NTuple result = new NTuple();
+		while (!tokenizer.nextToken().equals("{"));
+		result.n = Integer.parseInt(tokenizer.nextToken());
+		result.symmetricPositions = new int[Integer.parseInt(tokenizer.nextToken())][];
+		for (int i = 0; i < result.symmetricPositions.length; i++) {
+			result.symmetricPositions[i] = readIntArray(tokenizer, result.n);
+		}
+		result.lut = readDoubleArray(tokenizer, (int) Math.pow(VALUES, result.n));
+		while (!tokenizer.nextToken().equals("}"));
+		return result;
+	}
+	
+	private static double[] readDoubleArray(StringTokenizer tokenizer, int n) {
+		double[] result = new double[n];
+        while (!tokenizer.nextToken().equals("{"));
+        for (int i=0; i < n; i++) {
+            result[i] = Double.parseDouble(tokenizer.nextToken());
+        }
+		while (!tokenizer.nextToken().equals("}"));
+        return result;
+	}
+
+	private static int[] readIntArray(StringTokenizer tokenizer, int n) {
+        int[] result = new int[n];
+        while (!tokenizer.nextToken().equals("{"));
+        for (int i=0; i < n; i++) {
+            result[i] = Integer.parseInt(tokenizer.nextToken());
+        }
+		while (!tokenizer.nextToken().equals("}"));
+        return result;
+    }
 }
+
+

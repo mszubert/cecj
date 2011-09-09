@@ -8,6 +8,7 @@ import ec.util.Parameter;
 import games.Board;
 
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 import cecj.app.othello.OthelloSymmetryExpander;
 import cecj.ntuple.NTupleIndividual;
@@ -112,6 +113,22 @@ public class NTuplePlayer implements EvolvedPlayer {
 		ind.fitness = new SimpleFitness();
 
 		return ind;
+	}
+	
+	public static NTuplePlayer readFromString(String s) {
+		StringTokenizer tokenizer = new StringTokenizer(s);
+		while (!tokenizer.nextToken().equals("{"));
+		
+		int tuplesNum = Integer.parseInt(tokenizer.nextToken());
+		NTuplePlayer result = new NTuplePlayer();
+		result.tuples = new NTuple[tuplesNum];
+		
+		for (int i = 0; i < tuplesNum; i++) {
+			result.tuples[i] = NTuple.readNTuple(tokenizer);
+		}
+
+		while (!tokenizer.nextToken().equals("}"));
+		return result;
 	}
 	
 	@Override

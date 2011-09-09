@@ -22,7 +22,6 @@ public class OthelloSymmetryExpander implements SymmetryExpander {
         a[7] = (flat(M - y, M - x));
         
         return a;
-
 	}
 	
 	public static int flat(int x, int y) {

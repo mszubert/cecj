@@ -1,11 +1,9 @@
 package games.league;
 
 import ec.simple.SimpleFitness;
-import ec.util.MersenneTwisterFast;
 import games.player.NTuplePlayer;
 import games.player.Player;
 import games.scenario.GameScenario;
-import games.scenario.RandomizedTwoPlayersGameScenario;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -33,13 +31,15 @@ public class ProgressPlotter {
 
 		try {
 			String line;
-			LineNumberReader reader = new LineNumberReader(new FileReader(filename));
-			while (((line = reader.readLine()) != null) && (progress.size() < GENERATIONS)) {
+			LineNumberReader reader = new LineNumberReader(new FileReader(
+					filename));
+			while (((line = reader.readLine()) != null)
+					&& (progress.size() < GENERATIONS)) {
 				int generationSize = Integer.parseInt(line.split(" ")[1]);
 				List<Player> generation = new ArrayList<Player>(generationSize);
 
-				System.err.println("Generation " + line.split(" ")[0] + " has " + generationSize
-						+ "players");
+				System.err.println("Generation " + line.split(" ")[0] + " has "
+						+ generationSize + "players");
 				if (generationSize < PLAYERS_PER_GENERATION) {
 					System.err.println("Generation " + line.split(" ")[0]
 							+ "has less players than required!");
@@ -87,7 +87,8 @@ public class ProgressPlotter {
 		System.out.println();
 	}
 
-	private double playMatch(List<Player> currentGeneration, List<Player> olderGeneration) {
+	private double playMatch(List<Player> currentGeneration,
+			List<Player> olderGeneration) {
 		int games = 0;
 		double result = 0;
 
@@ -96,13 +97,11 @@ public class ProgressPlotter {
 
 		for (Player cp : currentGeneration) {
 			for (Player op : olderGeneration) {
-				scenario = new RandomizedTwoPlayersGameScenario(new MersenneTwisterFast(1987),
-						new Player[] { cp, op }, new double[] { 0, 0 });
+				scenario = new GameScenario(new Player[] { cp, op });
 				game.reset();
 				result += (scenario.play(game) >= 0) ? 1 : 0;
 
-				scenario = new RandomizedTwoPlayersGameScenario(new MersenneTwisterFast(1987),
-						new Player[] { op, cp }, new double[] { 0, 0 });
+				scenario = new GameScenario(new Player[] { op, cp });
 				game.reset();
 				result += (scenario.play(game) <= 0) ? 1 : 0;
 
@@ -118,22 +117,24 @@ public class ProgressPlotter {
 	}
 
 	public static void main(String[] args) {
-		//ProgressPlotter plotter = new ProgressPlotter("ntuple/apTDLmpx100.players");
-		//plotter.analyzeProgress();
+		// ProgressPlotter plotter = new
+		// ProgressPlotter("ntuple/apTDLmpx100.players");
+		// plotter.analyzeProgress();
 		// plotter.printTable();
 		// plotter.printBestPlayer();
 
-		 NTupleIndividual ind = new NTupleIndividual();
-		 ind.fitness = new SimpleFitness();
-		 try {
-			 ind.readIndividual(null, new LineNumberReader(new FileReader("ntuple/ind.txt")));
-		 } catch (IOException e) {
-			 e.printStackTrace();
-		 }
-				
-		 NTuplePlayer player = new NTuplePlayer();
-		 player.readFromIndividual(ind);
-		 System.out.println(player);
+		NTupleIndividual ind = new NTupleIndividual();
+		ind.fitness = new SimpleFitness();
+		try {
+			ind.readIndividual(null, new LineNumberReader(new FileReader(
+					"ntuple/ind.txt")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		NTuplePlayer player = new NTuplePlayer();
+		player.readFromIndividual(ind);
+		System.out.println(player);
 	}
 
 }

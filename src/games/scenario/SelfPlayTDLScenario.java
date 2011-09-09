@@ -1,6 +1,5 @@
 package games.scenario;
 
-import ec.util.MersenneTwisterFast;
 import games.Board;
 import games.BoardGame;
 import games.GameMove;
@@ -15,15 +14,13 @@ public class SelfPlayTDLScenario extends GameScenario {
 	private LearningPlayer player;
 	private double learningRate;
 
-	public SelfPlayTDLScenario(MersenneTwisterFast random, LearningPlayer player, double prob,
+	public SelfPlayTDLScenario(LearningPlayer player, double prob,
 			double learningRate) {
-		this(random, player, prob, learningRate, 0);
+		this(player, prob, learningRate, 0);
 	}
 
-	public SelfPlayTDLScenario(MersenneTwisterFast random, LearningPlayer player, double prob,
+	public SelfPlayTDLScenario(LearningPlayer player, double prob,
 			double learningRate, double lambda) {
-		super(random);
-
 		this.prob = prob;
 		this.player = player;
 		this.lambda = lambda;
@@ -37,8 +34,8 @@ public class SelfPlayTDLScenario extends GameScenario {
 		while (!game.endOfGame()) {
 			List<? extends GameMove> moves = game.findMoves();
 			if (!moves.isEmpty()) {
-				if (random.nextBoolean(prob)) {
-					game.makeMove(moves.get(random.nextInt(moves.size())));
+				if (Math.random() < prob) {
+					game.makeMove(moves.get((int) (Math.random() * moves.size())));
 				} else {
 					GameMove bestMove = chooseBestMove(game, player, moves);
 					Board previousBoard = game.getBoard().clone();

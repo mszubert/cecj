@@ -1,6 +1,5 @@
 package games.league;
 
-import ec.util.MersenneTwisterFast;
 import games.player.WPCPlayer;
 import games.scenario.ALPGameScenario;
 import games.scenario.GameScenario;
@@ -36,8 +35,8 @@ public class HeuristicPerformanceMeter {
 	private void testPlayer(GoGame game) {
 //		WPCPlayer heuristic = new WPCPlayer(wpc);
 		
-		GameScenario scenario1 = new ALPGameScenario(new MersenneTwisterFast(1987), player, 0, new double[] {0, 0 }); 
-		GameScenario scenario2 = new ALPGameScenario(new MersenneTwisterFast(1987), player, 1, new double[] {0, 0 });
+		GameScenario scenario1 = new ALPGameScenario(player, 0, new double[] {0, 0 }); 
+		GameScenario scenario2 = new ALPGameScenario(player, 1, new double[] {0, 0 });
 		
 //			new RandomizedTwoPlayersGameScenario(
 //				new MersenneTwisterFast(1987), new Player[] { player, heuristic }, new double[] {

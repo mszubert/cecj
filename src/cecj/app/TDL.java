@@ -35,7 +35,8 @@ public class TDL {
 		Parameter verbosityParam = new Parameter(P_VERBOSITY);
 		int verbosity = parameters.getInt(verbosityParam, null, 0);
 		if (verbosity < 0) {
-			Output.initialError("Verbosity should be an integer >= 0.\n", verbosityParam);
+			Output.initialError("Verbosity should be an integer >= 0.\n",
+					verbosityParam);
 		}
 
 		Output output = new Output(true);
@@ -44,7 +45,8 @@ public class TDL {
 
 		int time = (int) (System.currentTimeMillis());
 		Parameter seedParam = new Parameter(P_SEED);
-		int seed = ec.Evolve.determineSeed(output, parameters, seedParam, time, 0, false);
+		int seed = ec.Evolve.determineSeed(output, parameters, seedParam, time,
+				0, false);
 		MersenneTwisterFast random = new MersenneTwisterFast(seed);
 
 		EvolutionState state = new SimpleEvolutionState();
@@ -65,7 +67,6 @@ public class TDL {
 	private EvolutionState state;
 	private BoardGame boardGame;
 	private EvolvedPlayer player;
-	private MersenneTwisterFast random;
 
 	private int numGames;
 	private double lambda;
@@ -74,43 +75,45 @@ public class TDL {
 
 	public TDL(EvolutionState state) {
 		this.state = state;
-		this.random = state.random[0];
 
 		Parameter base = new Parameter(P_TDL);
 		Parameter randomnessParam = base.push(P_RANDOMNESS);
-		randomness = state.parameters.getDoubleWithDefault(randomnessParam, null, 0.1);
+		randomness = state.parameters.getDoubleWithDefault(randomnessParam,
+				null, 0.1);
 
 		Parameter learningRateParam = base.push(P_LEARNING_RATE);
-		learningRate = state.parameters.getDoubleWithDefault(learningRateParam, null, 0.01);
+		learningRate = state.parameters.getDoubleWithDefault(learningRateParam,
+				null, 0.01);
 
 		Parameter lambdaParam = base.push(P_LAMBDA);
 		lambda = state.parameters.getDoubleWithDefault(lambdaParam, null, 0.0);
 
 		Parameter numGamesParam = base.push(P_GAMES);
-		numGames = state.parameters.getIntWithDefault(numGamesParam, null, 1000000);
+		numGames = state.parameters.getIntWithDefault(numGamesParam, null,
+				1000000);
 		state.numGenerations = numGames;
 
 		Parameter gameParam = new Parameter(P_GAME);
-		boardGame = (BoardGame) state.parameters.getInstanceForParameter(gameParam, null,
-				BoardGame.class);
+		boardGame = (BoardGame) state.parameters.getInstanceForParameter(
+				gameParam, null, BoardGame.class);
 
 		Parameter playerParam = new Parameter(P_PLAYER);
-		player = (EvolvedPlayer) state.parameters.getInstanceForParameter(playerParam, null,
-				EvolvedPlayer.class);
+		player = (EvolvedPlayer) state.parameters.getInstanceForParameter(
+				playerParam, null, EvolvedPlayer.class);
 		player.setup(state, playerParam);
 		player.reset();
-		
+
 		state.population.subpops[0].individuals[0] = player.createIndividual();
-		
+
 		Parameter statParam = base.push(P_STAT);
-		stat = (Statistics) state.parameters.getInstanceForParameterEq(statParam, null,
-				Statistics.class);
+		stat = (Statistics) state.parameters.getInstanceForParameterEq(
+				statParam, null, Statistics.class);
 		stat.setup(state, statParam);
 	}
 
 	public void run() {
-		SelfPlayTDLScenario scenario = new SelfPlayTDLScenario(random, player, randomness,
-				learningRate, lambda);
+		SelfPlayTDLScenario scenario = new SelfPlayTDLScenario(player,
+				randomness, learningRate, lambda);
 
 		for (int game = 0; game < numGames; game++) {
 			stat.postEvaluationStatistics(state);

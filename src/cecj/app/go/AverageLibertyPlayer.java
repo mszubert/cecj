@@ -10,14 +10,15 @@ import cecj.app.GamePlayerFitnessCalculator;
 public class AverageLibertyPlayer extends GamePlayerFitnessCalculator {
 
 	@Override
-	protected GameScenario getInverseScenario(EvolutionState state, Player player) {
-		return new ALPGameScenario(state.random[0], player, SimpleBoard.WHITE, new double[] {
+	protected GameScenario getInverseScenario(EvolutionState state,
+			Player player) {
+		return new ALPGameScenario(player, SimpleBoard.WHITE, new double[] {
 				evaluatedRandomness, evaluatorRandomness });
 	}
 
 	@Override
 	protected GameScenario getScenario(EvolutionState state, Player player) {
-		return new ALPGameScenario(state.random[0], player, SimpleBoard.BLACK, new double[] {
+		return new ALPGameScenario(player, SimpleBoard.BLACK, new double[] {
 				evaluatedRandomness, evaluatorRandomness });
 	}
 }

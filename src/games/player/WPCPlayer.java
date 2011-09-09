@@ -18,7 +18,7 @@ public class WPCPlayer implements EvolvedPlayer {
 	private double[] wpc;
 
 	private double[][] traces;
-
+	
 	public WPCPlayer() {
 		
 	}
@@ -33,6 +33,16 @@ public class WPCPlayer implements EvolvedPlayer {
 		this.wpc = wpc;
 	}
 
+	public WPCPlayer(String string) {
+		String[] weights = string.trim().split("\\s+");
+		this.boardSize = (int) Math.sqrt(wpc.length);
+		this.wpc = new double[boardSize * boardSize];
+		
+		for (int i = 0; i < wpc.length; i++) {
+			wpc[i] = Double.parseDouble(weights[i]);
+		}
+	}
+	
 	public void setup(EvolutionState state, Parameter base) {
 		this.boardSize = 8;
 		this.wpc = new double[64];

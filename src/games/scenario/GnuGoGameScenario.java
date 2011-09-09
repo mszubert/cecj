@@ -24,8 +24,6 @@ public class GnuGoGameScenario extends GameScenario {
 	private double[] prob;
 
 	public GnuGoGameScenario(MersenneTwisterFast random, Player player, int color, double[] prob) {
-		super(random);
-
 		this.player = player;
 		this.color = color;
 
@@ -42,8 +40,8 @@ public class GnuGoGameScenario extends GameScenario {
 
 			GameMove bestMove = null;
 			List<? extends GameMove> moves = game.findMoves();
-			if (random.nextBoolean(prob[game.getCurrentPlayer()])) {
-				bestMove = moves.get(random.nextInt(moves.size()));
+			if (Math.random() < prob[game.getCurrentPlayer()]) {
+				bestMove = moves.get((int) (Math.random() * moves.size()));
 			} else {
 				if (game.getCurrentPlayer() == color) {
 					bestMove = chooseBestMove(game, player, moves);

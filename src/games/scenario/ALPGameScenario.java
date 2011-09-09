@@ -5,7 +5,6 @@ import java.util.List;
 
 import cecj.app.go.GoGame;
 
-import ec.util.MersenneTwisterFast;
 import games.BoardGame;
 import games.GameMove;
 import games.player.Player;
@@ -16,8 +15,7 @@ public class ALPGameScenario extends GameScenario {
 	private double[] prob;
 	private int color;
 
-	public ALPGameScenario(MersenneTwisterFast random, Player player, int color, double[] prob) {
-		super(random);
+	public ALPGameScenario(Player player, int color, double[] prob) {
 		this.player = player;
 		this.color = color;
 		this.prob = prob;
@@ -29,8 +27,8 @@ public class ALPGameScenario extends GameScenario {
 			List<? extends GameMove> moves = game.findMoves();
 			if (!moves.isEmpty()) {
 				GameMove bestMove = null;
-				if (random.nextBoolean(prob[game.getCurrentPlayer()])) {
-					bestMove = moves.get(random.nextInt(moves.size()));
+				if (Math.random() < prob[game.getCurrentPlayer()]) {
+					bestMove = moves.get((int) (Math.random() * moves.size()));
 				} else if (game.getCurrentPlayer() == color) {
 					bestMove = chooseBestMove(game, player, moves);
 				} else {
@@ -59,6 +57,6 @@ public class ALPGameScenario extends GameScenario {
 			}
 		}
 
-		return bestMoves.get(random.nextInt(bestMoves.size()));
+		return bestMoves.get((int) (Math.random() * bestMoves.size()));
 	}
 }

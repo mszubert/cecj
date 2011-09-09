@@ -8,7 +8,6 @@ import games.player.Player;
 import games.player.WPCPlayer;
 import games.scenario.GameScenario;
 import games.scenario.GnuGoGameScenario;
-import games.scenario.RandomizedTwoPlayersGameScenario;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -60,8 +59,7 @@ public class League {
 						continue;
 
 					for (Player opponent : teams.get(opponentTeam)) {
-						scenario = new RandomizedTwoPlayersGameScenario(new MersenneTwisterFast(
-								1987), new Player[] { player, opponent }, new double[] { 0, 0 });
+						scenario = new GameScenario(new Player[] { player, opponent });
 						game.reset();
 						double result = scenario.play(game);
 						score[team] += points(result);
@@ -73,8 +71,7 @@ public class League {
 						if (result < 0)
 							losts[team]++;
 
-						scenario = new RandomizedTwoPlayersGameScenario(new MersenneTwisterFast(
-								1987), new Player[] { opponent, player }, new double[] { 0, 0 });
+						scenario = new GameScenario(new Player[] { opponent, player });
 						game.reset();
 						result = -scenario.play(game);
 						score[team] += points(result);

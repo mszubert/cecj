@@ -1,11 +1,9 @@
 package games.league;
 
 import ec.simple.SimpleFitness;
-import ec.util.MersenneTwisterFast;
 import games.player.NTuplePlayer;
 import games.player.Player;
 import games.scenario.GameScenario;
-import games.scenario.RandomizedTwoPlayersGameScenario;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -96,14 +94,12 @@ public class LeagueProgress {
 					// continue;
 
 					for (Player opponent : teamsSnapshot.get(opponentTeam)) {
-						scenario = new RandomizedTwoPlayersGameScenario(new MersenneTwisterFast(
-								1987), new Player[] { player, opponent }, new double[] { 0, 0 });
+						scenario = new GameScenario(new Player[] { player, opponent });
 
 						game.reset();
-						assignPoints(team, opponentTeam, scenario.play(game));
+						assignPoints	(team, opponentTeam, scenario.play(game));
 
-						scenario = new RandomizedTwoPlayersGameScenario(new MersenneTwisterFast(
-								1987), new Player[] { opponent, player }, new double[] { 0, 0 });
+						scenario = new GameScenario(new Player[] { opponent, player });
 
 						game.reset();
 						assignPoints(team, opponentTeam, -scenario.play(game));

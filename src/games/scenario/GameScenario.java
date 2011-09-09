@@ -3,21 +3,44 @@ package games.scenario;
 import java.util.ArrayList;
 import java.util.List;
 
-import ec.util.MersenneTwisterFast;
 import games.BoardGame;
 import games.GameMove;
 import games.player.Player;
 
-public abstract class GameScenario {
+public class GameScenario {
 
-	protected MersenneTwisterFast random;
-
-	public GameScenario(MersenneTwisterFast random) {
-		this.random = random;
+	private Player[] players;
+	private double[] prob;
+	
+	public GameScenario() { }
+	
+	public GameScenario(Player[] players) {
+		this(players, new double[] {0., 0.});
 	}
-
-	public abstract int play(BoardGame game);
-
+	
+	public GameScenario(Player[] players, double[] prob) {
+		this.players = players;
+		this.prob = prob;
+	}
+	
+	public int play(BoardGame game) {
+		while (!game.endOfGame()) {
+			List<? extends GameMove> moves = game.findMoves();
+			if (!moves.isEmpty()) {
+				GameMove bestMove = null;
+				if (Math.random() < prob[game.getCurrentPlayer()]) {
+					bestMove = moves.get((int) (Math.random() * moves.size()));
+				} else {
+					bestMove = chooseBestMove(game, players[game.getCurrentPlayer()], moves);
+				}
+				game.makeMove(bestMove);
+			} else {
+				game.pass();
+			}
+		}
+		return game.getOutcome();
+	}
+	
 	protected GameMove chooseBestMove(BoardGame game, Player player, List<? extends GameMove> moves) {
 		double bestEval = Float.NEGATIVE_INFINITY;
 		List<GameMove> bestMoves = new ArrayList<GameMove>();
@@ -33,6 +56,10 @@ public abstract class GameScenario {
 			}
 		}
 
-		return bestMoves.get(random.nextInt(bestMoves.size()));
+		return bestMoves.get((int) (Math.random() * bestMoves.size()));
+	}
+	
+	protected boolean isRandomMove(double prob) {
+		return (Math.random() < prob);
 	}
 }

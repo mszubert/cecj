@@ -1,10 +1,8 @@
 package games.league;
 
-import ec.util.MersenneTwisterFast;
 import games.player.Player;
 import games.player.WPCPlayer;
 import games.scenario.GameScenario;
-import games.scenario.RandomizedTwoPlayersGameScenario;
 
 import java.io.InputStream;
 import java.util.Scanner;
@@ -28,12 +26,12 @@ public class RandomPerformanceMeter {
 	}
 
 	private int testPlayer(int repeats) {
-		MersenneTwisterFast rng = new MersenneTwisterFast(System.currentTimeMillis());
-
-		GameScenario scenario1 = new RandomizedTwoPlayersGameScenario(rng, new Player[] { player,
-				new WPCPlayer(OthelloBoard.BOARD_SIZE) }, new double[] { 0, 1.0 });
-		GameScenario scenario2 = new RandomizedTwoPlayersGameScenario(rng, new Player[] {
-				new WPCPlayer(OthelloBoard.BOARD_SIZE), player }, new double[] { 1.0, 0 });
+		GameScenario scenario1 = new GameScenario(new Player[] { player,
+				new WPCPlayer(OthelloBoard.BOARD_SIZE) },
+				new double[] { 0, 1.0 });
+		GameScenario scenario2 = new GameScenario(new Player[] {
+				new WPCPlayer(OthelloBoard.BOARD_SIZE), player }, new double[] {
+				1.0, 0 });
 		OthelloGame game = new OthelloGame();
 
 		int sum = 0;

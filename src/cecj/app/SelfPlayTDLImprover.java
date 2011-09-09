@@ -28,18 +28,20 @@ public class SelfPlayTDLImprover implements LearningImprover {
 
 	public void setup(EvolutionState state, Parameter base) {
 		Parameter gameParam = new Parameter(P_GAME);
-		boardGame = (BoardGame) state.parameters.getInstanceForParameter(gameParam, null,
-				BoardGame.class);
+		boardGame = (BoardGame) state.parameters.getInstanceForParameter(
+				gameParam, null, BoardGame.class);
 
 		Parameter playerParam = new Parameter(P_PLAYER);
-		playerPrototype = (EvolvedPlayer) state.parameters.getInstanceForParameter(playerParam,
-				null, EvolvedPlayer.class);
+		playerPrototype = (EvolvedPlayer) state.parameters
+				.getInstanceForParameter(playerParam, null, EvolvedPlayer.class);
 
 		Parameter randomnessParam = base.push(P_RANDOMNESS);
-		randomness = state.parameters.getDoubleWithDefault(randomnessParam, null, 0.1);
+		randomness = state.parameters.getDoubleWithDefault(randomnessParam,
+				null, 0.1);
 
 		Parameter learningRateParam = base.push(P_LEARNING_RATE);
-		learningRate = state.parameters.getDoubleWithDefault(learningRateParam, null, 0.01);
+		learningRate = state.parameters.getDoubleWithDefault(learningRateParam,
+				null, 0.01);
 
 		Parameter lambdaParam = base.push(P_LAMBDA);
 		lambda = state.parameters.getDoubleWithDefault(lambdaParam, null, 0.0);
@@ -52,7 +54,7 @@ public class SelfPlayTDLImprover implements LearningImprover {
 		EvolvedPlayer player = playerPrototype.createEmptyCopy();
 		player.readFromIndividual(ind);
 
-		SelfPlayTDLScenario selfPlayScenario = new SelfPlayTDLScenario(state.random[0], player,
+		SelfPlayTDLScenario selfPlayScenario = new SelfPlayTDLScenario(player,
 				randomness, learningRate, lambda);
 
 		for (int r = 0; r < repeats; r++) {

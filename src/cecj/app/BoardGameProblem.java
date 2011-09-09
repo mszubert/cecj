@@ -6,7 +6,6 @@ import ec.util.Parameter;
 import games.BoardGame;
 import games.player.EvolvedPlayer;
 import games.scenario.GameScenario;
-import games.scenario.RandomizedTwoPlayersGameScenario;
 import games.scenario.TwoPlayerTDLScenario;
 import cecj.interaction.IntegerTestResult;
 import cecj.interaction.TestResult;
@@ -88,14 +87,13 @@ public class BoardGameProblem extends TestBasedProblem {
 		}
 
 		if (learningPlay) {
-			scenario = new TwoPlayerTDLScenario(state.random[0], players,
-					randomness, learningRate);
+			scenario = new TwoPlayerTDLScenario(players, randomness,
+					learningRate);
 		} else if (randomizedPlay) {
-			scenario = new RandomizedTwoPlayersGameScenario(state.random[0],
-					players, new double[] { randomness, randomness });
+			scenario = new GameScenario(players, new double[] { randomness,
+					randomness });
 		} else {
-			scenario = new RandomizedTwoPlayersGameScenario(state.random[0],
-					players, new double[] { 0, 0 });
+			scenario = new GameScenario(players);
 		}
 
 		boardGame.reset();

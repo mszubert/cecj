@@ -1,4 +1,4 @@
-package games.league;
+package utils;
 
 import games.player.WPCPlayer;
 import games.scenario.ALPGameScenario;

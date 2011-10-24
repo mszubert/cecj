@@ -1,4 +1,4 @@
-package games.league;
+package utils.display;
 
 import java.util.Scanner;
 

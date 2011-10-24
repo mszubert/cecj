@@ -1,4 +1,4 @@
-package games.league;
+package utils.display;
 
 import java.io.FileOutputStream;
 import java.util.Locale;

@@ -3,6 +3,8 @@ package cecj.app.othello;
 import games.Board;
 import games.player.Player;
 import cecj.app.RandomizedPlayerFitnessCalculator;
+import ec.EvolutionState;
+import ec.util.Parameter;
 
 public class OthelloMobilityPlayer extends RandomizedPlayerFitnessCalculator {
 
@@ -33,6 +35,12 @@ public class OthelloMobilityPlayer extends RandomizedPlayerFitnessCalculator {
 				}
 
 				return corners + mobility;
+			}
+
+			public void setup(EvolutionState state, Parameter base) {
+			}
+
+			public void reset() {
 			}
 		};
 	}

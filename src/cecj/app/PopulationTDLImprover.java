@@ -32,21 +32,25 @@ public class PopulationTDLImprover extends SelfPlayTDLImprover {
 			EvolvedPlayer opponent = playerPrototype.createEmptyCopy();
 			opponent.readFromIndividual(ind2);
 
-			TwoPlayerTDLScenario scenario = new TwoPlayerTDLScenario(
-					new LearningPlayer[] { player, opponent }, randomness,
-					learningRate, 0);
-			TwoPlayerTDLScenario scenario2 = new TwoPlayerTDLScenario(
-					new LearningPlayer[] { opponent, player }, randomness,
-					learningRate, 1);
+			if (player instanceof LearningPlayer && opponent instanceof LearningPlayer) {
+				TwoPlayerTDLScenario scenario = new TwoPlayerTDLScenario(new LearningPlayer[] {
+						(LearningPlayer) player, (LearningPlayer) opponent }, randomness,
+						learningRate, 0);
+				TwoPlayerTDLScenario scenario2 = new TwoPlayerTDLScenario(new LearningPlayer[] {
+						(LearningPlayer) opponent, (LearningPlayer) player }, randomness,
+						learningRate, 1);
 
-			for (int r = 0; r < repeats; r++) {
-				boardGame.reset();
-				scenario.play(boardGame);
-			}
+				for (int r = 0; r < repeats; r++) {
+					boardGame.reset();
+					scenario.play(boardGame);
+				}
 
-			for (int r = 0; r < repeats; r++) {
-				boardGame.reset();
-				scenario2.play(boardGame);
+				for (int r = 0; r < repeats; r++) {
+					boardGame.reset();
+					scenario2.play(boardGame);
+				}
+			} else {
+				state.output.fatal("Can not improve players which are not LearningPlayer instances");
 			}
 		}
 	}

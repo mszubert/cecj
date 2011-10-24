@@ -1,4 +1,4 @@
-package games.league;
+package utils;
 
 import ec.simple.SimpleFitness;
 import games.player.NTuplePlayer;

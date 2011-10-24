@@ -5,6 +5,7 @@ import ec.Individual;
 import ec.util.Parameter;
 import games.BoardGame;
 import games.player.EvolvedPlayer;
+import games.player.LearningPlayer;
 import games.scenario.GameScenario;
 import games.scenario.TwoPlayerTDLScenario;
 import cecj.interaction.IntegerTestResult;
@@ -40,17 +41,16 @@ public class BoardGameProblem extends TestBasedProblem {
 		super.setup(state, base);
 
 		Parameter gameParam = new Parameter(P_GAME);
-		boardGame = (BoardGame) state.parameters.getInstanceForParameter(
-				gameParam, null, BoardGame.class);
+		boardGame = (BoardGame) state.parameters.getInstanceForParameter(gameParam, null,
+				BoardGame.class);
 
 		Parameter playerParam = new Parameter(P_PLAYER);
-		playerPrototype = (EvolvedPlayer) state.parameters
-				.getInstanceForParameter(playerParam, null, EvolvedPlayer.class);
+		playerPrototype = (EvolvedPlayer) state.parameters.getInstanceForParameter(playerParam,
+				null, EvolvedPlayer.class);
 
 		Parameter randomnessParam = base.push(P_RANDOMNESS);
 		if (state.parameters.exists(randomnessParam)) {
-			randomness = state.parameters.getDoubleWithDefault(randomnessParam,
-					null, 0);
+			randomness = state.parameters.getDoubleWithDefault(randomnessParam, null, 0);
 			randomizedPlay = true;
 		} else {
 			randomizedPlay = false;
@@ -58,40 +58,34 @@ public class BoardGameProblem extends TestBasedProblem {
 
 		Parameter learningRateParam = base.push(P_LEARNING_RATE);
 		if (state.parameters.exists(learningRateParam)) {
-			learningRate = state.parameters.getDoubleWithDefault(
-					learningRateParam, null, 0.01);
+			learningRate = state.parameters.getDoubleWithDefault(learningRateParam, null, 0.01);
 			learningPlay = true;
 		} else {
 			learningPlay = false;
 		}
 
 		Parameter sportScoringParam = base.push(P_SPORT_SCORING);
-		sportScoring = state.parameters.getBoolean(sportScoringParam, null,
-				false);
+		sportScoring = state.parameters.getBoolean(sportScoringParam, null, false);
 	}
 
 	@Override
-	public TestResult test(EvolutionState state, Individual candidate,
-			Individual test) {
+	public TestResult test(EvolutionState state, Individual candidate, Individual test) {
 		GameScenario scenario;
-		EvolvedPlayer[] players = new EvolvedPlayer[] {
-				playerPrototype.createEmptyCopy(),
+		EvolvedPlayer[] players = new EvolvedPlayer[] { playerPrototype.createEmptyCopy(),
 				playerPrototype.createEmptyCopy() };
 
 		try {
 			players[0].readFromIndividual(candidate);
 			players[1].readFromIndividual(test);
 		} catch (IllegalArgumentException ex) {
-			state.output
-					.fatal("Players can not be constructed from this type of individual");
+			state.output.fatal("Players can not be constructed from this type of individual");
 		}
 
-		if (learningPlay) {
-			scenario = new TwoPlayerTDLScenario(players, randomness,
+		if (learningPlay && playerPrototype instanceof LearningPlayer) {
+			scenario = new TwoPlayerTDLScenario((LearningPlayer[]) players, randomness,
 					learningRate);
 		} else if (randomizedPlay) {
-			scenario = new GameScenario(players, new double[] { randomness,
-					randomness });
+			scenario = new GameScenario(players, new double[] { randomness, randomness });
 		} else {
 			scenario = new GameScenario(players);
 		}

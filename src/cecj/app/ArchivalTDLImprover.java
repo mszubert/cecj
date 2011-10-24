@@ -27,15 +27,13 @@ public class ArchivalTDLImprover extends SelfPlayTDLImprover {
 		opponents = state.parameters.getInt(opponentsParam, null);
 
 		Parameter selfPlayGamesParam = base.push(P_SELF_PLAY_GAMES);
-		selfPlayGames = state.parameters.getIntWithDefault(selfPlayGamesParam,
-				null, 0);
+		selfPlayGames = state.parameters.getIntWithDefault(selfPlayGamesParam, null, 0);
 	}
 
 	@Override
 	public void improve(EvolutionState state, Individual ind) {
 		if (!(state.population.subpops[0] instanceof ArchivingSubpopulation)) {
-			state.output
-					.fatal("Archival improver requires archiving subpopulation");
+			state.output.fatal("Archival improver requires archiving subpopulation");
 		}
 
 		List<Individual> archivalIndividuals = ((ArchivingSubpopulation) state.population.subpops[0])
@@ -45,41 +43,42 @@ public class ArchivalTDLImprover extends SelfPlayTDLImprover {
 		EvolvedPlayer player = playerPrototype.createEmptyCopy();
 		player.readFromIndividual(ind);
 
-		SelfPlayTDLScenario selfPlayScenario = new SelfPlayTDLScenario(player,
-				randomness, learningRate, lambda);
-		for (int r = 0; r < selfPlayGames; r++) {
-			boardGame.reset();
-			selfPlayScenario.play(boardGame);
-		}
-
-		if (archiveSize < opponents) {
-			for (int r = 0; r < (opponents - archiveSize) * repeats; r++) {
+		if (player instanceof LearningPlayer) {
+			SelfPlayTDLScenario selfPlayScenario = new SelfPlayTDLScenario((LearningPlayer) player,
+					randomness, learningRate, lambda);
+			for (int r = 0; r < selfPlayGames; r++) {
 				boardGame.reset();
 				selfPlayScenario.play(boardGame);
 			}
-		}
 
-		for (int i = 1; i <= Math.min(opponents, archiveSize); i++) {
-			Individual archivalOpponent = archivalIndividuals.get(archiveSize
-					- i);
-			EvolvedPlayer opponent = playerPrototype.createEmptyCopy();
-			opponent.readFromIndividual(archivalOpponent);
-
-			TwoPlayerTDLScenario scenario = new TwoPlayerTDLScenario(
-					new LearningPlayer[] { player, opponent }, randomness,
-					learningRate, 0);
-			TwoPlayerTDLScenario scenario2 = new TwoPlayerTDLScenario(
-					new LearningPlayer[] { opponent, player }, randomness,
-					learningRate, 1);
-
-			for (int r = 0; r < repeats; r++) {
-				boardGame.reset();
-				scenario.play(boardGame);
+			if (archiveSize < opponents) {
+				for (int r = 0; r < (opponents - archiveSize) * repeats; r++) {
+					boardGame.reset();
+					selfPlayScenario.play(boardGame);
+				}
 			}
 
-			for (int r = 0; r < repeats; r++) {
-				boardGame.reset();
-				scenario2.play(boardGame);
+			for (int i = 1; i <= Math.min(opponents, archiveSize); i++) {
+				Individual archivalOpponent = archivalIndividuals.get(archiveSize - i);
+				EvolvedPlayer opponent = playerPrototype.createEmptyCopy();
+				opponent.readFromIndividual(archivalOpponent);
+
+				TwoPlayerTDLScenario scenario = new TwoPlayerTDLScenario(new LearningPlayer[] {
+						(LearningPlayer) player, (LearningPlayer) opponent }, randomness,
+						learningRate, 0);
+				TwoPlayerTDLScenario scenario2 = new TwoPlayerTDLScenario(new LearningPlayer[] {
+						(LearningPlayer) opponent, (LearningPlayer) player }, randomness,
+						learningRate, 1);
+
+				for (int r = 0; r < repeats; r++) {
+					boardGame.reset();
+					scenario.play(boardGame);
+				}
+
+				for (int r = 0; r < repeats; r++) {
+					boardGame.reset();
+					scenario2.play(boardGame);
+				}
 			}
 		}
 	}

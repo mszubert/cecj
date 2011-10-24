@@ -1,4 +1,4 @@
-package games.league;
+package utils;
 
 import games.player.Player;
 import games.player.WPCPlayer;

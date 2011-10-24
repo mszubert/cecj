@@ -1,4 +1,4 @@
-package games.league;
+package utils.league;
 
 import ec.simple.SimpleFitness;
 import ec.util.MersenneTwisterFast;

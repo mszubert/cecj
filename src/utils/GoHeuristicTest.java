@@ -1,4 +1,4 @@
-package games.league;
+package utils;
 
 import ec.util.MersenneTwisterFast;
 import games.GameMove;

@@ -56,8 +56,8 @@ public class GameScenario {
 			}
 		}
 
-		//return bestMoves.get((int) (Math.random() * bestMoves.size()));
-		return bestMoves.get(0);
+		return bestMoves.get((int) (Math.random() * bestMoves.size()));
+		//return bestMoves.get(0);
 	}
 	
 	protected boolean isRandomMove(double prob) {

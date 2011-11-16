@@ -17,6 +17,13 @@ public class GameMove implements Comparable<GameMove> {
 		this.previousBoard = previousBoard;
 	}
 
+	public GameMove(int flatPosition, BoardGame game) {
+		this.player = game.getCurrentPlayer();
+		this.previousBoard = game.getBoard();
+		this.row = flatPosition / previousBoard.getSize() + 1;
+		this.col = flatPosition % previousBoard.getSize() + 1;
+	}
+
 	public int getRow() {
 		return row;
 	}
@@ -51,6 +58,10 @@ public class GameMove implements Comparable<GameMove> {
 		GameMove o = (GameMove) other;
 		return (row == o.row && col == o.col && player == o.player && ((previousBoard == null && o.previousBoard == null) || (previousBoard
 				.equals(o.previousBoard))));
+	}
+
+	public int flatten() {
+		return ((row - 1) * previousBoard.getSize()) + (col - 1);
 	}
 
 }

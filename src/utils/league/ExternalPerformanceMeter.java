@@ -16,9 +16,9 @@ import cecj.app.othello.OthelloGame;
 
 public class ExternalPerformanceMeter extends ProgressMeter {
 
-	private static final int NUM_ROUNDS = 30;
+	private static final int NUM_ROUNDS = 1;
 
-	private static final double RANDOMNESS = 0.1;
+	private static final double RANDOMNESS = 0.00;
 
 	private List<Player> externalOpponents;
 	private List<Integer> tournamentPoints;
@@ -65,11 +65,18 @@ public class ExternalPerformanceMeter extends ProgressMeter {
 				teamPoints += playerPoints;
 				playerRanks.add(getRank(playerPoints, externalPlayersPoints));
 			}
+			
+
+			System.out.print(teamPoints);
+			for (int rank = 1; rank <= externalOpponents.size() + 1; rank++) {
+				int frequency = Collections.frequency(playerRanks, rank);
+				System.out.print("\t" + frequency);
+			}
+			
 			Collections.sort(playerRanks);
 			int mode = findMode(playerRanks);
 			double median = findMedian(playerRanks);
-			
-			System.out.println(teamPoints + "\t" + playerRanks.get(0) + "\t"
+			System.out.println("\t" + teamPoints + "\t" + playerRanks.get(0) + "\t"
 					+ playerRanks.get(playerRanks.size() - 1) + "\t" + median + "\t" + mode);
 		}
 	}
@@ -88,15 +95,15 @@ public class ExternalPerformanceMeter extends ProgressMeter {
 		if (playerRanks.size() % 2 != 0) {
 			return playerRanks.get(playerRanks.size() / 2);
 		} else {
-			return (playerRanks.get(playerRanks.size() / 2)
-					+ playerRanks.get((playerRanks.size() / 2) - 1)) / 2.0;
+			return (playerRanks.get(playerRanks.size() / 2) + playerRanks
+					.get((playerRanks.size() / 2) - 1)) / 2.0;
 		}
 	}
 
 	private int findMode(List<Integer> playerRanks) {
 		int mode = -1;
 		int maxFrequency = -1;
-		
+
 		for (int rank = 1; rank <= externalOpponents.size() + 1; rank++) {
 			int frequency = Collections.frequency(playerRanks, rank);
 			if (frequency > maxFrequency) {
@@ -104,7 +111,7 @@ public class ExternalPerformanceMeter extends ProgressMeter {
 				mode = rank;
 			}
 		}
-		
+
 		return mode;
 	}
 
@@ -169,9 +176,9 @@ public class ExternalPerformanceMeter extends ProgressMeter {
 		externalMeter.readExternalOpponents("ntuple/snt.players");
 		externalMeter.playExternalTournament();
 
-		List<List<Player>> ctdlProgress = externalMeter.readProgressFile(
-				"ntuple/apTDLmpx100.players", 3, 5);
-		
+		List<List<Player>> ctdlProgress = externalMeter
+				.readProgressFile("ntuple/epTDLxover.players");
+
 		List<List<List<Player>>> progressRecords = new ArrayList<List<List<Player>>>();
 		progressRecords.add(ctdlProgress);
 		externalMeter.play(progressRecords);

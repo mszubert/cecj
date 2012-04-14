@@ -24,6 +24,11 @@ public class GoGame implements BoardGame {
 	GameMove[] historicalMoves;
 	GoBoard[] historicalBoards;
 
+	@Override
+	public GoGame clone() {
+		throw new UnsupportedOperationException();
+	}
+	
 	public GoGame() {
 		board = new GoBoard();
 		reset();

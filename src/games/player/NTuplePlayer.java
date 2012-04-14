@@ -14,12 +14,20 @@ import cecj.app.othello.OthelloSymmetryExpander;
 import cecj.ntuple.NTupleIndividual;
 import cecj.ntuple.NTupleSystem;
 
-public class NTuplePlayer implements EvolvedPlayer {
+public class NTuplePlayer implements EvolvedPlayer, LearningPlayer {
 
 	private static final String P_NTUPLE_SYSTEM = "ntuple-system";
 
 	private NTuple[] tuples;
 
+	public int getNumTuples() {
+		return tuples.length;
+	}
+	
+	public NTuple getTuple(int t) {
+		return tuples[t];
+	}
+	
 	public void setup(EvolutionState state, Parameter base) {
 		NTupleSystem system = new NTupleSystem();
 		system.setup(state, base.push(P_NTUPLE_SYSTEM));
@@ -97,6 +105,13 @@ public class NTuplePlayer implements EvolvedPlayer {
 		}
 	}
 
+	@Override
+	public LearningPlayer clone() {
+		NTuplePlayer clone = new NTuplePlayer();
+		
+		return clone;
+	}
+	
 	public Individual createIndividual() {
 		NTupleIndividual ind = new NTupleIndividual();
 
@@ -115,20 +130,18 @@ public class NTuplePlayer implements EvolvedPlayer {
 		return ind;
 	}
 	
-	public static NTuplePlayer readFromString(String s) {
+	public void readFromString(String s) {
 		StringTokenizer tokenizer = new StringTokenizer(s);
 		while (!tokenizer.nextToken().equals("{"));
 		
 		int tuplesNum = Integer.parseInt(tokenizer.nextToken());
-		NTuplePlayer result = new NTuplePlayer();
-		result.tuples = new NTuple[tuplesNum];
+		tuples = new NTuple[tuplesNum];
 		
 		for (int i = 0; i < tuplesNum; i++) {
-			result.tuples[i] = NTuple.readNTuple(tokenizer);
+			tuples[i] = NTuple.readNTuple(tokenizer);
 		}
 
 		while (!tokenizer.nextToken().equals("}"));
-		return result;
 	}
 	
 	@Override
@@ -141,5 +154,25 @@ public class NTuplePlayer implements EvolvedPlayer {
 		builder.append("}");
 		
 		return builder.toString();
+	}
+
+	public void prepareForOfflineLearning() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void updateWeights(Board board, double d) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public double[] getWeightDerivatives(Board[] boards, double[] errors) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void updateWeights(double[] derivatives) {
+		// TODO Auto-generated method stub
+		
 	}
 }

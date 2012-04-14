@@ -10,7 +10,7 @@ import java.util.List;
  * @author Marcin Szubert
  * 
  */
-public interface BoardGame {
+public interface BoardGame extends Cloneable {
 
 	/**
 	 * Verifies if game is in terminal state.
@@ -27,7 +27,7 @@ public interface BoardGame {
 	 * @return
 	 */
 	public double evalMove(Player player, GameMove move);
-
+	
 	public List<GameMove> findMoves();
 
 	public int getCurrentPlayer();
@@ -41,4 +41,6 @@ public interface BoardGame {
 	public Board getBoard();
 
 	public void pass();
+
+	public BoardGame clone();
 }

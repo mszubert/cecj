@@ -17,8 +17,8 @@ public class IntraPopulationInteractionScheme implements InteractionScheme {
 
 	private static final String P_PLAY_BOTH = "play-both";
 
-	private boolean playBoth;
-	private TestBasedProblem problem;
+	protected boolean playBoth;
+	protected TestBasedProblem problem;
 
 	public void setup(EvolutionState state, Parameter base) {
 		if (!(state.evaluator.p_problem instanceof TestBasedProblem)) {

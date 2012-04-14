@@ -1,10 +1,10 @@
 package cecj.app.othello;
 
+import ec.EvolutionState;
+import ec.util.Parameter;
 import games.Board;
 import games.player.Player;
 import cecj.app.RandomizedPlayerFitnessCalculator;
-import ec.EvolutionState;
-import ec.util.Parameter;
 
 public class OthelloMobilityPlayer extends RandomizedPlayerFitnessCalculator {
 

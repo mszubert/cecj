@@ -63,22 +63,7 @@ public class TwoPlayerTDLScenario extends GameScenario {
 			LearningPlayer player, BoardGame game) {
 		double evalBefore = Math.tanh(player.evaluate(previousBoard));
 		double derivative = (1 - (evalBefore * evalBefore));
-		double error;
-
-		if (game.endOfGame()) {
-			int result;
-			if (game.getOutcome() > 0) {
-				result = 1;
-			} else if (game.getOutcome() < 0) {
-				result = -1;
-			} else {
-				result = 0;
-			}
-			error = result - evalBefore;
-		} else {
-			double evalAfter = Math.tanh(player.evaluate(game.getBoard()));
-			error = evalAfter - evalBefore;
-		}
+		double error = getValue(game, player) - evalBefore;
 
 		player.TDLUpdate(previousBoard, learningRate * error * derivative);
 	}

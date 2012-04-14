@@ -77,6 +77,10 @@ public abstract class GamePlayerFitnessCalculator implements
 		EvolvedPlayer player = playerPrototype.createEmptyCopy();
 		player.readFromIndividual(ind);
 
+		return calculateObjectiveFitness(state, player);
+	}
+
+	public float calculateObjectiveFitness(EvolutionState state, Player player) {
 		GameScenario scenario1 = getScenario(state, player);
 		GameScenario scenario2 = getInverseScenario(state, player);
 
@@ -99,7 +103,7 @@ public abstract class GamePlayerFitnessCalculator implements
 			return sum / repeats;
 		}
 	}
-
+	
 	private float getPoints(int gameResult) {
 		if (gameResult > 0) {
 			return winPoints;
@@ -115,4 +119,5 @@ public abstract class GamePlayerFitnessCalculator implements
 
 	protected abstract GameScenario getInverseScenario(EvolutionState state,
 			Player player);
+
 }

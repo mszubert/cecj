@@ -6,7 +6,7 @@ import cecj.app.RandomizedPlayerFitnessCalculator;
 
 public class OthelloHeuristicPlayer extends RandomizedPlayerFitnessCalculator {
 
-	private final double[] wpc = { 1.00f, -0.25f, 0.10f, 0.05f, 0.05f, 0.10f, -0.25f, 1.00f, -0.25f, -0.25f,
+	private static final double[] wpc = { 1.00f, -0.25f, 0.10f, 0.05f, 0.05f, 0.10f, -0.25f, 1.00f, -0.25f, -0.25f,
 			0.01f, 0.01f, 0.01f, 0.01f, -0.25f, -0.25f, 0.10f, 0.01f, 0.05f, 0.02f, 0.02f, 0.05f,
 			0.01f, 0.10f, 0.05f, 0.01f, 0.02f, 0.01f, 0.01f, 0.02f, 0.01f, 0.05f, 0.05f, 0.01f,
 			0.02f, 0.01f, 0.01f, 0.02f, 0.01f, 0.05f, 0.10f, 0.01f, 0.05f, 0.02f, 0.02f, 0.05f,
@@ -15,6 +15,10 @@ public class OthelloHeuristicPlayer extends RandomizedPlayerFitnessCalculator {
 
 	@Override
 	protected Player getOpponent() {
+		return new WPCPlayer(wpc);
+	}
+	
+	public static Player getPlayer() {
 		return new WPCPlayer(wpc);
 	}
 }

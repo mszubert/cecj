@@ -11,18 +11,20 @@ import ec.vector.DoubleVectorIndividual;
 import ec.vector.VectorIndividual;
 import games.Board;
 
-public class WPCPlayer implements EvolvedPlayer {
+public class WPCPlayer implements EvolvedPlayer, LearningPlayer {
 
 	private int boardSize;
 
 	private double[] wpc;
 
 	private double[][] traces;
-	
+
+	private double[] weightUpdates;
+
 	public WPCPlayer() {
-		
+
 	}
-	
+
 	public WPCPlayer(int boardSize) {
 		this.boardSize = boardSize;
 		this.wpc = new double[boardSize * boardSize];
@@ -33,16 +35,15 @@ public class WPCPlayer implements EvolvedPlayer {
 		this.wpc = wpc;
 	}
 
-	public static WPCPlayer readFromString(String string) {		
+	public void readFromString(String string) {
 		String[] weights = string.trim().split("\\s+");
-		WPCPlayer result = new WPCPlayer((int) Math.sqrt(weights.length));
-		
+		boardSize = (int) Math.sqrt(weights.length);
+		wpc = new double[boardSize * boardSize];
 		for (int i = 0; i < weights.length; i++) {
-			result.wpc[i] = Double.parseDouble(weights[i]);
+			wpc[i] = Double.parseDouble(weights[i]);
 		}
-		return result;
 	}
-	
+
 	public void setup(EvolutionState state, Parameter base) {
 		this.boardSize = 8;
 		this.wpc = new double[64];
@@ -81,7 +82,7 @@ public class WPCPlayer implements EvolvedPlayer {
 			}
 		}
 	}
-	
+
 	public void initializeEligibilityTraces() {
 		traces = new double[boardSize + 1][boardSize + 1];
 	}
@@ -120,7 +121,7 @@ public class WPCPlayer implements EvolvedPlayer {
 	public void readFromIndividual(Individual ind) {
 		if (ind instanceof DoubleVectorIndividual) {
 			wpc = ((DoubleVectorIndividual) ind).genome;
-			boardSize = (int)Math.sqrt(wpc.length);
+			boardSize = (int) Math.sqrt(wpc.length);
 		} else {
 			throw new IllegalArgumentException(
 					"Individual should be of type DoubleVectorIndividual");
@@ -140,5 +141,52 @@ public class WPCPlayer implements EvolvedPlayer {
 
 	public void reset() {
 		Arrays.fill(wpc, 0.0);
+	}
+
+	@Override
+	public LearningPlayer clone() {
+		WPCPlayer clone = new WPCPlayer(wpc.clone());
+		return clone;
+	}
+
+	public void prepareForOfflineLearning() {
+		weightUpdates = new double[boardSize * boardSize];
+	}
+
+	public void applyWeightsUpdates() {
+		for (int row = 1; row <= boardSize; row++) {
+			for (int col = 1; col <= boardSize; col++) {
+				setValue(row, col, getValue(row, col)
+						+ weightUpdates[(row - 1) * boardSize + (col - 1)]);
+			}
+		}
+	}
+
+	public void updateWeights(Board previous, double d) {
+		for (int row = 1; row <= boardSize; row++) {
+			for (int col = 1; col <= boardSize; col++) {
+				weightUpdates[(row - 1) * boardSize + (col - 1)] += (d * previous.getValueAt(row,
+						col));
+			}
+		}
+	}
+
+	public double[] getWeightDerivatives(Board[] boards, double[] errors) {
+		double[] derivatives = new double[boardSize * boardSize];
+		for (int i = 0; i < boards.length; i++) {
+			for (int row = 1; row <= boardSize; row++) {
+				for (int col = 1; col <= boardSize; col++) {
+					int index = (row - 1) * boardSize + (col - 1);
+					derivatives[index] += (errors[i] * boards[i].getValueAt(row, col));
+				}
+			}
+		}
+		return derivatives;
+	}
+
+	public void updateWeights(double[] weightDelta) {
+		for (int i = 0; i < wpc.length; i++) {
+			wpc[i] += weightDelta[i];
+		}
 	}
 }

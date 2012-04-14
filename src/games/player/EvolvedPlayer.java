@@ -10,6 +10,8 @@ public interface EvolvedPlayer extends Player, Setup {
 	
 	public void readFromIndividual(Individual ind) throws IllegalArgumentException;
 	
+	public void readFromString(String s);
+	
 	public Individual createIndividual();
 	
 	public void randomizeWeights(MersenneTwisterFast random, double range);

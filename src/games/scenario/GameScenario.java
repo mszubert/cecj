@@ -1,11 +1,11 @@
 package games.scenario;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import games.BoardGame;
 import games.GameMove;
 import games.player.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameScenario {
 
@@ -41,7 +41,7 @@ public class GameScenario {
 		return game.getOutcome();
 	}
 	
-	protected GameMove chooseBestMove(BoardGame game, Player player, List<? extends GameMove> moves) {
+	public static GameMove chooseBestMove(BoardGame game, Player player, List<? extends GameMove> moves) {
 		double bestEval = Float.NEGATIVE_INFINITY;
 		List<GameMove> bestMoves = new ArrayList<GameMove>();
 
@@ -57,7 +57,22 @@ public class GameScenario {
 		}
 
 		return bestMoves.get((int) (Math.random() * bestMoves.size()));
-		//return bestMoves.get(0);
+	}
+	
+	public static double getValue(BoardGame game, Player player) {
+		if (game.endOfGame()) {
+			int result;
+			if (game.getOutcome() > 0) {
+				result = 1;
+			} else if (game.getOutcome() < 0) {
+				result = -1;
+			} else {
+				result = 0;
+			}
+			return result;
+		} else {
+			return Math.tanh(player.evaluate(game.getBoard()));
+		}
 	}
 	
 	protected boolean isRandomMove(double prob) {

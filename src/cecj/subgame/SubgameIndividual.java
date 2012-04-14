@@ -3,6 +3,7 @@ package cecj.subgame;
 import java.util.Arrays;
 import java.util.List;
 
+import cecj.app.othello.OthelloGame;
 import cecj.ntuple.NTupleDefaults;
 import ec.EvolutionState;
 import ec.Individual;
@@ -16,9 +17,10 @@ public class SubgameIndividual extends Individual {
 	public static final String P_SUBGAME_INDIVIDUAL = "subgame-ind";
 
 	private static final int NUM_MAX_MOVES = 60 * 2;
+
+	private static final int PASS = -1;
 	
-	private static final int INITIAL_SUBGAME_SIZE = 2;
-	
+
 	private int lastPosition;
 
 	private int[] trace;
@@ -76,19 +78,34 @@ public class SubgameIndividual extends Individual {
 
 		MersenneTwisterFast rng = state.random[thread];
 		if (rng.nextBoolean(prob)) {
-			undoLastMove();
-			if (rng.nextBoolean()) {
-				undoLastMove();
+			if (s.getMutationType() == SubgameSpecies.M_UP_MUTATION) {
+				mutateDown(s.getGame(), rng);
+			} else {
+				mutateUp(s.getGame(), rng);
 			}
-			
-			BoardGame game = s.getGame();
-			adapt(game);
-			
-			List<GameMove> moves = game.findMoves();
-			int randomMoveIndex = state.random[0].nextInt(moves.size());
+		}
+	}
+
+	private void mutateDown(BoardGame game, MersenneTwisterFast random) {
+		adapt(game);
+
+		List<GameMove> moves = game.findMoves();
+		if (moves.isEmpty()) {
+			trace[++lastPosition] = PASS;
+		} else {
+			int randomMoveIndex = random.nextInt(moves.size());
 			GameMove move = moves.get(randomMoveIndex);
 			trace[++lastPosition] = move.flatten();
 		}
+	}
+
+	private void mutateUp(BoardGame game, MersenneTwisterFast random) {
+		undoLastMove();
+		if (random.nextBoolean()) {
+			undoLastMove();
+		}
+
+		mutateDown(game, random);
 	}
 
 	@Override
@@ -97,22 +114,22 @@ public class SubgameIndividual extends Individual {
 	}
 
 	private void undoLastMove() {
-		do {
+		if (lastPosition >= 0) {
 			lastPosition--;
-		} while (trace[lastPosition + 1] == -1);
+		}
 	}
-	
-	public void init(EvolutionState state, BoardGame boardGame) {
+
+	public void init(BoardGame boardGame, MersenneTwisterFast random, int depth) {
 		this.trace = new int[NUM_MAX_MOVES];
 		this.lastPosition = -1;
-		Arrays.fill(trace, -1);
+		Arrays.fill(trace, PASS);
 
 		boardGame.reset();
-		while (!boardGame.endOfGame()) {
+		while (lastPosition + 1 < depth && !boardGame.endOfGame()) {
 			lastPosition++;
 			List<GameMove> moves = boardGame.findMoves();
 			if (!moves.isEmpty()) {
-				int randomMoveIndex = state.random[0].nextInt(moves.size());
+				int randomMoveIndex = random.nextInt(moves.size());
 				GameMove move = moves.get(randomMoveIndex);
 				trace[lastPosition] = move.flatten();
 				boardGame.makeMove(move);
@@ -120,14 +137,12 @@ public class SubgameIndividual extends Individual {
 				boardGame.pass();
 			}
 		}
-		
-		this.lastPosition -= INITIAL_SUBGAME_SIZE;
 	}
 
 	public void adapt(BoardGame boardGame) {
 		boardGame.reset();
 		for (int i = 0; i <= lastPosition; i++) {
-			if (trace[i] != -1) {
+			if (trace[i] != PASS) {
 				boardGame.makeMove(new GameMove(trace[i], boardGame));
 			} else {
 				boardGame.pass();
@@ -135,4 +150,27 @@ public class SubgameIndividual extends Individual {
 		}
 	}
 
+	public static void main(String args[]) {
+		SubgameIndividual subgame = new SubgameIndividual();
+		MersenneTwisterFast random = new MersenneTwisterFast();
+		BoardGame othello = new OthelloGame();
+		
+//		for (int i = 0; i <= 60; i++) {
+//			subgame.init(othello, random, i);
+//			System.out.println(othello.getBoard());
+//		}
+		
+		subgame.init(othello, random, 0);
+		for (int i = 0; i < 60; i++) {
+			System.out.println("Mutate down, step:" + i);
+			subgame.mutateDown(othello, random);
+			System.out.println(othello.getBoard());
+		}
+		
+		for (int i = 0; i < 200; i++) {
+			System.out.println("Mutate up, step:" + i);
+			subgame.mutateUp(othello, random);
+			System.out.println(othello.getBoard());
+		}
+	}
 }

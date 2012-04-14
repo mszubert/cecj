@@ -23,7 +23,12 @@ public class OthelloGame implements BoardGame {
 	}
 
 	public OthelloGame(OthelloBoard board) {
-		this.board = board;
+		this.board = board.clone();
+	}
+
+	public OthelloGame(int currentPlayer, OthelloBoard board) {
+		this.currentPlayer = currentPlayer;
+		this.board = board.clone();
 	}
 
 	public boolean endOfGame() {
@@ -110,5 +115,17 @@ public class OthelloGame implements BoardGame {
 
 	public void pass() {
 		currentPlayer = getOpponent(currentPlayer);
+	}
+
+	@Override
+	public BoardGame clone() {
+		OthelloGame game = new OthelloGame(this.board.clone());
+		game.currentPlayer = this.currentPlayer;
+		return game;
+	}
+	
+	@Override
+	public String toString() {
+		return (currentPlayer == 1 ? "WHITE" : "BLACK") + "\n\n" + board.toString();
 	}
 }

@@ -3,8 +3,10 @@ package games.scenario;
 import games.Board;
 import games.BoardGame;
 import games.GameMove;
+import games.Transition;
 import games.player.LearningPlayer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SelfPlayTDLScenario extends GameScenario {
@@ -49,26 +51,35 @@ public class SelfPlayTDLScenario extends GameScenario {
 
 		return game.getOutcome();
 	}
+	
+	public List<Transition> sampleTransitions(BoardGame game) {
+		List<Transition> transitions = new ArrayList<Transition>();
+		
+		while (!game.endOfGame()) {
+			List<? extends GameMove> moves = game.findMoves();
+			if (!moves.isEmpty()) {
+				if (Math.random() < prob) {
+					game.makeMove(moves.get((int) (Math.random() * moves.size())));
+				} else {
+					GameMove bestMove = chooseBestMove(game, player, moves);
+					Board previousBoard = game.getBoard().clone();
+					game.makeMove(bestMove);
+					Board currentBoard = game.getBoard().clone();
+					
+					transitions.add(new Transition(previousBoard, currentBoard));
+				}
+			} else {
+				game.pass();
+			}
+		}
+		
+		return transitions;
+	}
 
 	private void updateEvaluationFunction(Board previousBoard, BoardGame game) {
 		double evalBefore = Math.tanh(player.evaluate(previousBoard));
 		double derivative = (1 - (evalBefore * evalBefore));
-		double error;
-
-		if (game.endOfGame()) {
-			int result;
-			if (game.getOutcome() > 0) {
-				result = 1;
-			} else if (game.getOutcome() < 0) {
-				result = -1;
-			} else {
-				result = 0;
-			}
-			error = result - evalBefore;
-		} else {
-			double evalAfter = Math.tanh(player.evaluate(game.getBoard()));
-			error = evalAfter - evalBefore;
-		}
+		double error = getValue(game, player) - evalBefore;
 
 		if (lambda > 0) {
 			player.TDLUpdate(previousBoard, learningRate * error, lambda);

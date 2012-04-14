@@ -14,8 +14,20 @@ public class SubgameSpecies extends Species {
 
 	public final static String P_MUTATION_PROB = "mutation-prob";
 
+	public final static String P_MUTATION_TYPE = "mutation-type";
+	
+	public static final int M_DOWN_MUTATION = 0;
+	public static final String V_DOWN_MUTATION = "weight";
+
+	public static final int M_UP_MUTATION = 1;
+	public static final String V_UP_MUTATION = "position";
+	
+	public static final String P_DEPTH = "depth";
+			
 	private BoardGame boardGame;
 
+	private int subgameDepth;
+	private int mutationType;
 	private float mutationProbability;
 
 	public Parameter defaultBase() {
@@ -36,6 +48,18 @@ public class SubgameSpecies extends Species {
 		boardGame = (BoardGame) state.parameters.getInstanceForParameter(gameParam, null,
 				BoardGame.class);
 
+		String type = state.parameters.getStringWithDefault(base.push(P_MUTATION_TYPE), null, V_DOWN_MUTATION);
+		if (type.equalsIgnoreCase(V_UP_MUTATION)) {
+			mutationType = M_UP_MUTATION;
+		} else if (type.equalsIgnoreCase(V_DOWN_MUTATION)) {
+			mutationType = M_DOWN_MUTATION;
+		} else {
+			state.output.error("SubgameMutationPipeline given a bad mutation type: " + type,
+					base.push(P_MUTATION_TYPE), null);
+		}
+		
+		subgameDepth = state.parameters.getIntWithDefault(base.push(P_DEPTH), defaultBase().push(P_DEPTH), 0);
+		
 		state.output.exitIfErrors();
 		super.setup(state, base);
 	}
@@ -43,7 +67,7 @@ public class SubgameSpecies extends Species {
 	@Override
 	public Individual newIndividual(final EvolutionState state, int thread) {
 		SubgameIndividual individual = (SubgameIndividual) (super.newIndividual(state, thread));
-		individual.init(state, boardGame);
+		individual.init(boardGame, state.random[thread], subgameDepth);
 		return individual;
 	}
 
@@ -53,5 +77,9 @@ public class SubgameSpecies extends Species {
 
 	public BoardGame getGame() {
 		return boardGame;
+	}
+	
+	public int getMutationType() {
+		return mutationType;
 	}
 }

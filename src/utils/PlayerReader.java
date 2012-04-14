@@ -53,7 +53,7 @@ public class PlayerReader {
 			throws IOException, InstantiationException, IllegalAccessException {
 		String line;
 		StringBuilder builder = new StringBuilder();
-		while (!(line = reader.readLine()).startsWith(DELIMITER)) {
+		while ((line = reader.readLine()) != null && !line.startsWith(DELIMITER)) {
 			builder.append(line);
 			builder.append("\n");
 		}
@@ -62,6 +62,7 @@ public class PlayerReader {
 		return player;
 	}
 
+	
 	private static List<Player> readPlayers(LineNumberReader reader, int teamSize,
 			PlayerFormat format, Encoding encoding) throws IOException, InstantiationException,
 			IllegalAccessException {
@@ -77,6 +78,30 @@ public class PlayerReader {
 		return team;
 	}
 
+	public static Player readLeagueEntry(String file, PlayerFormat playerFormat) {
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String line;
+			StringBuilder preamble = new StringBuilder();
+			while (((line = reader.readLine()) != null) && !line.matches("[sS]olution:")) {
+				preamble.append(line);
+				preamble.append("\n");
+			}
+			return readPlayer(reader, playerFormat);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	public static List<Player> readTeamFile(String file, PlayerFormat playerFormat,
 			Encoding encoding) {
 		try {
@@ -128,6 +153,8 @@ public class PlayerReader {
 		List<Player> team1 = readTeamFile("EXP1_best_players", PlayerFormat.WPC, Encoding.ECJ);
 		List<Player> team2 = readTeamFile("ntuple/snt.players", PlayerFormat.NTUPLE, Encoding.TEXT);
 		List<Player> team3 = readTeamFile("pcTDLx.players", PlayerFormat.NTUPLE, Encoding.ECJ);
+		Player player = readLeagueEntry("ntuple/best_apTDLmpx100.out", PlayerFormat.NTUPLE);
 		System.out.println(team1.size() + " " + team2.size() + " " + team3.size());
+		player.reset();
 	}
 }
